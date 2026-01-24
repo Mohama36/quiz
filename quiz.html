@@ -57,8 +57,26 @@
     button:disabled {
       background: #aaa;
     }
-    #restartBtn {
-      background: #28a745;
+
+    /* R/F buttons */
+    .tf-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    .tf-text {
+      flex: 1;
+      margin-right: 10px;
+    }
+    .tf-btn {
+      width: 45px;
+      height: 35px;
+      margin-left: 5px;
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -70,7 +88,7 @@
       <div class="question" id="question"></div>
       <div class="answers" id="answers"></div>
       <button id="nextBtn" disabled>Nächste Frage</button>
-      <button id="restartBtn" style="margin-left:10px;">Neustart (neu mischen)</button>
+      <button id="restartBtn" style="margin-left:10px;background:#28a745;">Neustart (neu mischen)</button>
     </div>
     <div id="result" style="display:none;"></div>
   </div>
@@ -78,182 +96,91 @@
   <script>
     const questions = [
       {
-        q: "Das Gewinde eines Druckreglers einer Sauerstoffflasche ist schwergängig. Was tun?",
-        a: ["Mit der Gewindefeile nacharbeiten","Mit Fett einfetten","Den Ausbilder informieren","Rostlöser benutzen"],
-        correct: [0, 2],
-        explain: "Bei sicherheitsrelevanten Bauteilen: Gewinde fachgerecht nacharbeiten und zusätzlich den Ausbilder informieren. Fett oder Rostlöser dürfen bei Sauerstoffanlagen nicht verwendet werden."
-      },
-      {
-        q: "Aus welchen Materialien besteht Messing?",
-        a: ["Kupfer und Stahl","Zinn und Kupfer","Kupfer und Zink","Stahl und Aluminium"],
-        correct: [2],
-        explain: "Messing besteht aus Kupfer und Zink."
-      },
-      {
-        q: "Welches Gas verwenden wir beim Schutzgasschweißen?",
-        a: ["Sauerstoff","Argon","CO2","Azetylen"],
-        correct: [1],
-        explain: "Beim Schutzgasschweißen wird meist Argon verwendet."
-      },
-      {
-        q: "Was ist die Hauptaufgabe des Schutzgases?",
-        a: ["Die Schweißstelle vor atmosphärischen Einflüssen schützen","Schmutz von der Stelle wegpusten","Für Erfrischung sorgen","Brennbarkeit erhöhen"],
-        correct: [0],
-        explain: "Das Schutzgas schützt die Schweißstelle vor Oxidation."
-      },
-      {
-        q: "Welcher Bohrer wird für Gewinde M8 verwendet?",
-        a: ["8,0 mm","6,5 mm","6,8 mm","7,8 mm"],
-        correct: [1],
-        explain: "Für M8 wird ein 6,5 mm Kernloch gebohrt."
-      },
-      {
-        q: "Welches Werkzeug eignet sich zum Außengewindeschneiden?",
-        a: ["Kluppe","Kugelwindeisen","Schneideisenhalter","Radienlehre"],
-        correct: [2],
-        explain: "Mit dem Schneideisenhalter lässt sich das Gewinde schneiden."
-      },
-      {
-        q: "Die Klemmbezeichnung 58R an einer Anhängersteckdose steht für?",
-        a: ["Bremsleuchte rechts","Schlusslicht rechts","Masse","Blinker rechts"],
-        correct: [1],
-        explain: "58R = Schlusslicht rechts."
-      },
-      {
-        q: "Die Klemmbezeichnung 54 an einer Anhängersteckdose steht für?",
-        a: ["Bremsleuchte","Schlusslicht","Blinker links","Nebelschlussleuchte"],
-        correct: [0],
-        explain: "54 = Bremsleuchte."
-      },
-      {
-        q: "Welches Element treibt die Nockenwelle nicht an?",
-        a: ["Zahnriemen","Keilriemen","Steuerkette","Keilrippenriemen"],
-        correct: [1],
-        explain: "Ein Keilriemen treibt keine Nockenwelle an."
-      },
-      {
-        q: "Mit welchem Werkzeug prüft man den Verzug am Zylinderkopf?",
-        a: ["Feinmessuhr","Haarlineal","Winkelmesser","Parallelmaß"],
-        correct: [1],
-        explain: "Mit dem Haarlineal wird der Verzug geprüft."
-      },
-      {
-        q: "Welches Werkzeug zum genauen Messen einer Kurbelwelle?",
-        a: ["Messschieber","Innenfeinmessgerät","Bügelmessschraube","Refraktometer"],
-        correct: [2],
-        explain: "Die Bügelmessschraube ist ideal zum genauen Messen."
-      },
-      {
-        q: "Welche drei Winkel hat ein Ventil?",
-        a: ["15°, 45°, 75°","5°, 15°, 40°","70°, 75°, 110°","15°, 40°, 70°"],
-        correct: [0],
-        explain: "Standard-Ventilwinkel sind 15°, 45°, 75°."
-      },
-      {
-        q: "Wie breit sollte der Ventilsitz ungefähr sein?",
-        a: ["1,8 cm","1,5 mm","4,2 cm","2,0 mm"],
-        correct: [1],
-        explain: "Ein Ventilsitz ist ca. 1,5 mm breit."
-      },
-      {
-        q: "Welche Eigenschaft trifft auf einen Zahnriemen zu?",
-        a: ["Formschlüssig","Beständig gegen Feuchtigkeit","Geringe Zugfestigkeit","Kaum Längung"],
-        correct: [0],
-        explain: "Der Zahnriemen arbeitet formschlüssig."
-      },
-      {
-        q: "Welches Bauteil sorgt für die Rückstellung des Bremszylinderkolbens?",
-        a: ["Staubmanschette","Rechteckring","Hauptbremszylinder","Bremsscheibe"],
-        correct: [1],
-        explain: "Der Rechteckring sorgt für Rückstellung."
-      },
-      {
-        q: "Welche Fehler kann ein Kompressionstest zeigen?",
-        a: ["Defekte Kurbelwelle","Verbranntes Ventil","Verschlissener Kolben","Loch im Kolben"],
-        correct: [1,2,3],
-        explain: "Ein verbranntes Ventil, verschlissener Kolben/Zylinder oder ein Loch im Kolben zeigen sich durch niedrige Kompression."
-      },
-      {
-        q: "Beim Druckverlusttest: Ursache bei 90% Verlust?",
-        a: ["Ventile falsch eingestellt","Ventil verbrannt","Kolben steht auf UT","Öleinfüllstutzen geöffnet"],
-        correct: [1],
-        explain: "Ein verbranntes Ventil kann hohen Druckverlust erzeugen."
-      },
-      {
-        q: "Wie viele Nockenwellenumdrehungen beim Ventile einstellen (4-Zyl)?",
-        a: ["0,5","2","1","4"],
-        correct: [1],
-        explain: "Mindestens 2 Umdrehungen."
-      },
-      {
-        q: "Ein Arbeitsspiel eines 8-Zylinders besteht aus...?",
-        a: ["360°","180°","720°","90°"],
-        correct: [2],
-        explain: "Ein kompletter Zyklus ist 720°."
-      },
-      {
-        q: "Die Klemmbezeichnung 54g steht für?",
-        a: ["Bremsleuchte","Kennzeichenleuchte","Nebelleuchte","Rückfahrleuchte"],
-        correct: [2],
-        explain: "54g = Nebelleuchte."
-      },
-      {
-        q: "Hohlventile werden gefüllt mit?",
-        a: ["Öl","Messing","Natrium","Blei"],
-        correct: [2],
-        explain: "Natrium dient der Wärmeabfuhr."
-      },
-      {
-        q: "Kurbelwelle und Nockenwelle drehen sich im Verhältnis?",
-        a: ["2:1","1:1","1:2","3:1"],
-        correct: [0],
-        explain: "Die Nockenwelle dreht sich halb so oft wie die Kurbelwelle."
-      },
-      {
         q: "Wie bereitest du eine Klebeverbindung fachgerecht vor?",
-        a: ["Du musst die Klebeflächen absolut eben schleifen.","Du musst nichts vorbereiten, moderne Klebstoffe gleichen Unebenheiten und Verunreinigungen von selbst aus.","Du musst die Klebeflächen metallisch blank schleifen oder die KTL-Grundierung des Ersatzteils anschleifen bzw. reinigen.","Du musst punktschweißen oder Glasprimer auftragen."],
+        a: [
+          "Du musst die Klebeflächen absolut eben schleifen.",
+          "Du musst nichts vorbereiten, moderne Klebstoffe gleichen Unebenheiten und Verunreinigungen von selbst aus.",
+          "Du musst die Klebeflächen metallisch blank schleifen oder die KTL-Grundierung des Ersatzteils anschleifen bzw. reinigen.",
+          "Du musst punktschweistarbe oder Glasprime auftragen"
+        ],
         correct: [0, 2],
-        explain: "Klebeflächen müssen sauber und plan sein; bei lackierten Teilen muss man anschleifen/reinigen."
+        explain: "Die richtige Vorbereitung ist: absolut eben schleifen und metallisch blank bzw. KTL-Grundierung anschleifen/ reinigen.",
+        type: "mc"
       },
       {
-        q: "Was verstehst du unter der 'Fügezeit' eines Klebers?",
-        a: ["Die Zeit, innerhalb der der Kleber vollständig aushärtet.","Die Zeit, nach der sich der Kleber verflüssigt, wenn er nicht in den Trocknungsofen kommt.","Die Zeit, innerhalb der der Kleber mit Wasser benetzt werden muss.","Die Zeit, innerhalb der alle Anpassarbeiten abgeschlossen sein müssen."],
+        q: "Was verstehst du unter der „Fügezeit\" eines Klebers?",
+        a: [
+          "Die Zeit, innerhalb der der Kleber vollstandig aushartet.",
+          "Die Zeit, nach der sich der Kleber verflüssigt, wenn er nicht in den Trocknungsofen kommt.",
+          "Die Zeit, innerhalb der der Kleber mit Wasser benetzt werden muss.",
+          "Die Zeit, innerhalb der alle Anpassarbeiten abgeschlossen sein müssen."
+        ],
         correct: [3],
-        explain: "Fügezeit = Zeitraum, in dem Anpassungen/Positionierung abgeschlossen sein müssen."
+        explain: "Fügezeit = Zeit, innerhalb der alle Anpassarbeiten abgeschlossen sein müssen.",
+        type: "mc"
       },
       {
-        q: "Welche Materialeigenschaften müssen beim Schweißen von Karosserieteilen erhalten bleiben?",
-        a: ["Korrosionsschutz und Flexibilität","Flexibilität und Magnetismus","Festigkeit und Korrosionsschutz","Lackierbarkeit und Rostfreiheit"],
+        q: "Welche übergeordneten Material-eigenschaften müssen trotz Wärmezufuhr beim Fügen (Schweißen) von Karosserie-bauteilen erhalten bleiben?",
+        a: [
+          "Korrosionsschutz und Flexibilitat",
+          "Flexibilität und Magnetismus",
+          "Festigkeit und Korrosionsschutz",
+          "Lackierbarkeit und Rostfreiheit"
+        ],
         correct: [2],
-        explain: "Beim Fügen müssen Festigkeit und Korrosionsschutz erhalten bleiben."
+        explain: "Festigkeit und Korrosionsschutz müssen erhalten bleiben.",
+        type: "mc"
       },
       {
-        q: "Wofür steht das 'M' in der Schraubenbezeichnung M12x - 10.9?",
-        a: ["Für Metallschraube.","Für metrisches ISO-Gewinde.","Für Mindestzugfestigkeit 12 Nm.","Für maximales Drehmoment 120 Nm."],
+        q: "Wofür steht das „M\" in der Schrauben-bezeichnung M 12x - -10.9?",
+        a: [
+          "Für Metallschraube.",
+          "Für metrisches ISO-Gewinde.",
+          "Für Mindestzugfestigkeit 12 Nm.",
+          "Für maximales Drehmoment 120 Nm."
+        ],
         correct: [1],
-        explain: "M steht für metrisches ISO-Gewinde."
+        explain: "M steht für metrisches ISO-Gewinde.",
+        type: "mc"
       },
       {
-        q: "Welche zwei Werte werden auf den Schraubenkopf verschlüsselt aufgebracht?",
-        a: ["Die Streckgrenze","Die Zugfestigkeit.","Die Gewindeart.","Die Gewindebezeichnung."],
+        q: "Welche zwei Werte werden verschlüsselt auf den Schraubenkopf aufgebracht?",
+        a: [
+          "Die Streckgrenze",
+          "Die Zugfestigkeit.",
+          "Die Gewindeart.",
+          "Die Gewindebezeichnung."
+        ],
         correct: [0, 1],
-        explain: "Auf dem Schraubenkopf stehen Streckgrenze und Zugfestigkeit."
+        explain: "Auf dem Schraubenkopf stehen Streckgrenze und Zugfestigkeit.",
+        type: "mc"
       },
       {
-        q: "Welche Messschrauben werden im Kfz-Bereich verwendet? (R/F)",
-        a: ["Bügelmessschrauben","Einbaumessschrauben","Innenmessschrauben","Tiefenmessschrauben","Winkelmessschrauben"],
-        correct: [0, 2],
-        explain: "Im Kfz werden Bügel- und Innenmessschrauben genutzt."
+        q: "Es gibt verschiedene Varianten von Mess-schrauben. Entscheide, welche davon im Kfz-Bereich zum Einsatz kommen. Setze R für richtig und F für falsch ein.",
+        type: "tf",
+        items: [
+          { text: "Bügelmessschrauben", correct: true },
+          { text: "Einbaumessschrauben", correct: false },
+          { text: "Innenmessschrauben", correct: true },
+          { text: "Tiefenmessschrauben", correct: false },
+          { text: "Winkelmessschrauben", correct: false }
+        ],
+        explain: "Im Kfz-Bereich kommen Bügelmessschrauben und Innenmessschrauben zum Einsatz."
       },
       {
-        q: "Mit welcher Genauigkeit kann man mit dem Universalmessschieber messen?",
-        a: ["0,1 Millimeter","0,01 Millimeter","0,001 Millimeter","0,05 Millimeter"],
+        q: "Mit welcher Genauigkeit lassen sich Längenmaße mit dem Universalmessschieber ermitteln?",
+        a: [
+          "0,1 Millimeter",
+          "0,01 Millimeter",
+          "0,001 Millimeter",
+          "0,05 Millimeter"
+        ],
         correct: [0, 3],
-        explain: "Universalmessschieber misst typischerweise auf 0,1 mm oder 0,05 mm Genauigkeit."
+        explain: "Mit dem Universalmessschieber sind 0,1 mm und 0,05 mm Genauigkeit üblich (je nach Modell).",
+        type: "mc"
       }
     ];
 
-    // Shuffle questions and answers for randomness
     function shuffleArray(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -262,23 +189,18 @@
     }
 
     function shuffleQuiz() {
-      // Shuffle questions
       shuffleArray(questions);
-
-      // Shuffle answers within each question and update correct indices
       questions.forEach(q => {
-        const pairs = q.a.map((text, idx) => ({ text, idx }));
-        shuffleArray(pairs);
-
-        // New answer list
-        q.a = pairs.map(p => p.text);
-
-        // Update correct indices after shuffle
-        const newCorrect = [];
-        pairs.forEach((p, newIdx) => {
-          if (q.correct.includes(p.idx)) newCorrect.push(newIdx);
-        });
-        q.correct = newCorrect;
+        if (q.type === "mc") {
+          const pairs = q.a.map((text, idx) => ({ text, idx }));
+          shuffleArray(pairs);
+          q.a = pairs.map(p => p.text);
+          const newCorrect = [];
+          pairs.forEach((p, newIdx) => {
+            if (q.correct.includes(p.idx)) newCorrect.push(newIdx);
+          });
+          q.correct = newCorrect;
+        }
       });
     }
 
@@ -301,16 +223,68 @@
       const q = questions[index];
       questionEl.textContent = q.q;
 
-      q.a.forEach((text, i) => {
-        const label = document.createElement("label");
-        const input = document.createElement("input");
-        input.type = q.correct.length > 1 ? "checkbox" : "radio";
-        input.name = "answer";
-        input.onclick = () => checkAnswer(i, label);
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(text));
-        answersEl.appendChild(label);
-      });
+      if (q.type === "tf") {
+        const list = document.createElement("div");
+        list.className = "tf-list";
+
+        q.items.forEach((item, i) => {
+          const row = document.createElement("div");
+          row.className = "tf-row";
+
+          const text = document.createElement("div");
+          text.className = "tf-text";
+          text.textContent = item.text;
+
+          const btnR = document.createElement("button");
+          btnR.textContent = "R";
+          btnR.className = "tf-btn";
+          btnR.onclick = () => checkTF(i, true, row);
+
+          const btnF = document.createElement("button");
+          btnF.textContent = "F";
+          btnF.className = "tf-btn";
+          btnF.onclick = () => checkTF(i, false, row);
+
+          row.appendChild(text);
+          row.appendChild(btnR);
+          row.appendChild(btnF);
+          list.appendChild(row);
+        });
+
+        answersEl.appendChild(list);
+      } else {
+        q.a.forEach((text, i) => {
+          const label = document.createElement("label");
+          const input = document.createElement("input");
+          input.type = q.correct.length > 1 ? "checkbox" : "radio";
+          input.name = "answer";
+          input.onclick = () => checkAnswer(i, label);
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(text));
+          answersEl.appendChild(label);
+        });
+      }
+    }
+
+    function checkTF(itemIndex, chosenValue, row) {
+      const q = questions[index];
+      const item = q.items[itemIndex];
+
+      row.querySelectorAll("button").forEach(b => b.disabled = true);
+
+      const correct = item.correct === chosenValue;
+      row.classList.add(correct ? "correct" : "wrong");
+
+      if (correct) score++;
+
+      const answered = Array.from(answersEl.querySelectorAll(".tf-row")).every(r => r.classList.contains("correct") || r.classList.contains("wrong"));
+      if (answered) {
+        const explain = document.createElement("div");
+        explain.style.marginTop = "10px";
+        explain.textContent = "Erklärung: " + q.explain;
+        answersEl.appendChild(explain);
+        nextBtn.disabled = false;
+      }
     }
 
     function checkAnswer(selected, label) {
@@ -318,26 +292,18 @@
       const labels = answersEl.querySelectorAll("label");
       const inputs = answersEl.querySelectorAll("input");
 
-      // Multiple correct answers: wait until user selects all required answers
       if (q.correct.length > 1) {
         let chosen = [];
         inputs.forEach((inp, i) => { if (inp.checked) chosen.push(i); });
-
-        // Do nothing until user selects the same number of answers as correct ones
-        if (chosen.length < q.correct.length) {
-          return;
-        }
+        if (chosen.length < q.correct.length) return;
 
         const isCorrect = chosen.length === q.correct.length && chosen.every(v => q.correct.includes(v));
-
         labels.forEach((l, i) => {
           if (q.correct.includes(i)) l.classList.add("correct");
           else if (chosen.includes(i)) l.classList.add("wrong");
         });
-
         if (isCorrect) score++;
       } else {
-        // Single correct answer
         if (selected === q.correct[0]) {
           label.classList.add("correct");
           score++;
@@ -367,13 +333,10 @@
     };
 
     restartBtn.onclick = () => {
-      // Reset state
       index = 0;
       score = 0;
       resultEl.style.display = "none";
       quizEl.style.display = "block";
-
-      // Reshuffle questions and answers
       shuffleQuiz();
       loadQuestion();
     };
