@@ -208,6 +208,7 @@
 
     let index = 0;
     let score = 0;
+    let answered = false; // منع التكرار
 
     const questionEl = document.getElementById("question");
     const answersEl = document.getElementById("answers");
@@ -219,6 +220,7 @@
     function loadQuestion() {
       document.getElementById("counter").textContent = `Frage ${index + 1} von ${questions.length}`;
       nextBtn.disabled = true;
+      answered = false; // reset
       answersEl.innerHTML = "";
       const q = questions[index];
       questionEl.textContent = q.q;
@@ -277,8 +279,8 @@
 
       if (correct) score++;
 
-      const answered = Array.from(answersEl.querySelectorAll(".tf-row")).every(r => r.classList.contains("correct") || r.classList.contains("wrong"));
-      if (answered) {
+      const answeredAll = Array.from(answersEl.querySelectorAll(".tf-row")).every(r => r.classList.contains("correct") || r.classList.contains("wrong"));
+      if (answeredAll) {
         const explain = document.createElement("div");
         explain.style.marginTop = "10px";
         explain.textContent = "Erklärung: " + q.explain;
@@ -288,6 +290,9 @@
     }
 
     function checkAnswer(selected, label) {
+      if (answered) return; // منع التكرار
+      answered = true;
+
       const q = questions[index];
       const labels = answersEl.querySelectorAll("label");
       const inputs = answersEl.querySelectorAll("input");
@@ -295,7 +300,10 @@
       if (q.correct.length > 1) {
         let chosen = [];
         inputs.forEach((inp, i) => { if (inp.checked) chosen.push(i); });
-        if (chosen.length < q.correct.length) return;
+        if (chosen.length < q.correct.length) {
+          answered = false;
+          return;
+        }
 
         const isCorrect = chosen.length === q.correct.length && chosen.every(v => q.correct.includes(v));
         labels.forEach((l, i) => {
