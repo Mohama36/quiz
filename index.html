@@ -3,537 +3,210 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Technische Lernfragen</title>
+  <title>Technische Lernfragen - Final</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 700px;
-      margin: 20px auto;
-      background: #fff;
-      padding: 18px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-    .question {
-      font-size: 18px;
-      margin-bottom: 15px;
-    }
-    .answers label {
-      display: block;
-      padding: 12px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .answers input {
-      margin-right: 10px;
-    }
-    .correct {
-      background-color: #cce7ff;
-      border-color: #0099ff;
-    }
-    .wrong {
-      background-color: #f8d7da;
-      border-color: #dc3545;
-    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    h1 { text-align: center; color: #1a73e8; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+    #counter { text-align: right; font-weight: bold; color: #5f6368; margin-bottom: 20px; }
+    .question { font-size: 20px; margin-bottom: 25px; color: #202124; line-height: 1.5; font-weight: 600; }
+    .multi-hint { font-size: 14px; color: #1a73e8; font-weight: normal; margin-left: 10px; }
+    .answers { display: flex; flex-direction: column; gap: 12px; }
+    .answers label { display: block; padding: 15px; border: 2px solid #dadce0; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-size: 17px; position: relative; }
+    .answers label:hover { background-color: #f8f9fa; border-color: #bdc1c6; }
+    .answers input { margin-right: 15px; transform: scale(1.3); }
+    
+    /* الألوان */
+    .correct { background-color: #e6f4ea !important; border-color: #34a853 !important; color: #137333; pointer-events: none; }
+    .wrong { background-color: #fce8e6 !important; border-color: #ea4335 !important; color: #c5221f; pointer-events: none; }
+    .selected { border-color: #1a73e8; background-color: #e8f0fe; }
+    .disabled { pointer-events: none; }
 
-    .answers div button {
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #007bff;
-      background: #007bff;
-      color: #fff;
-      cursor: pointer;
-      font-size: 14px;
-      margin-right: 10px;
-    }
-
-    .answers div.correct button {
-      background-color: #28a745 !important;
-      border-color: #28a745 !important;
-      color: #fff;
-    }
-    .answers div.wrong button {
-      background-color: #dc3545 !important;
-      border-color: #dc3545 !important;
-      color: #fff;
-    }
-
-    .rf-btn-correct {
-      background-color: #28a745 !important;
-      border-color: #28a745 !important;
-      color: #fff !important;
-    }
-    .rf-btn-wrong {
-      background-color: #dc3545 !important;
-      border-color: #dc3545 !important;
-      color: #fff !important;
-    }
-
-    button {
-      padding: 12px 18px;
-      border: none;
-      border-radius: 8px;
-      background: #007bff;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
-    #restartBtn {
-      background: #28a745;
-    }
-    @media (max-width: 480px) {
-      .container {
-        margin: 10px;
-        padding: 15px;
-      }
-      h1 {
-        font-size: 18px;
-      }
-      .question {
-        font-size: 17px;
-      }
-      button {
-        width: 100%;
-        margin-top: 8px;
-      }
-    }
+    #nextBtn { display: none; width: 100%; margin-top: 25px; padding: 15px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+    #nextBtn:hover { background: #1765cc; }
+    #restartBtn { width: 100%; margin-top: 20px; padding: 15px; background: #34a853; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; }
+    #result-summary { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Technische Lernfragen</h1>
-    <div id="counter" style="text-align:right;font-weight:bold;margin-bottom:10px;"></div>
-    <div id="quiz">
-      <div class="question" id="question"></div>
-      <div class="answers" id="answers"></div>
-      <button id="nextBtn" disabled>Nächste Frage</button>
-      <button id="restartBtn">Neustart (neu mischen)</button>
-      </div>
-    <div id="result" style="display:none;"></div>
+<div class="container">
+  <h1>Technische Lernfragen</h1>
+  <div id="counter"></div>
+  <div id="quiz-box">
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+    <button id="nextBtn">Nächste Frage</button>
   </div>
+  <div id="result-area" style="display:none;">
+    <div id="result-summary"></div>
+    <button id="restartBtn">Test neu starten</button>
+  </div>
+</div>
 
-  <script>
-    /**
-     * Quiz data format:
-     * - mcq: { type: 'mcq', q: '...', a: ['opt1','opt2'], correct: [index] }
-     * - rf:  { type: 'rf', q: '...', a: [{text:'...', correct:true}, ...] }
-     */
+<script>
+const questions = [
+  { q: "Welche Arten von Schrauben gibt es?", a: ["Holzschrauben", "Maschinenschrauben", "Blechschrauben", "Alle oben"], correct: [3] },
+  { q: "Was ist eine Mutter?", a: ["Ein Werkzeug", "Ein Schraubenteil mit Innengewinde", "Ein Messgerät", "Ein Schmiermittel"], correct: [1] },
+  { q: "Wofür steht die Abkürzung DIN?", a: ["Deutsches Institut für Normung", "Deutsche Industrie Norm", "Deutsche Ingenieur Norm", "Deutsche Institut Norm"], correct: [0] },
+  { q: "Welche Schraube ist für Metall geeignet?", a: ["Holzschraube", "Blechschraube", "Betonschraube", "Nagel"], correct: [1] },
+  { q: "Was bedeutet die Bezeichnung M8?", a: ["8 mm Durchmesser", "8 cm Länge", "8 mm Länge", "8 Zoll"], correct: [0] },
+  { q: "Was ist ein Drehmoment?", a: ["Kraft mal Weg", "Drehkraft", "Temperatur", "Geschwindigkeit"], correct: [1] },
+  { q: "Welche Einheit hat das Drehmoment?", a: ["Nm", "m/s", "kg", "W"], correct: [0] },
+  { q: "Was ist eine Schraubensicherung?", a: ["Ein Werkzeug", "Ein Mittel gegen Lösen", "Eine Schraube", "Ein Messgerät"], correct: [1] },
+  { q: "Welche Sicherung ist für hohe Vibration geeignet?", a: ["Loctite", "Federring", "Unterlegscheibe", "Kleber"], correct: [1] },
+  { q: "Was ist ein Federring?", a: ["Ein Gummiring", "Ein Metallring mit Federwirkung", "Ein Kunststoffring", "Ein Dichtungsring"], correct: [1] },
+  { q: "Welche Funktion hat eine Unterlegscheibe?", a: ["Schützt das Material", "Erhöht das Drehmoment", "Verringert die Kraft", "Erhöht die Geschwindigkeit"], correct: [0] },
+  { q: "Welche Schraube hat ein metrisches Gewinde?", a: ["M-Schraube", "UNC-Schraube", "BSW-Schraube", "NPT-Schraube"], correct: [0] },
+  { q: "Was bedeutet 'Gewindesteigung'?", a: ["Abstand zwischen Gewindegängen", "Durchmesser", "Länge", "Härte"], correct: [0] },
+  { q: "Was ist eine Mutter mit Sicherungsring?", a: ["Sicherungsmutter", "Kronenmutter", "Kontermutter", "Flügelmutter"], correct: [0] },
+  { q: "Welche Schraube wird für Holz verwendet?", a: ["Blechschraube", "Holzschraube", "Maschinenschraube", "Betonschraube"], correct: [1] },
+  { q: "Was ist eine Maschinenschraube?", a: ["Schraube für Maschinengewinde", "Schraube für Holz", "Schraube für Beton", "Schraube für Kunststoff"], correct: [0] },
+  { q: "Was ist eine Blechschraube?", a: ["Schraube für Holz", "Schraube für Metallbleche", "Schraube für Beton", "Schraube für Kunststoff"], correct: [1] },
+  { q: "Wofür steht die Abkürzung SAE?", a: ["Society of Automotive Engineers", "Standard Automotive Engineering", "System Automotive Engineering", "Standard Auto Equipment"], correct: [0] },
+  { q: "Was beschreibt die SAE-Klasse eines Öls?", a: ["Viskosität", "Farbe", "Geruch", "Preis"], correct: [0] },
+  { q: "Was ist ein O-Ring?", a: ["Ein Metallring", "Ein Gummidichtungsring", "Ein Kunststoffring", "Ein Schraubenteil"], correct: [1] },
+  { q: "Wofür steht 'ATF'?", a: ["Automatic Transmission Fluid", "Auto Tire Fluid", "Anti Freeze", "Air Tank Fluid"], correct: [0] },
+  { q: "Was bedeutet 'TÜV'?", a: ["Technischer Überwachungsverein", "Technische Überwachungsorganisation", "Technischer Überwachungsdienst", "Technische Überwachung"], correct: [0] },
+  { q: "Was ist ein Profilindikator?", a: ["Ein Messgerät für Reifenprofil", "Ein Ölfilter", "Ein Bremsbelag", "Ein Zündkerze"], correct: [0] },
+  { q: "Wofür steht 'TWI'?", a: ["Tread Wear Indicator", "Tire Wear Index", "Tire Width Indicator", "Tread Width Index"], correct: [0] },
+  { q: "Was passiert bei zu niedrigem Reifendruck?", a: ["Abnutzung in der Mitte", "Abnutzung an den Schultern", "Keine Abnutzung", "Reifen platzt sofort"], correct: [1] },
+  { q: "Welche Funktion hat die Bremse?", a: ["Beschleunigen", "Bremsen", "Lenken", "Hupen"], correct: [1] },
+  { q: "Was ist ein Bremssattel?", a: ["Teil der Bremse", "Teil des Motors", "Teil des Getriebes", "Teil der Karosserie"], correct: [0] },
+  { q: "Was bedeutet 'hygroskopisch' bei Bremsflüssigkeit?", a: ["Zieht Wasser an", "Ist wasserdicht", "Ist brennbar", "Ist farblos"], correct: [0] },
+  { q: "Wie sehen Reifen aus, die مع zu hohem Luftdruck gefahren worden sind?", a: ["Gleichmäßige Abnutzung", "Abnutzung in der Reifenmitte", "Abnutzung an der Reifeninnenschulter", "Abnutzung an der Reifenaußenschulter"], correct: [1] },
+  { q: "Was bedeutet die Geschwindigkeitsklasse H beim PKW Reifen?", a: ["190 km/h", "200 km/h", "210 km/h", "220 km/h"], correct: [2] },
+  { q: "Was ist ein Abriebindikator TWI?", a: ["Erhebung am Profilgrund", "Bremsstreifen", "Nachschneidbares Profil", "Flüssigkeit zur Alterserkennung"], correct: [0] },
+  { q: "Welchen Vorteil hat die Scheibenbremse gegenüber der Trommelbremse?", a: ["Bremsbacken geschützt", "Kein Abrieb auf Felge", "Günstiger", "Weniger empfindlich gegen Reibwertschwankungen"], correct: [3] },
+  { q: "In welchem Abstand und warum Bremsflüssigkeit wechseln?", a: ["Alle 2 Jahre wegen Farbe", "Alle 3 Jahre", "Alle 2 Jahre, hygroskopisch", "Bei jeder Inspektion"], correct: [2] },
+  { q: "Auswirkung unterschiedlich dicker Bremsscheiben?", a: ["Vibrationen", "Keine", "Mehr Bremskraft", "Längerer Pedalweg"], correct: [0] },
+  { q: "Temperatur von Motoröl bei Betriebstemperatur?", a: ["50–100 °C", "80–150 °C", "150–250 °C", "50–250 °C"], correct: [1] },
+  { q: "Was ist Eloxieren?", a: ["Salzsäurebad", "Zinkschicht", "Chemische Oxidation", "Elektrolytische Oxidation von Aluminium"], correct: [3] },
+  { q: "Kennzeichnung von Automatikgetriebeöl?", a: ["ASU", "SAE", "ATF", "API"], correct: [2] },
+  { q: "SAE 10W-40 bezieht sich auf?", a: ["Viskosität", "Menge", "Qualität", "Motorräder"], correct: [0] },
+  { q: "Batteriesäure auf der Hand – was tun?", a: ["Nichts", "Mit viel Wasser abwaschen", "Verbinden", "Abwischen"], correct: [1] },
+  { q: "Auswirkung eines verschmutzten Luftfilters?", a: ["Mehr Leistung", "Mehr Luft", "Schnellere Luft", "Weniger Luftdurchsatz"], correct: [3] },
+  { q: "Wie bereitest du eine Klebeverbindung fachgerecht vor?", a: ["Klebeflächen absolut eben schleifen", "Nichts vorbereiten", "Klebeflächen metallisch blank schleifen oder KTL anschleifen", "Glasprime auftragen"], correct: [2] },
+  { q: "Was verstehst du unter der „Fügezeit\" eines Klebers?", a: ["Zeit bis zur Aushärtung", "Zeit nach der Verflüssigung", "Zeit der Benetzung", "Zeit innerhalb der alle Anpassarbeiten abgeschlossen sein müssen"], correct: [3] },
+  { q: "Welche Eigenschaften müssen beim Schweißen erhalten bleiben?", a: ["Korrosionsschutz und Flexibilität", "Flexibilität und Magnetismus", "Festigkeit und Korrosionsschutz", "Lackierbarkeit und Rostfreiheit"], correct: [0] },
+  { q: "Wofür steht das „M\" in M 12x 70 -- 10.9?", a: ["Metallschraube", "Metrisches ISO-Gewinde", "Mindestzugfestigkeit", "Maximales Drehmoment"], correct: [1] },
+  { q: "Welche zwei Werte werden auf den Schraubenkopf aufgebracht?", a: ["Die Streckgrenze", "Die Zugfestigkeit", "Die Gewindeart", "Die Gewindebezeichnung"], correct: [0, 1] },
+  { q: "Welche Messschrauben kommen im Kfz-Bereich zum Einsatz?", a: ["Bügelmessschrauben", "Einbaumessschrauben", "Innenmessschrauben", "Tiefenmessschrauben"], correct: [0, 2, 3] },
+  { q: "Genauigkeit eines Universalmessschiebers?", a: ["0,1 Millimeter", "0,01 Millimeter", "0,001 Millimeter", "0,05 Millimeter"], correct: [0, 3] },
+  { q: "Arten der Zinkbeschichtung für Karosseriebleche?", a: ["Legierungsverzinkung", "Pulververzinkung", "Elektrolytische Verzinkung", "Feuerverzinkung"], correct: [0, 2, 3] },
+  { q: "Was beachten bei Karosserie-Hohlraumschutz?", a: ["Keine wachsähnlichen Mittel", "Innenverkleidung abbauen", "Material das auf Zink haftet", "Keine neuen Löcher bohren"], correct: [2, 3] },
+  { q: "Eigenschaft von CNG Kraftstoff?", a: ["5-8 bar Druck", "Druck von etwa 200 bar in speziellen Stahltanks", "Flüssig bei 5 bar", "Beigas bei Benzinherstellung"], correct: [1] },
+  { q: "Was bedeutet bivalenter Betrieb?", a: ["Autogas und Erdgas", "Propan und Butan", "Gaskraftstoff und Benzin", "Benzin und Diesel"], correct: [2] },
+  { q: "Energiegehalt von Autogas?", a: ["Gleich wie 1L Benzin", "Gleich wie 1kg Erdgas", "Halber Inhalt wie 1kg Erdgas", "Halber Inhalt wie 1L Benzin"], correct: [1] },
+  { q: "Ohmsches Gesetz für Innenwiderstand?", a: ["U = R x I", "R = U : I", "P = U : I", "R = U x I"], correct: [1] },
+  { q: "Kälteprüfstrom einer Batterie mit ETN ...068?", a: ["588 Ampere", "380 Ampere", "680 Ampere", "880 Ampere"], correct: [2] },
+  { q: "Was legt die Zifferngruppe B fest?", a: ["Kälteprüfstrom", "Rüttelfestigkeit", "Gehäusematerial", "Zyklenfestigkeit"], correct: [0] }
+];
 
-    const questions = [
-      // 1
-      { type: 'mcq', q: 'Welche Arten von Schrauben gibt es?', a: ['Holzschrauben','Maschinenschrauben','Blechschrauben','Alle oben'], correct: [3] },
-      // 2
-      { type: 'mcq', q: 'Was ist eine Mutter?', a: ['Ein Werkzeug','Ein Schraubenteil mit Innengewinde','Ein Messgerät','Ein Schmiermittel'], correct: [1] },
-      // 3
-      { type: 'mcq', q: 'Wofür steht die Abkürzung DIN?', a: ['Deutsches Institut für Normung','Deutsche Industrie Norm','Deutsche Ingenieur Norm','Deutsche Institut Norm'], correct: [0] },
-      // 4
-      { type: 'mcq', q: 'Welche Schraube ist für Metall geeignet?', a: ['Holzschraube','Blechschraube','Betonschraube','Nagel'], correct: [1] },
-      // 5
-      { type: 'mcq', q: 'Was bedeutet die Bezeichnung M8?', a: ['8 mm Durchmesser','8 cm Länge','8 mm Länge','8 Zoll'], correct: [0] },
-      // 6
-      { type: 'mcq', q: 'Was ist ein Drehmoment?', a: ['Kraft mal Weg','Drehkraft','Temperatur','Geschwindigkeit'], correct: [1] },
-      // 7
-      { type: 'mcq', q: 'Welche Einheit hat das Drehmoment?', a: ['Nm','m/s','kg','W'], correct: [0] },
-      // 8
-      { type: 'mcq', q: 'Was ist eine Schraubensicherung?', a: ['Ein Werkzeug','Ein Mittel gegen Lösen','Eine Schraube','Ein Messgerät'], correct: [1] },
-      // 9
-      { type: 'mcq', q: 'Welche Sicherung ist für hohe Vibration geeignet?', a: ['Loctite','Federring','Unterlegscheibe','Kleber'], correct: [1] },
-      // 10
-      { type: 'mcq', q: 'Was ist ein Federring?', a: ['Ein Gummiring','Ein Metallring mit Federwirkung','Ein Kunststoffring','Ein Dichtungsring'], correct: [1] },
-      // 11
-      { type: 'mcq', q: 'Welche Funktion hat eine Unterlegscheibe?', a: ['Schützt das Material','Erhöht das Drehmoment','Verringert die Kraft','Erhöht die Geschwindigkeit'], correct: [0] },
-      // 12
-      { type: 'mcq', q: 'Welche Schraube hat ein metrisches Gewinde?', a: ['M-Schraube','UNC-Schraube','BSW-Schraube','NPT-Schraube'], correct: [0] },
-      // 13
-      { type: 'mcq', q: "Was bedeutet 'Gewindesteigung'?", a: ['Abstand zwischen Gewindegängen','Durchmesser','Länge','Härte'], correct: [0] },
-      // 14
-      { type: 'mcq', q: 'Was ist eine Mutter mit Sicherungsring?', a: ['Sicherungsmutter','Kronenmutter','Kontermutter','Flügelmutter'], correct: [0] },
-      // 15
-      { type: 'mcq', q: 'Welche Schraube wird für Holz verwendet?', a: ['Blechschraube','Holzschraube','Maschinenschraube','Betonschraube'], correct: [1] },
-      // 16
-      { type: 'mcq', q: 'Was ist eine Maschinenschraube?', a: ['Schraube für Maschinengewinde','Schraube für Holz','Schraube für Beton','Schraube für Kunststoff'], correct: [0] },
-      // 17
-      { type: 'mcq', q: 'Was ist eine Blechschraube?', a: ['Schraube für Holz','Schraube für Metallbleche','Schraube für Beton','Schraube für Kunststoff'], correct: [1] },
-      // 18
-      { type: 'mcq', q: 'Wofür steht die Abkürzung SAE?', a: ['Society of Automotive Engineers','Standard Automotive Engineering','System Automotive Engineering','Standard Auto Equipment'], correct: [0] },
-      // 19
-      { type: 'mcq', q: 'Was beschreibt die SAE-Klasse eines Öls?', a: ['Viskosität','Farbe','Geruch','Preis'], correct: [0] },
-      // 20
-      { type: 'mcq', q: 'Was ist ein O-Ring?', a: ['Ein Metallring','Ein Gummidichtungsring','Ein Kunststoffring','Ein Schraubenteil'], correct: [1] },
-      // 21
-      { type: 'mcq', q: "Wofür steht 'ATF'?", a: ['Automatic Transmission Fluid','Auto Tire Fluid','Anti Freeze','Air Tank Fluid'], correct: [0] },
-      // 22
-      { type: 'mcq', q: "Was bedeutet 'TÜV'?", a: ['Technischer Überwachungsverein','Technische Überwachungsorganisation','Technischer Überwachungsdienst','Technische Überwachung'], correct: [0] },
-      // 23
-      { type: 'mcq', q: 'Was ist ein Profilindikator?', a: ['Ein Messgerät für Reifenprofil','Ein Ölfilter','Ein Bremsbelag','Ein Zündkerze'], correct: [0] },
-      // 24
-      { type: 'mcq', q: "Wofür steht 'TWI'?", a: ['Tread Wear Indicator','Tire Wear Index','Tire Width Indicator','Tread Width Index'], correct: [0] },
-      // 25
-      { type: 'mcq', q: 'Was passiert bei zu niedrigem Reifendruck?', a: ['Abnutzung in der Mitte','Abnutzung an den Schultern','Keine Abnutzung','Reifen platzt sofort'], correct: [1] },
-      // 26
-      { type: 'mcq', q: 'Welche Funktion hat die Bremse?', a: ['Beschleunigen','Bremsen','Lenken','Hupen'], correct: [1] },
-      // 27
-      { type: 'mcq', q: 'Was ist ein Bremssattel?', a: ['Teil der Bremse','Teil des Motors','Teil des Getriebes','Teil der Karosserie'], correct: [0] },
-      // 28
-      { type: 'mcq', q: "Was bedeutet 'hygroskopisch' bei Bremsflüssigkeit?", a: ['Zieht Wasser an','Ist wasserdicht','Ist brennbar','Ist farblos'], correct: [0] },
-      // 29
-      { type: 'mcq', q: 'Wie sehen Reifen aus, die mit zu hohem Luftdruck gefahren worden sind?', a: ['Gleichmäßige Abnutzung','Abnutzung in der Reifenmitte','Abnutzung an der Reifeninnenschulter','Abnutzung an der Reifenaußenschulter'], correct: [1] },
-      // 30
-      { type: 'mcq', q: "Was bedeutet die Geschwindigkeitsklasse H beim PKW Reifen?", a: ['190 km/h','200 km/h','210 km/h','220 km/h'], correct: [2] },
-      // 31
-      { type: 'mcq', q: 'Was ist ein Abriebindikator TWI?', a: ['Erhebung am Profilgrund','Bremsstreifen','Nachschneidbares Profil','Flüssigkeit zur Alterserkennung'], correct: [0] },
-      // 32
-      { type: 'mcq', q: 'Welchen Vorteil hat die Scheibenbremse gegenüber der Trommelbremse?', a: ['Bremsbacken geschützt','Kein Abrieb auf Felge','Günstiger','Weniger empfindlich gegen Reibwertschwankungen'], correct: [3] },
-      // 33
-      { type: 'mcq', q: 'In welchem Abstand und warum Bremsflüssigkeit wechseln?', a: ['Alle 2 Jahre wegen Farbe','Alle 3 Jahre','Alle 2 Jahre, hygroskopisch','Bei jeder Inspektion'], correct: [2] },
-      // 34
-      { type: 'mcq', q: 'Auswirkung unterschiedlich dicker Bremsscheiben?', a: ['Vibrationen','Keine','Mehr Bremskraft','Längerer Pedalweg'], correct: [0] },
-      // 35
-      { type: 'mcq', q: 'Temperatur von Motoröl bei Betriebstemperatur?', a: ['50–100 °C','80–150 °C','150–250 °C','50–250 °C'], correct: [1] },
-      // 36
-      { type: 'mcq', q: 'Was ist Eloxieren?', a: ['Salzsäurebad','Zinkschicht','Chemische Oxidation','Elektrolytische Oxidation von Aluminium'], correct: [3] },
-      // 37
-      { type: 'mcq', q: 'Kennzeichnung von Automatikgetriebeöl?', a: ['ASU','SAE','ATF','API'], correct: [2] },
-      // 38
-      { type: 'mcq', q: 'SAE 10W-40 bezieht sich auf?', a: ['Viskosität','Menge','Qualität','Motorräder'], correct: [0] },
-      // 39
-      { type: 'mcq', q: 'Batteriesäure auf der Hand – was tun?', a: ['Nichts','Mit viel Wasser abwaschen','Verbinden','Abwischen'], correct: [1] },
-      // 40
-      { type: 'mcq', q: 'Auswirkung eines verschmutzten Luftfilters?', a: ['Mehr Leistung','Mehr Luft','Schnellere Luft','Weniger Luftdurchsatz'], correct: [3] },
-      // 41
-      { type: 'mcq', q: 'Wie bereitest du eine Klebeverbindung fachgerecht vor?', a: ['Du musst die Klebeflächen absolut eben schleifen.','Du musst nichts vorbereiten, moderne Klebstoffe gleichen Unebenheiten und Verunreinigungen von selbst aus.','Du musst die Klebeflächen metallisch blank schleifen oder die KTL-Grundierung des Ersatzteils anschleifen bzw. reinigen.','Du musst punktschweistarbe oder Glasprime auftragen.'], correct: [2] },
-      // 42
-      { type: 'mcq', q: 'Was verstehst du unter der „Fügezeit" eines Klebers?', a: ['Die Zeit, innerhalb der der Kleber vollstandig aushartet.','Die Zeit, nach der sich der Kleber verflüssigt, wenn er nicht in den Trocknungsofen kommt.','Die Zeit, innerhalb der der Kleber mit Wasser benetzt werden muss.','Die Zeit, innerhalb der alle Anpassarbeiten abgeschlossen sein müssen.'], correct: [3] },
-      // 43
-      { type: 'mcq', q: 'Welche übergeordneten Material-eigenschaften müssen trotz Wärmezufuhr beim Fügen (Schweißen) von Karosserie-bauteilen erhalten bleiben?', a: ['Korrosionsschutz und Flexibilitat','Flexibilität und Magnetismus','Festigkeit und Korrosionsschutz','Lackierbarkeit und Rostfreiheit'], correct: [2] },
-      // 44
-      { type: 'mcq', q: 'Wofür steht das „M" in der Schrauben-bezeichnung M 12x 70 --10.9?', a: ['Für Metallschraube.','Für metrisches ISO-Gewinde.','Für Mindestzugfestigkeit 12 Nm.','Für maximales Drehmoment 120 Nm.'], correct: [1] },
-      // 45
-      { type: 'mcq', q: 'Welche zwei Werte werden verschlüsselt auf den Schraubenkopf aufgebracht?', a: ['Die Streckgrenze','Die Zugfestigkeit.','Die Gewindeart.','Die Gewindebezeichnung.'], correct: [0,1] },
-      // 48
-      { type: 'rf', q: 'Es gibt verschiedene Varianten von Mess-schrauben. Entscheide, welche davon im Kfz-Bereich zum Einsatz kommen.', a: [
-          { text: 'Bügelmessschrauben', correct: true },
-          { text: 'Einbaumessschrauben', correct: false },
-          { text: 'Innenmessschrauben', correct: true },
-          { text: 'Tiefenmessschrauben', correct: false },
-          { text: 'Winkelmessschrauben', correct: false }
-        ]
-      },
-      // 49
-      { type: 'mcq', q: 'Mit welcher Genauigkeit lassen sich Längenmaße mit dem Universalmessschieber ermitteln?', a: ['0,1 Millimeter','0,01 Millimeter','0,001 Millimeter','0,05 Millimeter'], correct: [0,3] },
-      // 50
-      { type: 'rf', q: 'Welche Arten der Zinkbeschichtung werden üblicherweise bei Blechen für Karosseriepressteile verwendet?', a: [
-          { text: 'legierungsverzinkung', correct: true },
-          { text: 'Pulververzinkung', correct: false },
-          { text: 'Elektrolytische Verzinkung', correct: true },
-          { text: 'Feuerverzinkung', correct: true },
-          { text: 'Spritzverzinkung', correct: false }
-        ]
-      },
-      // 51
-      { type: 'rf', q: 'Was musst du beachten, wenn du Karosserie-Hohlraumschutz aufbringst?', a: [
-          { text: 'Du darfst keine wachsähnlichen Mittel versprühen.', correct: true },
-          { text: 'Du musst die Innenverkleidung von Türen abbauen.', correct: false },
-          { text: 'Du musst Material verwenden, das auf Zink haftet.', correct: true },
-          { text: 'Du musst überschüssiges, abtropfendes Wachs auf der Karosserie belassen.', correct: false },
-          { text: 'Du darfst keine neuen Löcher in die Karosserie-hohlräume bohren.', correct: true }
-        ]
-      },
-      // 52
-      { type: 'mcq', q: 'Was charakterisiert den Kraftstoff CNG hinsichtlich Druck, Speicherung und Herstellung?', a: ['CNG wird mit einem Druck von 5 bis 8 bar in runden Stahltanks im Auto gespeichert.','CNG wird mit einem Druck von etwa 200 bar in speziellen Stahltanks im Auto gespeichert.','CNG wird bei einem Druck von etwa 5 bar flüssig.','CNG entsteht als Beigas bei der Benzinherstellung.'], correct: [1] },
-      // 53
-      { type: 'mcq', q: 'Was bedeutet es, wenn Autos bivalent betrieben werden können?', a: ['Sie können Autogas und Erdgas tanken.','Sie können Propan und Butan tanken.','Sie können einen Gaskraftstoff und Benzin tanken.','Sie können Benzin und Diesel tanken.'], correct: [2] },
-      // 54
-      { type: 'rf', q: 'Welche Aussagen zum Energiegehalt von Autogas sind richtig?', a: [
-          { text: 'Ein Liter Autogas hat den gleichen Energie-inhalt wie ein Liter Benzin.', correct: false },
-          { text: 'Ein Liter Autogas hat den gleichen Energie-inhalt wie ein Kilogramm Erdgas.', correct: true },
-          { text: 'Ein Liter Autogas hat etwa den halben Energieinhalt wie ein Kilogramm Erdgas.', correct: false },
-          { text: 'Ein Liter Autogas hat etwa den halben Energieinhalt wie ein Liter Benzin.', correct: false }
-        ]
-      },
-      // 55
-      { type: 'mcq', q: 'Der Innenwiderstand einer Batterie lässt sich mit dem ohmschen Gesetz berechnen. Welche Formel ist richtig?', a: ['U=RxI','R = U : I','P=U:l','R=Uxl'], correct: [1] },
-      // 56
-      { type: 'mcq', q: 'Welchen Kälteprüfstrom hat eine Batterie mit der ETN 588038068?', a: ['588 Ampere.','380 Ampere.','680 Ampere.','880 Ampere.'], correct: [2] },
-      // 57
-      { type: 'rf', q: 'Was legt die Klassifizierung in der Ziffern-gruppe B fest?', a: [
-          { text: 'Kälteprüfstrom', correct: true },
-          { text: 'Ruttelfestigkeit', correct: false },
-          { text: 'Gehausematerla', correct: false },
-          { text: 'Zyklenfestigkeit', correct: false }
-        ]
-      },
-      // 58
-      { type: 'mcq', q: 'Wieviel bar entspricht ein Druck in Höhe von 50 N/cm²?', a: ['50 bar','5 bar','0,5 bar','0,05 bar'], correct: [1] },
-      // 59
-      { type: 'mcq', q: 'Welche Maßeinheit hat die mechanische Kraft?', a: ['Pascal -Pa','Watt -W','Newton (N)','Newtonmeter -Nm'], correct: [2] },
-      // 60
-      { type: 'mcq', q: 'Wie hoch ist der Sollwert bei einer Kompressionsprüfung an einem Benzinmotor?', a: ['4 - 8 bar','30- 40 bar','20- 25 bar','10- 17 bar'], correct: [3] },
-      // 61
-      { type: 'mcq', q: 'Bei einem Motor ist ausschließlich ein Auslassventil undicht. Wo entweicht bei einer Druckverlustprüfung die beaufschlagte Luft?', a: ['in den Ansaugkanal','ins Kurbelgehäuse (Ölwanne)','am Auspuff','ins Kühlsystem'], correct: [2] },
-      // 62
-      { type: 'mcq', q: 'Wieviel Druckverlust darf ein intakter Zylinder maximal haben?', a: ['20 - 25 %','80 - 100 %','10- 15%','4- 10%'], correct: [3] },
-      // 63
-      { type: 'mcq', q: 'Wie stehen Ein-und Auslassventil wenn sich der dazugehörige Kolben in Zünd-OT befindet?', a: ['Einlassventil offen, Auslassventil geschlossen','Auslassventil offen, Einlassventil geschlossen','Einlassventil offen, Einlassventil offen','Auslassventil geschlossen, Einlassventil geschlossen'], correct: [3] },
-      // 64
-      { type: 'mcq', q: 'Was sollte während einer herkömmlichen Kompressionsprüfung am Benzinmotor geöffnet sein?', a: ['alle Drosselklappe','die Kurbelgehäuseentlüftung','das Kompressionsventil','Drosselklappe'], correct: [0] },
-      // 65
-      { type: 'mcq', q: 'Wieviel Ausgänge benötigt das Wegeventil zur direkten Steuerung eines doppeltwirkenden Zylinders?', a: ['2 Ausgänge','3 Ausgänge','1 Ausgang','4 Ausgänge'], correct: [0] },
-      // 66
-      { type: 'mcq', q: 'Welche Kurzbezeichnung einer Bremskreisaufteilung ist richtig?', a: ['HL','ABS','X','Duo'], correct: [2] },
-      // 67
-      { type: 'mcq', q: 'Mit welchem Symbol werden geschlossene Anschlüsse bei Wegeventilen dargestellt?', a: ['Q-Symbol','T-Symbol','X-Symbol','e-Symbol'], correct: [2] },
-      // 68
-      { type: 'mcq', q: 'Welche Art von Druck wird beim Entriegeln (Öffnen) einer elektropneumatischen Zentralverriegelung erzeugt?', a: ['ein positiver Überdruck (Überdruck)','ein negativer Überdruck (Unterdruck)','ein atmosphärischer Druck','ein Vakuum'], correct: [0] },
-      // 69
-      { type: 'mcq', q: 'Was sollte vor der Durchführung einer Kompressionsprüfung nicht unterbrochen werden?', a: ['die Stromversorgung für den Starter','die Stromversorgung für das Zündsystem','die Stromversorgung für die Kraftstoffpumpe','die Stromversorgung für den Generator'], correct: [0] },
-      // 70
-      { type: 'mcq', q: 'Welche der genannten Eigenschaften trifft auf Druckluft zu?', a: ['Druckluft ist sehr temperaturempfindlich','Ein Druckluftsystem benötigt eine Rücklaufleitung','Druckluft ist nicht kompressibel','Druckluft kann gespeichert werden'], correct: [3] },
-      // 71
-      { type: 'mcq', q: 'Wieviel Pascal (Pa) entsprechen 1 bar?', a: ['1 Pa = 1 bar','100 Pa = 1 bar','1000 Pa = 1 bar','100.000 Pa = 1 bar'], correct: [3] },
-      // 72
-      { type: 'mcq', q: 'Die Höhe des atmosphärischen Drucks (Pamb) beträgt...', a: ['etwa 0,1 bar','etwa 0,01 bar','etwa 1 bar','etwa 10 bar'], correct: [2] },
-      // 73
-      { type: 'mcq', q: 'Welches Bauteil im Bremssattel bewirkt die Kolbenrückstellung beim Lösen der Bremse?', a: ['die Schutzmanschette','der Rechteckring','die Bolzenführung','die Rückstellfeder'], correct: [1] },
-      // 74
-      { type: 'mcq', q: 'Wieviel Anschlüsse besitzt ein Zweidruckventil?', a: ['2 Anschlüsse','3 Anschlüsse','4 Anschlüsse','1 Anschluss'], correct: [1] },
-      // 75
-      { type: 'mcq', q: 'Welche Aussage trifft zu? Rückschlagventile verfügen über...', a: ['1 Sperrrichtung und 1 Durchflussrichtung','2 Sperrrichtungen','2 Durchflussrichtungen','2 Sperrrichtungen und 1 Durchflussrichtung'], correct: [0] }
-    ];
+let currentIndex = 0;
+let score = 0;
+let isAnswered = false;
 
-    // --- Clean brackets from answers (if user added [ ] around correct options) ---
-    function cleanQuestionData() {
-      questions.forEach(q => {
-        if (q.type === 'mcq' && Array.isArray(q.a)) {
-          q.a = q.a.map(t => (typeof t === 'string' ? t.replace(/\[|\]/g, '').trim() : t));
-        }
-        if (q.type === 'rf' && Array.isArray(q.a)) {
-          q.a.forEach(item => {
-            if (item && typeof item.text === 'string') {
-              item.text = item.text.replace(/\[|\]/g, '').trim();
-            }
-          });
-        }
-      });
-    }
+function loadQuestion() {
+  isAnswered = false;
+  const currentQ = questions[currentIndex];
+  document.getElementById("counter").textContent = `Frage ${currentIndex + 1} von ${questions.length}`;
+  
+  // إضافة تنبيه لعدد الإجابات المطلوبة
+  let hint = currentQ.correct.length > 1 ? `<span class="multi-hint">(Wähle ${currentQ.correct.length})</span>` : "";
+  document.getElementById("question").innerHTML = currentQ.q + hint;
+  
+  const aEl = document.getElementById("answers");
+  aEl.innerHTML = "";
+  document.getElementById("nextBtn").style.display = "none";
 
-    // --- Auto-detect RF questions by phrase in the question text ---
-    function autoDetectRF() {
-      const rfPhrase = 'Setze (R) für richtig und (F) für falsch ein';
-      questions.forEach(q => {
-        if (typeof q.q === 'string' && q.q.includes(rfPhrase)) {
-          q.type = 'rf';
-        }
-      });
-    }
+  const inputType = currentQ.correct.length > 1 ? "checkbox" : "radio";
 
-    cleanQuestionData();
-    autoDetectRF();
-
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-    }
-
-    function shuffleQuiz() {
-      shuffleArray(questions);
-      questions.forEach(q => {
-        if (q.type === 'mcq') {
-          const pairs = q.a.map((text, idx) => ({ text, idx }));
-          shuffleArray(pairs);
-          q.a = pairs.map(p => p.text);
-          const newCorrect = [];
-          pairs.forEach((p, newIdx) => {
-            if (q.correct.includes(p.idx)) newCorrect.push(newIdx);
-          });
-          q.correct = newCorrect;
-        }
-      });
-    }
-
-    // Compute total steps (questions count)
-    function totalSteps() {
-      return questions.length;
-    }
-
-    let index = 0;
-    let score = 0;
-
-    const questionEl = document.getElementById('question');
-    const answersEl = document.getElementById('answers');
-    const nextBtn = document.getElementById('nextBtn');
-    const restartBtn = document.getElementById('restartBtn');
-    const restartBtnBottom = document.getElementById('restartBtnBottom');
-    const resultEl = document.getElementById('result');
-    const quizEl = document.getElementById('quiz');
-
-    function updateCounter() {
-      document.getElementById('counter').textContent = `Frage ${index + 1} von ${totalSteps()}`;
-    }
-
-    function loadQuestion() {
-      updateCounter();
-      nextBtn.disabled = true;
-      answersEl.innerHTML = '';
-
-      const q = questions[index];
-      questionEl.textContent = q.q;
-
-      if (q.type === 'mcq') {
-        q.a.forEach((text, i) => {
-          const label = document.createElement('label');
-          const input = document.createElement('input');
-          input.type = q.correct.length > 1 ? 'checkbox' : 'radio';
-          input.name = 'answer';
-          input.onclick = () => checkMCQ(i, label);
-          label.appendChild(input);
-          label.appendChild(document.createTextNode(text));
-          answersEl.appendChild(label);
-        });
-      } else if (q.type === 'rf') {
-        q.a.forEach((item, i) => {
-          const div = document.createElement('div');
-          div.style.marginBottom = '8px';
-          const btnR = document.createElement('button');
-          const btnF = document.createElement('button');
-
-          btnR.textContent = 'R';
-          btnF.textContent = 'F';
-
-          btnR.style.marginRight = '10px';
-          btnF.style.marginRight = '10px';
-
-          btnR.onclick = () => checkRF(i, true, div);
-          btnF.onclick = () => checkRF(i, false, div);
-
-          const span = document.createElement('span');
-          span.textContent = item.text;
-
-          div.appendChild(btnR);
-          div.appendChild(btnF);
-          div.appendChild(span);
-          answersEl.appendChild(div);
-        });
-
-        // RF: enable next only after all statements answered
-        q._answeredCount = 0;
-        q._totalCount = q.a.length;
-      }
-    }
-
-    function checkMCQ(selected, label) {
-      const q = questions[index];
-      const labels = answersEl.querySelectorAll('label');
-      const inputs = answersEl.querySelectorAll('input');
-
-      if (q.correct.length > 1) {
-        const chosen = [];
-        inputs.forEach((inp, i) => { if (inp.checked) chosen.push(i); });
-        if (chosen.length < q.correct.length) return;
-
-        const isCorrect = chosen.length === q.correct.length && chosen.every(v => q.correct.includes(v));
-        labels.forEach((l, i) => {
-          if (q.correct.includes(i)) l.classList.add('correct');
-          else if (chosen.includes(i)) l.classList.add('wrong');
-        });
-
-        if (isCorrect) score++;
-      } else {
-        if (selected === q.correct[0]) {
-          label.classList.add('correct');
-          score++;
-        } else {
-          label.classList.add('wrong');
-          labels[q.correct[0]].classList.add('correct');
-        }
-      }
-
-      nextBtn.disabled = false;
-    }
-
-    function checkRF(i, choice, div) {
-      const q = questions[index];
-      const item = q.a[i];
-
-      if (div.dataset.done) return;
-      div.dataset.done = 'true';
-
-      const correct = item.correct === choice;
-      if (correct) div.classList.add('correct');
-      else div.classList.add('wrong');
-
-      const buttons = Array.from(div.querySelectorAll('button'));
-      const btnClicked = choice ? buttons[0] : buttons[1];
-
-      if (correct) {
-        btnClicked.classList.add('rf-btn-correct');
-        score++;
-      } else {
-        btnClicked.classList.add('rf-btn-wrong');
-        const correctBtn = item.correct ? buttons[0] : buttons[1];
-        if (correctBtn) correctBtn.classList.add('rf-btn-correct');
-      }
-
-      buttons.forEach(b => b.disabled = true);
-
-      q._answeredCount = (q._answeredCount || 0) + 1;
-      if (q._answeredCount >= q._totalCount) {
-        nextBtn.disabled = false;
-      }
-    }
-
-    nextBtn.onclick = () => {
-      index++;
-      if (index < questions.length) {
-        loadQuestion();
-      } else {
-        // Show result without hiding the quiz container, so restart buttons remain visible
-        questionEl.style.display = 'none';
-        answersEl.style.display = 'none';
-        nextBtn.style.display = 'none';
-        document.getElementById('counter').style.display = 'none';
-
-        resultEl.style.display = 'block';
-        resultEl.innerHTML = `<h2>Ergebnis</h2><p>${score} von ${questions.length} richtig</p>`;
-      }
-    };
-
-    restartBtn.onclick = () => {
-      index = 0;
-      score = 0;
-      resultEl.style.display = 'none';
-      questionEl.style.display = 'block';
-      answersEl.style.display = 'block';
-      nextBtn.style.display = 'inline-block';
-      document.getElementById('counter').style.display = 'block';
-      shuffleQuiz();
-      loadQuestion();
-    };
-
+  currentQ.a.forEach((text, i) => {
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+    input.type = inputType;
+    input.name = "answer";
+    input.value = i;
     
+    input.onchange = () => handleSelection(inputType);
 
-    shuffleQuiz();
+    label.appendChild(input);
+    label.appendChild(document.createTextNode(text));
+    aEl.appendChild(label);
+  });
+}
+
+function handleSelection(type) {
+  if (isAnswered) return;
+  
+  const currentQ = questions[currentIndex];
+  const selected = document.querySelectorAll('input:checked');
+  const selectedIndices = Array.from(selected).map(inp => parseInt(inp.value));
+
+  // تمييز التصميم عند الاختيار
+  document.querySelectorAll('.answers label').forEach(l => l.classList.remove('selected'));
+  selected.forEach(inp => inp.parentElement.classList.add('selected'));
+
+  // منطق التصحيح
+  if (type === "radio") {
+    // تصحيح فوري للخيار الواحد
+    validate(selectedIndices);
+  } else {
+    // انتظار اختيار كافة الإجابات المطلوبة في الخيارات المتعددة
+    if (selectedIndices.length === currentQ.correct.length) {
+      validate(selectedIndices);
+    }
+  }
+}
+
+function validate(selectedIndices) {
+  isAnswered = true;
+  const currentQ = questions[currentIndex];
+  const labels = document.querySelectorAll('.answers label');
+  const inputs = document.querySelectorAll('.answers input');
+
+  const isCorrect = selectedIndices.length === currentQ.correct.length && 
+                    selectedIndices.every(val => currentQ.correct.includes(val));
+
+  if (isCorrect) score++;
+
+  labels.forEach((label, idx) => {
+    label.classList.add('disabled');
+    if (currentQ.correct.includes(idx)) {
+      label.classList.add('correct');
+    } else if (selectedIndices.includes(idx)) {
+      label.classList.add('wrong');
+    }
+  });
+
+  document.getElementById("nextBtn").style.display = "block";
+}
+
+document.getElementById("nextBtn").onclick = () => {
+  currentIndex++;
+  if (currentIndex < questions.length) {
     loadQuestion();
-  </script>
+  } else {
+    showResults();
+  }
+};
+
+function showResults() {
+  document.getElementById("quiz-box").style.display = "none";
+  document.getElementById("result-area").style.display = "block";
+  document.getElementById("result-summary").textContent = `Ergebnis: ${score} von ${questions.length} richtig! (${Math.round(score/questions.length*100)}%)`;
+}
+
+document.getElementById("restartBtn").onclick = () => {
+  currentIndex = 0; score = 0;
+  questions.sort(() => Math.random() - 0.5);
+  document.getElementById("quiz-box").style.display = "block";
+  document.getElementById("result-area").style.display = "none";
+  loadQuestion();
+};
+
+questions.sort(() => Math.random() - 0.5);
+loadQuestion();
+</script>
 </body>
 </html>
