@@ -48,6 +48,43 @@
       background-color: #f8d7da; /* أحمر فاتح */
       border-color: #dc3545;
     }
+
+    /* RF buttons inside each answer row */
+    .answers div button {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #007bff;
+      background: #007bff;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    /* when the container div is marked correct/wrong, style the child buttons accordingly */
+    .answers div.correct button {
+      background-color: #28a745 !important; /* green */
+      border-color: #28a745 !important;
+      color: #fff;
+    }
+    .answers div.wrong button {
+      background-color: #dc3545 !important; /* red */
+      border-color: #dc3545 !important;
+      color: #fff;
+    }
+
+    /* also allow styling individual buttons via classes */
+    .rf-btn-correct {
+      background-color: #28a745 !important;
+      border-color: #28a745 !important;
+      color: #fff !important;
+    }
+    .rf-btn-wrong {
+      background-color: #dc3545 !important;
+      border-color: #dc3545 !important;
+      color: #fff !important;
+    }
+
     button {
       padding: 12px 18px;
       border: none;
@@ -328,15 +365,17 @@
         ],
         explain: "Bügel- und Innenmessschrauben werden im KFZ-Bereich verwendet."
       },
+      // تم تحويل السؤال التالي من R/F إلى اختيار متعدد كما طلبت
       {
-        type: "rf",
+        type: "mcq",
         q: "Mit welcher Genauigkeit lassen sich Längenmaße mit dem Universalmessschieber ermitteln?",
         a: [
-          { text: "0,1 Millimeter", correct: true },
-          { text: "0,01 Millimeter", correct: false },
-          { text: "0,001 Millimeter", correct: false },
-          { text: "0,05 Millimeter", correct: true }
+          "0,1 Millimeter",
+          "0,01 Millimeter",
+          "0,001 Millimeter",
+          "0,05 Millimeter"
         ],
+        correct: [0,3],
         explain: "Genauigkeit: 0,1 mm و 0,05 mm حسب النوع."
       }
     ];
@@ -462,6 +501,24 @@
       const correct = item.correct === choice;
       if (correct) div.classList.add("correct");
       else div.classList.add("wrong");
+
+      // style and disable the buttons inside this div so the user sees feedback
+      const buttons = Array.from(div.querySelectorAll('button'));
+      const btnClicked = choice ? buttons[0] : buttons[1];
+      const btnOther = choice ? buttons[1] : buttons[0];
+
+      if (correct) {
+        // clicked button was correct
+        btnClicked.classList.add('rf-btn-correct');
+      } else {
+        // clicked wrong — mark it and also highlight the real correct button
+        btnClicked.classList.add('rf-btn-wrong');
+        const correctBtn = item.correct ? buttons[0] : buttons[1];
+        if (correctBtn) correctBtn.classList.add('rf-btn-correct');
+      }
+
+      // disable both buttons to prevent re-clicking
+      buttons.forEach(b => b.disabled = true);
 
       showExplain(q.explain);
       nextBtn.disabled = false;
