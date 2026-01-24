@@ -13,29 +13,26 @@
     }
     .container {
       max-width: 700px;
-      margin: 20px auto;
+      margin: 40px auto;
       background: #fff;
-      padding: 18px;
+      padding: 25px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     h1 {
       text-align: center;
-      font-size: 20px;
-      margin-bottom: 10px;
     }
     .question {
       font-size: 18px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
     .answers label {
       display: block;
-      padding: 12px;
+      padding: 10px;
       margin-bottom: 10px;
       border: 1px solid #ddd;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 16px;
     }
     .answers input {
       margin-right: 10px;
@@ -49,42 +46,19 @@
       border-color: #dc3545;
     }
     button {
-      padding: 12px 18px;
+      padding: 10px 20px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       background: #007bff;
       color: #fff;
       cursor: pointer;
       font-size: 16px;
-      margin-top: 10px;
     }
     button:disabled {
       background: #aaa;
-      cursor: not-allowed;
     }
     #restartBtn {
       background: #28a745;
-      margin-left: 10px;
-    }
-    @media (max-width: 480px) {
-      .container {
-        margin: 10px;
-        padding: 15px;
-      }
-      h1 {
-        font-size: 18px;
-      }
-      .question {
-        font-size: 17px;
-      }
-      button {
-        width: 100%;
-        margin-top: 8px;
-        margin-left: 0;
-      }
-      #restartBtn {
-        margin-left: 0;
-      }
     }
   </style>
 </head>
@@ -96,7 +70,7 @@
       <div class="question" id="question"></div>
       <div class="answers" id="answers"></div>
       <button id="nextBtn" disabled>Nächste Frage</button>
-      <button id="restartBtn">Neustart (neu mischen)</button>
+      <button id="restartBtn" style="margin-left:10px;">Neustart (neu mischen)</button>
     </div>
     <div id="result" style="display:none;"></div>
   </div>
@@ -234,9 +208,52 @@
         a: ["2:1","1:1","1:2","3:1"],
         correct: [0],
         explain: "Die Nockenwelle dreht sich halb so oft wie die Kurbelwelle."
+      },
+      {
+        q: "Wie bereitest du eine Klebeverbindung fachgerecht vor?",
+        a: ["Du musst die Klebeflächen absolut eben schleifen.","Du musst nichts vorbereiten, moderne Klebstoffe gleichen Unebenheiten und Verunreinigungen von selbst aus.","Du musst die Klebeflächen metallisch blank schleifen oder die KTL-Grundierung des Ersatzteils anschleifen bzw. reinigen.","Du musst punktschweißen oder Glasprimer auftragen."],
+        correct: [0, 2],
+        explain: "Klebeflächen müssen sauber und plan sein; bei lackierten Teilen muss man anschleifen/reinigen."
+      },
+      {
+        q: "Was verstehst du unter der 'Fügezeit' eines Klebers?",
+        a: ["Die Zeit, innerhalb der der Kleber vollständig aushärtet.","Die Zeit, nach der sich der Kleber verflüssigt, wenn er nicht in den Trocknungsofen kommt.","Die Zeit, innerhalb der der Kleber mit Wasser benetzt werden muss.","Die Zeit, innerhalb der alle Anpassarbeiten abgeschlossen sein müssen."],
+        correct: [3],
+        explain: "Fügezeit = Zeitraum, in dem Anpassungen/Positionierung abgeschlossen sein müssen."
+      },
+      {
+        q: "Welche Materialeigenschaften müssen beim Schweißen von Karosserieteilen erhalten bleiben?",
+        a: ["Korrosionsschutz und Flexibilität","Flexibilität und Magnetismus","Festigkeit und Korrosionsschutz","Lackierbarkeit und Rostfreiheit"],
+        correct: [2],
+        explain: "Beim Fügen müssen Festigkeit und Korrosionsschutz erhalten bleiben."
+      },
+      {
+        q: "Wofür steht das 'M' in der Schraubenbezeichnung M12x - 10.9?",
+        a: ["Für Metallschraube.","Für metrisches ISO-Gewinde.","Für Mindestzugfestigkeit 12 Nm.","Für maximales Drehmoment 120 Nm."],
+        correct: [1],
+        explain: "M steht für metrisches ISO-Gewinde."
+      },
+      {
+        q: "Welche zwei Werte werden auf den Schraubenkopf verschlüsselt aufgebracht?",
+        a: ["Die Streckgrenze","Die Zugfestigkeit.","Die Gewindeart.","Die Gewindebezeichnung."],
+        correct: [0, 1],
+        explain: "Auf dem Schraubenkopf stehen Streckgrenze und Zugfestigkeit."
+      },
+      {
+        q: "Welche Messschrauben werden im Kfz-Bereich verwendet? (R/F)",
+        a: ["Bügelmessschrauben","Einbaumessschrauben","Innenmessschrauben","Tiefenmessschrauben","Winkelmessschrauben"],
+        correct: [0, 2],
+        explain: "Im Kfz werden Bügel- und Innenmessschrauben genutzt."
+      },
+      {
+        q: "Mit welcher Genauigkeit kann man mit dem Universalmessschieber messen?",
+        a: ["0,1 Millimeter","0,01 Millimeter","0,001 Millimeter","0,05 Millimeter"],
+        correct: [0, 3],
+        explain: "Universalmessschieber misst typischerweise auf 0,1 mm oder 0,05 mm Genauigkeit."
       }
     ];
 
+    // Shuffle questions and answers for randomness
     function shuffleArray(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -245,11 +262,18 @@
     }
 
     function shuffleQuiz() {
+      // Shuffle questions
       shuffleArray(questions);
+
+      // Shuffle answers within each question and update correct indices
       questions.forEach(q => {
         const pairs = q.a.map((text, idx) => ({ text, idx }));
         shuffleArray(pairs);
+
+        // New answer list
         q.a = pairs.map(p => p.text);
+
+        // Update correct indices after shuffle
         const newCorrect = [];
         pairs.forEach((p, newIdx) => {
           if (q.correct.includes(p.idx)) newCorrect.push(newIdx);
@@ -294,17 +318,26 @@
       const labels = answersEl.querySelectorAll("label");
       const inputs = answersEl.querySelectorAll("input");
 
+      // Multiple correct answers: wait until user selects all required answers
       if (q.correct.length > 1) {
         let chosen = [];
         inputs.forEach((inp, i) => { if (inp.checked) chosen.push(i); });
-        if (chosen.length < q.correct.length) return;
+
+        // Do nothing until user selects the same number of answers as correct ones
+        if (chosen.length < q.correct.length) {
+          return;
+        }
+
         const isCorrect = chosen.length === q.correct.length && chosen.every(v => q.correct.includes(v));
+
         labels.forEach((l, i) => {
           if (q.correct.includes(i)) l.classList.add("correct");
           else if (chosen.includes(i)) l.classList.add("wrong");
         });
+
         if (isCorrect) score++;
       } else {
+        // Single correct answer
         if (selected === q.correct[0]) {
           label.classList.add("correct");
           score++;
@@ -334,10 +367,13 @@
     };
 
     restartBtn.onclick = () => {
+      // Reset state
       index = 0;
       score = 0;
       resultEl.style.display = "none";
       quizEl.style.display = "block";
+
+      // Reshuffle questions and answers
       shuffleQuiz();
       loadQuestion();
     };
