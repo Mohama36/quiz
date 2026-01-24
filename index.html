@@ -126,7 +126,7 @@
       <div class="answers" id="answers"></div>
       <button id="nextBtn" disabled>Nächste Frage</button>
       <button id="restartBtn">Neustart (neu mischen)</button>
-    </div>
+      </div>
     <div id="result" style="display:none;"></div>
   </div>
 
@@ -383,6 +383,7 @@
     const answersEl = document.getElementById('answers');
     const nextBtn = document.getElementById('nextBtn');
     const restartBtn = document.getElementById('restartBtn');
+    const restartBtnBottom = document.getElementById('restartBtnBottom');
     const resultEl = document.getElementById('result');
     const quizEl = document.getElementById('quiz');
 
@@ -506,7 +507,12 @@
       if (index < questions.length) {
         loadQuestion();
       } else {
-        quizEl.style.display = 'none';
+        // Show result without hiding the quiz container, so restart buttons remain visible
+        questionEl.style.display = 'none';
+        answersEl.style.display = 'none';
+        nextBtn.style.display = 'none';
+        document.getElementById('counter').style.display = 'none';
+
         resultEl.style.display = 'block';
         resultEl.innerHTML = `<h2>Ergebnis</h2><p>${score} von ${questions.length} richtig</p>`;
       }
@@ -516,10 +522,15 @@
       index = 0;
       score = 0;
       resultEl.style.display = 'none';
-      quizEl.style.display = 'block';
+      questionEl.style.display = 'block';
+      answersEl.style.display = 'block';
+      nextBtn.style.display = 'inline-block';
+      document.getElementById('counter').style.display = 'block';
       shuffleQuiz();
       loadQuestion();
     };
+
+    
 
     shuffleQuiz();
     loadQuestion();
