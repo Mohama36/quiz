@@ -1,355 +1,399 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Technische Lernfragen</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 700px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-    }
-    .question {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-    .answers label {
-      display: block;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .answers input {
-      margin-right: 10px;
-    }
-    .correct {
-      background-color: #d4edda;
-      border-color: #28a745;
-    }
-    .wrong {
-      background-color: #f8d7da;
-      border-color: #dc3545;
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      background: #007bff;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:disabled {
-      background: #aaa;
-    }
-
-    /* R/F buttons */
-    .tf-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-    }
-    .tf-text {
-      flex: 1;
-      margin-right: 10px;
-    }
-    .tf-btn {
-      width: 45px;
-      height: 35px;
-      margin-left: 5px;
-      border-radius: 6px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:0; }
+  .container { max-width: 900px; margin: 30px auto; background:white; padding:20px; border-radius:10px; display:flex; }
+  .left { flex: 3; }
+  .right { flex: 1; padding-left:20px; }
+  .question { font-weight:bold; margin-top:20px; }
+  .answers { margin-top:10px; }
+  label { display:block; margin:6px 0; padding:8px; border:1px solid #ccc; border-radius:5px; cursor:pointer; }
+  label.correct { background:#c8e6c9; border-color:#2e7d32; }
+  label.wrong { background:#ffcdd2; border-color:#c62828; }
+  .explain { margin-top:10px; background:#e3f2fd; padding:10px; border-radius:5px; }
+  button { margin-top:20px; padding:10px 20px; border:none; background:#1976d2; color:white; border-radius:5px; cursor:pointer; }
+  .counter { position:sticky; top:20px; background:#fff; border:1px solid #ccc; padding:15px; border-radius:10px; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Technische Lernfragen</h1>
-    <div id="counter" style="text-align:right;font-weight:bold;margin-bottom:10px;"></div>
-    <div id="quiz">
-      <div class="question" id="question"></div>
-      <div class="answers" id="answers"></div>
-      <button id="nextBtn" disabled>Nächste Frage</button>
-      <button id="restartBtn" style="margin-left:10px;background:#28a745;">Neustart (neu mischen)</button>
-    </div>
-    <div id="result" style="display:none;"></div>
+
+<div class="container">
+  <div class="left">
+    <div id="quiz"></div>
+    <button id="nextBtn">التالي</button>
+    <div id="result"></div>
   </div>
 
-  <script>
-    const questions = [
-      {
-        q: "Wie bereitest du eine Klebeverbindung fachgerecht vor?",
-        a: [
-          "Du musst die Klebeflächen absolut eben schleifen.",
-          "Du musst nichts vorbereiten, moderne Klebstoffe gleichen Unebenheiten und Verunreinigungen von selbst aus.",
-          "Du musst die Klebeflächen metallisch blank schleifen oder die KTL-Grundierung des Ersatzteils anschleifen bzw. reinigen.",
-          "Du musst punktschweistarbe oder Glasprime auftragen"
-        ],
-        correct: [0, 2],
-        explain: "Die richtige Vorbereitung ist: absolut eben schleifen und metallisch blank bzw. KTL-Grundierung anschleifen/ reinigen.",
-        type: "mc"
-      },
-      {
-        q: "Was verstehst du unter der „Fügezeit\" eines Klebers?",
-        a: [
-          "Die Zeit, innerhalb der der Kleber vollstandig aushartet.",
-          "Die Zeit, nach der sich der Kleber verflüssigt, wenn er nicht in den Trocknungsofen kommt.",
-          "Die Zeit, innerhalb der der Kleber mit Wasser benetzt werden muss.",
-          "Die Zeit, innerhalb der alle Anpassarbeiten abgeschlossen sein müssen."
-        ],
-        correct: [3],
-        explain: "Fügezeit = Zeit, innerhalb der alle Anpassarbeiten abgeschlossen sein müssen.",
-        type: "mc"
-      },
-      {
-        q: "Welche übergeordneten Material-eigenschaften müssen trotz Wärmezufuhr beim Fügen (Schweißen) von Karosserie-bauteilen erhalten bleiben?",
-        a: [
-          "Korrosionsschutz und Flexibilitat",
-          "Flexibilität und Magnetismus",
-          "Festigkeit und Korrosionsschutz",
-          "Lackierbarkeit und Rostfreiheit"
-        ],
-        correct: [2],
-        explain: "Festigkeit und Korrosionsschutz müssen erhalten bleiben.",
-        type: "mc"
-      },
-      {
-        q: "Wofür steht das „M\" in der Schrauben-bezeichnung M 12x - -10.9?",
-        a: [
-          "Für Metallschraube.",
-          "Für metrisches ISO-Gewinde.",
-          "Für Mindestzugfestigkeit 12 Nm.",
-          "Für maximales Drehmoment 120 Nm."
-        ],
-        correct: [1],
-        explain: "M steht für metrisches ISO-Gewinde.",
-        type: "mc"
-      },
-      {
-        q: "Welche zwei Werte werden verschlüsselt auf den Schraubenkopf aufgebracht?",
-        a: [
-          "Die Streckgrenze",
-          "Die Zugfestigkeit.",
-          "Die Gewindeart.",
-          "Die Gewindebezeichnung."
-        ],
-        correct: [0, 1],
-        explain: "Auf dem Schraubenkopf stehen Streckgrenze und Zugfestigkeit.",
-        type: "mc"
-      },
-      {
-        q: "Es gibt verschiedene Varianten von Mess-schrauben. Entscheide, welche davon im Kfz-Bereich zum Einsatz kommen. Setze R für richtig und F für falsch ein.",
-        type: "tf",
-        items: [
-          { text: "Bügelmessschrauben", correct: true },
-          { text: "Einbaumessschrauben", correct: false },
-          { text: "Innenmessschrauben", correct: true },
-          { text: "Tiefenmessschrauben", correct: false },
-          { text: "Winkelmessschrauben", correct: false }
-        ],
-        explain: "Im Kfz-Bereich kommen Bügelmessschrauben und Innenmessschrauben zum Einsatz."
-      },
-      {
-        q: "Mit welcher Genauigkeit lassen sich Längenmaße mit dem Universalmessschieber ermitteln?",
-        a: [
-          "0,1 Millimeter",
-          "0,01 Millimeter",
-          "0,001 Millimeter",
-          "0,05 Millimeter"
-        ],
-        correct: [0, 3],
-        explain: "Mit dem Universalmessschieber sind 0,1 mm und 0,05 mm Genauigkeit üblich (je nach Modell).",
-        type: "mc"
-      }
-    ];
+  <div class="right">
+    <div class="counter">
+      <h3>الأسئلة</h3>
+      <p id="counterText">Frage 1 von 1</p>
+      <p id="scoreText">النتيجة: 0</p>
+    </div>
+  </div>
+</div>
 
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
+<script>
+const questions = [
+  {
+    type: "mcq",
+    q: "Das Gewinde eines Druckreglers einer Sauerstoffflasche ist schwergängig. Was tun?",
+    a: ["Mit der Gewindefeile nacharbeiten", "Mit Fett einfetten", "Den Ausbilder informieren", "Rostlöser benutzen"],
+    correct: [0, 2],
+    explain: "Sicherheitsrelevant – niemals selbst reparieren. Informiere den Ausbilder."
+  },
+  {
+    type: "mcq",
+    q: "Aus welchen Materialien besteht Messing?",
+    a: ["Kupfer und Stahl", "Zinn und Kupfer", "Kupfer und Zink", "Stahl und Aluminium"],
+    correct: [2],
+    explain: "Messing besteht aus Kupfer und Zink."
+  },
+  {
+    type: "mcq",
+    q: "Welches Gas verwenden wir beim Schutzgasschweißen?",
+    a: ["Sauerstoff", "Argon", "CO2", "Azetylen"],
+    correct: [1],
+    explain: "Beim Schutzgasschweißen wird meist Argon verwendet."
+  },
+  {
+    type: "mcq",
+    q: "Was ist die Hauptaufgabe des Schutzgases?",
+    a: ["Die Schweißstelle vor atmosphärischen Einflüssen schützen", "Schmutz von der Stelle wegpusten", "Für Erfrischung sorgen", "Brennbarkeit erhöhen"],
+    correct: [0],
+    explain: "Das Schutzgas schützt die Schweißstelle vor Oxidation."
+  },
+  {
+    type: "mcq",
+    q: "Welcher Bohrer wird für Gewinde M8 verwendet?",
+    a: ["8,0 mm", "6,5 mm", "6,8 mm", "7,8 mm"],
+    correct: [1],
+    explain: "Für M8 wird ein 6,5 mm Kernloch gebohrt."
+  },
+  {
+    type: "mcq",
+    q: "Welches Werkzeug eignet sich zum Außengewindeschneiden?",
+    a: ["Kluppe", "Kugelwindeisen", "Schneideisenhalter", "Radienlehre"],
+    correct: [2],
+    explain: "Mit dem Schneideisenhalter lässt sich das Gewinde schneiden."
+  },
+  {
+    type: "mcq",
+    q: "Die Klemmbezeichnung 58R an einer Anhängersteckdose steht für?",
+    a: ["Bremsleuchte rechts", "Schlusslicht rechts", "Masse", "Blinker rechts"],
+    correct: [1],
+    explain: "58R = Schlusslicht rechts."
+  },
+  {
+    type: "mcq",
+    q: "Die Klemmbezeichnung 54 an einer Anhängersteckdose steht für?",
+    a: ["Bremsleuchte", "Schlusslicht", "Blinker links", "Nebelschlussleuchte"],
+    correct: [0],
+    explain: "54 = Bremsleuchte."
+  },
+  {
+    type: "mcq",
+    q: "Welches Element treibt die Nockenwelle nicht an?",
+    a: ["Zahnriemen", "Keilriemen", "Steuerkette", "Keilrippenriemen"],
+    correct: [1],
+    explain: "Ein Keilriemen treibt keine Nockenwelle an."
+  },
+  {
+    type: "mcq",
+    q: "Mit welchem Werkzeug prüft man den Verzug am Zylinderkopf?",
+    a: ["Feinmessuhr", "Haarlineal", "Winkelmesser", "Parallelmaß"],
+    correct: [1],
+    explain: "Mit dem Haarlineal wird der Verzug geprüft."
+  },
+  {
+    type: "mcq",
+    q: "Welches Werkzeug zum genauen Messen einer Kurbelwelle?",
+    a: ["Messschieber", "Innenfeinmessgerät", "Bügelmessschraube", "Refraktometer"],
+    correct: [2],
+    explain: "Die Bügelmessschraube ist ideal zum genauen Messen."
+  },
+  {
+    type: "mcq",
+    q: "Welche drei Winkel hat ein Ventil?",
+    a: ["15°, 45°, 75°", "5°, 15°, 40°", "70°, 75°, 110°", "15°, 40°, 70°"],
+    correct: [0],
+    explain: "Standard-Ventilwinkel sind 15°, 45°, 75°."
+  },
+  {
+    type: "mcq",
+    q: "Wie breit sollte der Ventilsitz ungefähr sein?",
+    a: ["1,8 cm", "1,5 mm", "4,2 cm", "2,0 mm"],
+    correct: [1],
+    explain: "Ein Ventilsitz ist ca. 1,5 mm breit."
+  },
+  {
+    type: "mcq",
+    q: "Welche Eigenschaft trifft auf einen Zahnriemen zu?",
+    a: ["Formschlüssig", "Beständig gegen Feuchtigkeit", "Geringe Zugfestigkeit", "Kaum Längung"],
+    correct: [0],
+    explain: "Der Zahnriemen arbeitet formschlüssig."
+  },
+  {
+    type: "mcq",
+    q: "Welches Bauteil sorgt für die Rückstellung des Bremszylinderkolbens?",
+    a: ["Staubmanschette", "Rechteckring", "Hauptbremszylinder", "Bremsscheibe"],
+    correct: [1],
+    explain: "Der Rechteckring sorgt für Rückstellung."
+  },
+  {
+    type: "mcq",
+    q: "Welche Fehler kann ein Kompressionstest zeigen?",
+    a: ["Defekte Kurbelwelle", "Verbranntes Ventil", "Verschlissener Kolben", "Loch im Kolben"],
+    correct: [1],
+    explain: "Ein verbranntes Ventil zeigt typischerweise niedrige Kompression."
+  },
+  {
+    type: "mcq",
+    q: "Beim Druckverlusttest: Ursache bei 90 % Verlust?",
+    a: ["Ventile falsch eingestellt", "Ventil verbrannt", "Kolben steht auf UT", "Öleinfüllstutzen geöffnet"],
+    correct: [1],
+    explain: "Ein verbranntes Ventil kann hohen Verlust erzeugen."
+  },
+  {
+    type: "mcq",
+    q: "Wie viele Nockenwellenumdrehungen beim Ventile einstellen (4-Zyl)?",
+    a: ["0,5", "2", "1", "4"],
+    correct: [1],
+    explain: "Mindestens 2 Umdrehungen."
+  },
+  {
+    type: "mcq",
+    q: "Ein Arbeitsspiel eines 8-Zylinders besteht aus...?",
+    a: ["360°", "180°", "720°", "90°"],
+    correct: [2],
+    explain: "Ein kompletter Zyklus ist 720°."
+  },
+  {
+    type: "mcq",
+    q: "Die Klemmbezeichnung 54g steht für?",
+    a: ["Bremsleuchte", "Kennzeichenleuchte", "Nebelleuchte", "Rückfahrleuchte"],
+    correct: [2],
+    explain: "54g = Nebelleuchte."
+  },
+  {
+    type: "mcq",
+    q: "Hohlventile werden gefüllt mit?",
+    a: ["Öl", "Messing", "Natrium", "Blei"],
+    correct: [2],
+    explain: "Natrium dient der Wärmeabfuhr."
+  },
+  {
+    type: "mcq",
+    q: "Kurbelwelle und Nockenwelle drehen sich im Verhältnis?",
+    a: ["2:1", "1:1", "1:2", "3:1"],
+    correct: [0],
+    explain: "Die Nockenwelle dreht sich halb so oft wie die Kurbelwelle."
+  },
+
+  // أسئلة جديدة من عندك
+  {
+    type: "mcq",
+    q: "Wie bereitest du eine Klebeverbindung fachgerecht vor (2)?",
+    a: ["Du musst die Klebeflächen absolut eben schleifen.", "Du musst nichts vorbereiten, moderne Klebstoffe gleichen Unebenheiten und Verunreinigungen von selbst aus.", "Du musst die Klebeflächen metallisch blank schleifen oder die KTL-Grundierung des Ersatzteils anschleifen bzw. reinigen.", "Du musst punktschweistarbe oder Glasprime auftragen"],
+    correct: [0, 2],
+    explain: "Die Klebeflächen müssen sauber und eben sein, ggf. anschleifen."
+  },
+  {
+    type: "mcq",
+    q: "Was verstehst du unter der „Fügezeit\" eines Klebers (1)?",
+    a: ["Die Zeit, innerhalb der der Kleber vollstandig aushartet.", "Die Zeit, nach der sich der Kleber verflüssigt, wenn er nicht in den Trocknungsofen kommt.", "Die Zeit, innerhalb der der Kleber mit Wasser benetzt werden muss.", "Die Zeit, innerhalb der alle Anpassarbeiten abgeschlossen sein müssen."],
+    correct: [3],
+    explain: "Fügezeit = Zeit für Anpassarbeiten bis der Kleber fixiert ist."
+  },
+  {
+    type: "mcq",
+    q: "Welche übergeordneten Material-eigenschaften müssen trotz Wärmezufuhr beim Fügen (Schweißen) von Karosserie-bauteilen erhalten bleiben (1)?",
+    a: ["Korrosionsschutz und Flexibilitat", "Flexibilität und Magnetismus", "Festigkeit und Korrosionsschutz", "Lackierbarkeit und Rostfreiheit"],
+    correct: [2],
+    explain: "Wichtig ist Festigkeit + Korrosionsschutz."
+  },
+  {
+    type: "mcq",
+    q: "Wofür steht das „M\" in der Schrauben-bezeichnung M 12x x - -10.9 (1)?",
+    a: ["Für Metallschraube.", "Für metrisches ISO-Gewinde.", "Für Mindestzugfestigkeit 12 Nm.", "Für maximales Drehmoment 120 Nm."],
+    correct: [1],
+    explain: "M = metrisches ISO-Gewinde."
+  },
+  {
+    type: "mcq",
+    q: "Welche zwei Werte werden verschlüsselt auf den Schraubenkopf aufgebracht (2)?",
+    a: ["Die Streckgrenze", "Die Zugfestigkeit", "Die Gewindeart", "Die Gewindebezeichnung"],
+    correct: [0, 1],
+    explain: "Auf dem Schraubenkopf stehen Streckgrenze und Zugfestigkeit."
+  },
+
+  {
+    type: "tf",
+    q: "Es gibt verschiedene Varianten von Mess-schrauben. Entscheide, welche davon im Kfz-Bereich zum Einsatz kommen.",
+    a: [
+      { text: "Bügelmessschrauben", correct: true },
+      { text: "Einbaumessschrauben", correct: false },
+      { text: "Innenmessschrauben", correct: true },
+      { text: "Tiefenmessschrauben", correct: false },
+      { text: "Winkelmessschrauben", correct: false }
+    ],
+    explain: "Bügel- und Innenmessschrauben werden im KFZ-Bereich verwendet."
+  },
+
+  {
+    type: "mcq",
+    q: "Mit welcher Genauigkeit lassen sich Längenmaße mit dem Universalmessschieber ermitteln (2)?",
+    a: ["0,1 Millimeter", "0,01 Millimeter", "0,001 Millimeter", "0,05 Millimeter"],
+    correct: [0, 3],
+    explain: "Der Messschieber hat typischerweise 0,1 mm oder 0,05 mm Genauigkeit."
+  }
+];
+
+let index = 0;
+let score = 0;
+let answered = false;
+
+const quizEl = document.getElementById("quiz");
+const nextBtn = document.getElementById("nextBtn");
+const resultEl = document.getElementById("result");
+const counterText = document.getElementById("counterText");
+const scoreText = document.getElementById("scoreText");
+
+function updateCounter() {
+  counterText.textContent = `Frage ${index + 1} von ${questions.length}`;
+  scoreText.textContent = `النتيجة: ${score}`;
+}
+
+function showQuestion() {
+  answered = false;
+  quizEl.innerHTML = "";
+  resultEl.innerHTML = "";
+  updateCounter();
+
+  const q = questions[index];
+
+  const qEl = document.createElement("div");
+  qEl.className = "question";
+  qEl.innerHTML = `${q.q}`;
+  quizEl.appendChild(qEl);
+
+  const aEl = document.createElement("div");
+  aEl.className = "answers";
+
+  if (q.type === "mcq") {
+    q.a.forEach((ans, i) => {
+      const label = document.createElement("label");
+      label.innerHTML = `
+        <input type="radio" name="ans" value="${i}">
+        ${ans}
+      `;
+      label.onclick = () => checkMCQ(i, label);
+      aEl.appendChild(label);
+    });
+  }
+
+  if (q.type === "tf") {
+    q.a.forEach((item, i) => {
+      const label = document.createElement("label");
+      label.innerHTML = `
+        <button style="margin-right:10px;" onclick="checkTF(${index}, ${i}, this)">R</button>
+        <button onclick="checkTF(${index}, ${i}, this)">F</button>
+        ${item.text}
+      `;
+      aEl.appendChild(label);
+    });
+  }
+
+  quizEl.appendChild(aEl);
+}
+
+function checkMCQ(i, label) {
+  if (answered) return;
+  const q = questions[index];
+
+  answered = true;
+
+  const labels = quizEl.querySelectorAll("label");
+  if (q.correct.length === 1) {
+    if (i === q.correct[0]) {
+      label.classList.add("correct");
+      score++;
+    } else {
+      label.classList.add("wrong");
+      labels[q.correct[0]].classList.add("correct");
     }
+    showExplain(q.explain);
+    return;
+  }
 
-    function shuffleQuiz() {
-      shuffleArray(questions);
-      questions.forEach(q => {
-        if (q.type === "mc") {
-          const pairs = q.a.map((text, idx) => ({ text, idx }));
-          shuffleArray(pairs);
-          q.a = pairs.map(p => p.text);
-          const newCorrect = [];
-          pairs.forEach((p, newIdx) => {
-            if (q.correct.includes(p.idx)) newCorrect.push(newIdx);
-          });
-          q.correct = newCorrect;
-        }
-      });
-    }
+  // multiple correct answers
+  const inputs = quizEl.querySelectorAll("input");
+  const chosen = [];
+  inputs.forEach((inp, idx) => {
+    if (inp.checked) chosen.push(idx);
+  });
 
-    shuffleQuiz();
+  if (chosen.length !== q.correct.length) {
+    answered = false;
+    return;
+  }
 
-    let index = 0;
-    let score = 0;
-    let answered = false; // منع التكرار
+  const isCorrect = chosen.every(v => q.correct.includes(v));
+  if (isCorrect) score++;
 
-    const questionEl = document.getElementById("question");
-    const answersEl = document.getElementById("answers");
-    const nextBtn = document.getElementById("nextBtn");
-    const restartBtn = document.getElementById("restartBtn");
-    const resultEl = document.getElementById("result");
-    const quizEl = document.getElementById("quiz");
+  labels.forEach((l, idx) => {
+    if (q.correct.includes(idx)) l.classList.add("correct");
+    else if (chosen.includes(idx)) l.classList.add("wrong");
+  });
 
-    function loadQuestion() {
-      document.getElementById("counter").textContent = `Frage ${index + 1} von ${questions.length}`;
-      nextBtn.disabled = true;
-      answered = false; // reset
-      answersEl.innerHTML = "";
-      const q = questions[index];
-      questionEl.textContent = q.q;
+  showExplain(q.explain);
+}
 
-      if (q.type === "tf") {
-        const list = document.createElement("div");
-        list.className = "tf-list";
+function checkTF(qIndex, aIndex, btn) {
+  const q = questions[qIndex];
+  const parent = btn.parentElement.parentElement;
+  const isRight = q.a[aIndex].correct;
+  const isR = btn.textContent === "R";
 
-        q.items.forEach((item, i) => {
-          const row = document.createElement("div");
-          row.className = "tf-row";
+  if ((isRight && isR) || (!isRight && !isR)) {
+    score++;
+    btn.style.background = "#c8e6c9";
+  } else {
+    btn.style.background = "#ffcdd2";
+  }
 
-          const text = document.createElement("div");
-          text.className = "tf-text";
-          text.textContent = item.text;
+  answered = true;
+  showExplain(q.explain);
+}
 
-          const btnR = document.createElement("button");
-          btnR.textContent = "R";
-          btnR.className = "tf-btn";
-          btnR.onclick = () => checkTF(i, true, row);
+function showExplain(text) {
+  const explainEl = document.createElement("div");
+  explainEl.className = "explain";
+  explainEl.textContent = text;
+  quizEl.appendChild(explainEl);
+}
 
-          const btnF = document.createElement("button");
-          btnF.textContent = "F";
-          btnF.className = "tf-btn";
-          btnF.onclick = () => checkTF(i, false, row);
+nextBtn.onclick = () => {
+  if (!answered) {
+    alert("اختر جواباً أولاً");
+    return;
+  }
 
-          row.appendChild(text);
-          row.appendChild(btnR);
-          row.appendChild(btnF);
-          list.appendChild(row);
-        });
+  index++;
+  if (index >= questions.length) {
+    quizEl.innerHTML = `<h2>النتيجة: ${score} من ${questions.length}</h2>`;
+    nextBtn.style.display = "none";
+    return;
+  }
+  showQuestion();
+};
 
-        answersEl.appendChild(list);
-      } else {
-        q.a.forEach((text, i) => {
-          const label = document.createElement("label");
-          const input = document.createElement("input");
-          input.type = q.correct.length > 1 ? "checkbox" : "radio";
-          input.name = "answer";
-          input.onclick = () => checkAnswer(i, label);
-          label.appendChild(input);
-          label.appendChild(document.createTextNode(text));
-          answersEl.appendChild(label);
-        });
-      }
-    }
+showQuestion();
+</script>
 
-    function checkTF(itemIndex, chosenValue, row) {
-      const q = questions[index];
-      const item = q.items[itemIndex];
-
-      row.querySelectorAll("button").forEach(b => b.disabled = true);
-
-      const correct = item.correct === chosenValue;
-      row.classList.add(correct ? "correct" : "wrong");
-
-      if (correct) score++;
-
-      const answeredAll = Array.from(answersEl.querySelectorAll(".tf-row")).every(r => r.classList.contains("correct") || r.classList.contains("wrong"));
-      if (answeredAll) {
-        const explain = document.createElement("div");
-        explain.style.marginTop = "10px";
-        explain.textContent = "Erklärung: " + q.explain;
-        answersEl.appendChild(explain);
-        nextBtn.disabled = false;
-      }
-    }
-
-    function checkAnswer(selected, label) {
-      if (answered) return; // منع التكرار
-      answered = true;
-
-      const q = questions[index];
-      const labels = answersEl.querySelectorAll("label");
-      const inputs = answersEl.querySelectorAll("input");
-
-      if (q.correct.length > 1) {
-        let chosen = [];
-        inputs.forEach((inp, i) => { if (inp.checked) chosen.push(i); });
-        if (chosen.length < q.correct.length) {
-          answered = false;
-          return;
-        }
-
-        const isCorrect = chosen.length === q.correct.length && chosen.every(v => q.correct.includes(v));
-        labels.forEach((l, i) => {
-          if (q.correct.includes(i)) l.classList.add("correct");
-          else if (chosen.includes(i)) l.classList.add("wrong");
-        });
-        if (isCorrect) score++;
-      } else {
-        if (selected === q.correct[0]) {
-          label.classList.add("correct");
-          score++;
-        } else {
-          label.classList.add("wrong");
-          labels[q.correct[0]].classList.add("correct");
-        }
-      }
-
-      const explain = document.createElement("div");
-      explain.style.marginTop = "10px";
-      explain.textContent = "Erklärung: " + q.explain;
-      answersEl.appendChild(explain);
-
-      nextBtn.disabled = false;
-    }
-
-    nextBtn.onclick = () => {
-      index++;
-      if (index < questions.length) {
-        loadQuestion();
-      } else {
-        quizEl.style.display = "none";
-        resultEl.style.display = "block";
-        resultEl.innerHTML = `<h2>Ergebnis</h2><p>${score} von ${questions.length} richtig</p>`;
-      }
-    };
-
-    restartBtn.onclick = () => {
-      index = 0;
-      score = 0;
-      resultEl.style.display = "none";
-      quizEl.style.display = "block";
-      shuffleQuiz();
-      loadQuestion();
-    };
-
-    loadQuestion();
-  </script>
 </body>
 </html>
