@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kfz-Technik Profi-Quiz (55 Fragen)</title>
+  <title>Kfz-Technik Profi-Quiz (93 Fragen)</title>
   <style>
     :root { --primary: #1a73e8; --success: #34a853; --error: #ea4335; --bg: #f8f9fa; --text: #202124; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; direction: ltr; }
@@ -27,7 +27,6 @@
     .answer-item:hover { background: #f8f9fa; }
     .answer-item input { margin: 0 12px; width: 18px; height: 18px; }
 
-    /* R/F Grid */
     .rf-row { display: grid; grid-template-columns: 1fr auto; align-items: center; padding: 12px; border: 1px solid #dadce0; border-radius: 10px; margin-bottom: 6px; background: #fff; }
     .rf-options { display: flex; gap: 8px; margin-left: 10px; }
     body.ar .rf-options { margin-left: 0; margin-right: 10px; }
@@ -83,8 +82,9 @@ const ui = {
   ar: { title: "اختبار ميكانيكا السيارات", next: "السؤال التالي", restart: "إعادة الاختبار", result: "النتيجة النهائية", of: "من", q: "سؤال", hintSingle: "اختر إجابة واحدة", hintMulti: "اختر جميع الإجابات الصحيحة", hintRF: "ضع علامة R (صح) أو F (خطأ) لكل سطر", lang: "Deutsch" }
 };
 
+// مصفوفة الأسئلة المحدثة بالكامل (93 سؤالاً)
 const questions = [
-  { q_de: "Welche Arten von Schrauben gibt es?", q_ar: "ما هي أنواع البراغي الموجودة؟", type: "single", a_de: ["Holzschrauben", "Maschinenschrauben", "Blechschrauben", "Alle genannten"], a_ar: ["براغي خشب", "براغي آلات", "براغي صفيح", "كل ما ذكر"], correct: [3] },
+  { q_de: "Welche Arten von Schrauben gibt es?", q_ar: "ما هي أنواع البراغي الموجودة؟", type: "single", a_de: ["Holzschrauben", "Maschinenschrauben", "Blechschrauben", "Alle oben"], a_ar: ["براغي خشب", "براغي آلات", "براغي صفيح", "كل ما سبق"], correct: [3] },
   { q_de: "Was ist eine Mutter?", q_ar: "ما هي الصامولة (Mutter)؟", type: "single", a_de: ["Ein Werkzeug", "Ein Schraubenteil mit Innengewinde", "Ein Messgerät", "Ein Schmiermittel"], a_ar: ["أداة", "جزء لولبي بمسننات داخلية", "جهاز قياس", "مادة تشحيم"], correct: [1] },
   { q_de: "Wofür steht die Abkürzung DIN?", q_ar: "إلى ماذا يرمز الاختصار DIN؟", type: "single", a_de: ["Deutsches Institut für Normung", "Deutsche Industrie Norm", "Deutsche Ingenieur Norm", "Deutsche Institut Norm"], a_ar: ["المعهد الألماني للتوحيد القياسي", "معيار الصناعة الألماني", "معيار المهندسين الألماني", "معهد المعايير الألماني"], correct: [0] },
   { q_de: "Welche Schraube ist für Metall geeignet?", q_ar: "أي برغي مناسب للمعادن؟", type: "single", a_de: ["Holzschraube", "Blechschraube", "Betonschraube", "Nagel"], a_ar: ["برغي خشب", "برغي صفيح", "برغي خرسانة", "مسمار"], correct: [1] },
@@ -101,70 +101,118 @@ const questions = [
   { q_de: "Welche Schraube wird für Holz verwendet?", q_ar: "أي برغي يستخدم للخشب؟", type: "single", a_de: ["Blechschraube", "Holzschraube", "Maschinenschraube", "Betonschraube"], a_ar: ["برغي صفيح", "برغي خشب", "برغي آلات", "برغي خرسانة"], correct: [1] },
   { q_de: "Was ist eine Maschinenschraube?", q_ar: "ما هو برغي الآلات؟", type: "single", a_de: ["Schraube für Maschinengewinde", "Schraube für Holz", "Schraube für Beton", "Schraube für Kunststoff"], a_ar: ["برغي لمسننات الآلات", "برغي خشب", "برغي خرسانة", "برغي بلاستيك"], correct: [0] },
   { q_de: "Was ist eine Blechschraube?", q_ar: "ما هو برغي الصفيح؟", type: "single", a_de: ["Schraube für Holz", "Schraube für Metallbleche", "Schraube für Beton", "Schraube für Kunststoff"], a_ar: ["برغي خشب", "برغي صفيح", "برغي خرسانة", "برغي بلاستيك"], correct: [1] },
-  { q_de: "Wofür steht SAE?", q_ar: "إلى ماذا يرمز SAE؟", type: "single", a_de: ["Society of Automotive Engineers", "Standard Automotive Engineering", "System Automotive Engineering", "Standard Auto Equipment"], a_ar: ["جمعية مهندسي السيارات", "معايير هندسة السيارات", "نظام هندسة السيارات", "معدات السيارات القياسية"], correct: [0] },
-  { q_de: "SAE-Klasse eines Öls?", q_ar: "ماذا تصف فئة SAE للزيت؟", type: "single", a_de: ["Viskosität", "Farbe", "Geruch", "Preis"], a_ar: ["اللزوجة", "اللون", "الرائحة", "السعر"], correct: [0] },
+  { q_de: "Wofür steht die Abkürzung SAE?", q_ar: "إلى ماذا يرمز الاختصار SAE؟", type: "single", a_de: ["Society of Automotive Engineers", "Standard Automotive Engineering", "System Automotive Engineering", "Standard Auto Equipment"], a_ar: ["جمعية مهندسي السيارات", "معايير هندسة السيارات", "نظام هندسة السيارات", "معدات السيارات القياسية"], correct: [0] },
+  { q_de: "Was beschreibt die SAE-Klasse eines Öls?", q_ar: "ماذا تصف فئة SAE للزيت؟", type: "single", a_de: ["Viskosität", "Farbe", "Geruch", "Preis"], a_ar: ["اللزوجة", "اللون", "الرائحة", "السعر"], correct: [0] },
   { q_de: "Was ist ein O-Ring?", q_ar: "ما هو الـ O-Ring؟", type: "single", a_de: ["Ein Metallring", "Ein Gummidichtungsring", "Ein Kunststoffring", "Ein Schraubenteil"], a_ar: ["حلقة معدنية", "حلقة إحكام مطاطية", "حلقة بلاستيكية", "جزء برغي"], correct: [1] },
-  { q_de: "Wofür steht ATF?", q_ar: "إلى ماذا يرمز ATF؟", type: "single", a_de: ["Automatic Transmission Fluid", "Auto Tire Fluid", "Anti Freeze", "Air Tank Fluid"], a_ar: ["سائل ناقل الحركة الأوتوماتيكي", "سائل إطارات", "مضاد تجمد", "سائل خزان"], correct: [0] },
-  { q_de: "Was bedeutet TÜV?", q_ar: "ماذا يعني TÜV؟", type: "single", a_de: ["Technischer Überwachungsverein", "Technische Überwachungsorganisation", "Technischer Überwachungsdienst", "Technische Überwachung"], a_ar: ["جمعية المراقبة الفنية", "منظمة المراقبة الفنية", "خدمة المراقبة الفنية", "المراقبة الفنية"], correct: [0] },
-  { q_de: "Was ist ein Profilindikator?", q_ar: "ما هو مؤشر عمق النقشة؟", type: "single", a_de: ["Messgerät für Reifenprofil", "Ein Ölfilter", "Ein Bremsbelag", "Ein Zündkerze"], a_ar: ["جهاز قياس عمق النقشة", "فلتر زيت", "فحمة فرامل", "شمعة احتراق"], correct: [0] },
-  { q_de: "Wofür steht TWI?", q_ar: "إلى ماذا يرمز TWI؟", type: "single", a_de: ["Tread Wear Indicator", "Tire Wear Index", "Tire Width Indicator", "Tread Width Index"], a_ar: ["مؤشر تآكل سطح الإطار", "مؤشر تآكل الإطار", "مؤشر عرض الإطار", "فهرس عرض السطح"], correct: [0] },
-  { q_de: "Zu niedriger Reifendruck?", q_ar: "انخفاض ضغط الإطارات يؤدي إلى؟", type: "single", a_de: ["Abnutzung in der Mitte", "Abnutzung an den Schultern", "Keine Abnutzung", "Reifen platzt sofort"], a_ar: ["تآكل في المنتصف", "تآكل عند الجوانب (الأكتاف)", "لا يوجد تآكل", "انفجار الإطار"], correct: [1] },
-  { q_de: "Funktion der Bremse?", q_ar: "ما وظيفة الفرامل؟", type: "single", a_de: ["Beschleunigen", "Bremsen", "Lenken", "Hupen"], a_ar: ["التسارع", "الكبح (الفرملة)", "التوجيه", "الزمور"], correct: [1] },
+  { q_de: "Wofür steht 'ATF'?", q_ar: "إلى ماذا يرمز ATF؟", type: "single", a_de: ["Automatic Transmission Fluid", "Auto Tire Fluid", "Anti Freeze", "Air Tank Fluid"], a_ar: ["سائل ناقل الحركة الأوتوماتيكي", "سائل إطارات", "مضاد تجمد", "سائل خزان"], correct: [0] },
+  { q_de: "Was bedeutet 'TÜV'?", q_ar: "ماذا يعني TÜV؟", type: "single", a_de: ["Technischer Überwachungsverein", "Technische Überwachungsorganisation", "Technischer Überwachungsdienst", "Technische Überwachung"], a_ar: ["جمعية المراقبة الفنية", "منظمة المراقبة الفنية", "خدمة المراقبة الفنية", "المراقبة الفنية"], correct: [0] },
+  { q_de: "Was ist ein Profilindikator?", q_ar: "ما هو مؤشر عمق النقشة؟", type: "single", a_de: ["Ein Messgerät für Reifenprofil", "Ein Ölfilter", "Ein Bremsbelag", "Ein Zündkerze"], a_ar: ["جهاز قياس عمق النقشة", "فلتر زيت", "فحمة فرامل", "شمعة احتراق"], correct: [0] },
+  { q_de: "Wofür steht 'TWI'?", q_ar: "إلى ماذا يرمز TWI؟", type: "single", a_de: ["Tread Wear Indicator", "Tire Wear Index", "Tire Width Indicator", "Tread Width Index"], a_ar: ["مؤشر تآكل سطح الإطار", "مؤشر تآكل الإطار", "مؤشر عرض الإطار", "فهرس عرض السطح"], correct: [0] },
+  { q_de: "Was passiert bei zu niedrigem Reifendruck?", q_ar: "ماذا يحدث عند انخفاض ضغط الإطارات؟", type: "single", a_de: ["Abnutzung in der Mitte", "Abnutzung an den Schultern", "Keine Abnutzung", "Reifen platzt sofort"], a_ar: ["تآكل في المنتصف", "تآكل عند الجوانب (الأكتاف)", "لا يوجد تآكل", "انفجار الإطار"], correct: [1] },
+  { q_de: "Welche Funktion hat die Bremse?", q_ar: "ما وظيفة الفرامل؟", type: "single", a_de: ["Beschleunigen", "Bremsen", "Lenken", "Hupen"], a_ar: ["التسارع", "الكبح (الفرملة)", "التوجيه", "الزمور"], correct: [1] },
   { q_de: "Was ist ein Bremssattel?", q_ar: "ما هو فك الفرامل (Bremssattel)؟", type: "single", a_de: ["Teil der Bremse", "Teil des Motors", "Teil des Getriebes", "Teil der Karosserie"], a_ar: ["جزء من الفرامل", "جزء من المحرك", "جزء من ناقل الحركة", "جزء من هيكل السيارة"], correct: [0] },
-  { q_de: "Hygroskopisch bei Bremsflüssigkeit?", q_ar: "ماذا يعني 'امتصاص الرطوبة' لسائل الفرامل؟", type: "single", a_de: ["Zieht Wasser an", "Ist wasserdicht", "Ist brennbar", "Ist farblos"], a_ar: ["يمتص الماء", "مقاوم للماء", "قابل للاشتعال", "عديم اللون"], correct: [0] },
-  { q_de: "Reifen mit zu hohem Luftdruck?", q_ar: "شكل الإطارات التي قيدت بضغط مرتفع؟", type: "single", a_de: ["Gleichmäßige Abnutzung", "Abnutzung in der Reifenmitte", "Abnutzung Innenschulter", "Abnutzung Außenschulter"], a_ar: ["تآكل متساوٍ", "تآكل في منتصف الإطار", "تآكل داخلي", "تآكل خارجي"], correct: [1] },
-  { q_de: "Geschwindigkeitsklasse H?", q_ar: "ما هي فئة السرعة H؟", type: "single", a_de: ["190 km/h", "200 km/h", "210 km/h", "220 km/h"], a_ar: ["190 كم/س", "200 كم/س", "210 كم/س", "220 كم/س"], correct: [2] },
-  { q_de: "Abriebindikator TWI?", q_ar: "ما هو مؤشر التآكل TWI؟", type: "single", a_de: ["Erhebung am Profilgrund", "Bremsstreifen", "Nachschneidbares Profil", "Flüssigkeit"], a_ar: ["بروز في قاعدة النقشة", "آثار كبح", "نقشة قابلة للحفر", "سائل"], correct: [0] },
-  { q_de: "Vorteil Scheibenbremse vs Trommel?", q_ar: "ميزة الفرامل القرصية عن الأسطوانية؟", type: "single", a_de: ["Geschützt", "Kein Abrieb", "Günstiger", "Unempfindlicher gegen Reibwertschwankungen"], a_ar: ["محمية", "لا يوجد تآكل", "أرخص", "أقل حساسية لتقلبات الاحتكاك"], correct: [3] },
-  { q_de: "Bremsflüssigkeit wechseln?", q_ar: "متى ولماذا يتم تغيير سائل الفرامل؟", type: "single", a_de: ["Alle 2 Jahre Farbe", "Alle 3 Jahre", "Alle 2 Jahre, hygroskopisch", "Jede Inspektion"], a_ar: ["كل سنتين للون", "كل 3 سنوات", "كل سنتين لأنها تمتص الماء", "كل فحص"], correct: [2] },
-  { q_de: "Unterschiedlich dicke Bremsscheiben?", q_ar: "تأثير اختلاف سماكة أقراص الفرامل؟", type: "single", a_de: ["Vibrationen", "Keine", "Mehr Kraft", "Länger Pedal"], a_ar: ["اهتزازات", "لا شيء", "قوة أكثر", "مسافة دواسة أطول"], correct: [0] },
-  { q_de: "Betriebstemperatur Motoröl?", q_ar: "حرارة زيت المحرك عند التشغيل؟", type: "single", a_de: ["50–100 °C", "80–150 °C", "150–250 °C", "50–250 °C"], a_ar: ["50-100 درجة", "80-150 درجة", "150-250 درجة", "50-250 درجة"], correct: [1] },
+  { q_de: "Was bedeutet 'hygroskopisch' bei Bremsflüssigkeit?", q_ar: "ماذا يعني 'امتصاص الرطوبة' لسائل الفرامل؟", type: "single", a_de: ["Zieht Wasser an", "Ist wasserdicht", "Ist brennbar", "Ist farblos"], a_ar: ["يمتص الماء", "مقاوم للماء", "قابل للاشتعال", "عديم اللون"], correct: [0] },
+  { q_de: "Wie sehen Reifen aus, die mit zu hohem Luftdruck gefahren worden sind?", q_ar: "كيف تبدو الإطارات التي سارت بضغط مرتفع جداً؟", type: "single", a_de: ["Gleichmäßige Abnutzung", "Abnutzung in der Reifenmitte", "Abnutzung an der Reifeninnenschulter", "Abnutzung an der Reifenaußenschulter"], a_ar: ["تآكل متساوٍ", "تآكل في منتصف الإطار", "تآكل داخلي", "تآكل خارجي"], correct: [1] },
+  { q_de: "Was bedeutet die Geschwindigkeitsklasse H beim PKW Reifen?", q_ar: "ما هي فئة السرعة H لإطارات السيارات؟", type: "single", a_de: ["190 km/h", "200 km/h", "210 km/h", "220 km/h"], a_ar: ["190 كم/س", "200 كم/س", "210 كم/س", "220 كم/س"], correct: [2] },
+  { q_de: "Was ist ein Abriebindikator TWI?", q_ar: "ما هو مؤشر التآكل TWI؟", type: "single", a_de: ["Erhebung am Profilgrund", "Bremsstreifen", "Nachschneidbares Profil", "Flüssigkeit zur Alterserkennung"], a_ar: ["بروز في قاعدة النقشة", "آثار كبح", "نقشة قابلة للحفر", "سائل للتعرف على العمر"], correct: [0] },
+  { q_de: "Welchen Vorteil hat die Scheibenbremse gegenüber der Trommelbremse?", q_ar: "ما ميزة الفرامل القرصية مقارنة بالأسطوانية؟", type: "single", a_de: ["Bremsbacken geschützt", "Kein Abrieb auf Felge", "Günstiger", "Weniger empfindlich gegen Reibwertschwankungen"], a_ar: ["لقم محمية", "لا تآكل على الجنط", "أرخص", "أقل حساسية لتقلبات معامل الاحتكاك"], correct: [3] },
+  { q_de: "In welchem Abstand und warum Bremsflüssigkeit wechseln?", q_ar: "كل متى ولماذا يتم تغيير سائل الفرامل؟", type: "single", a_de: ["Alle 2 Jahre wegen Farbe", "Alle 3 Jahre", "Alle 2 Jahre, hygroskopisch", "Bei jeder Inspektion"], a_ar: ["كل سنتين للون", "كل 3 سنوات", "كل سنتين لامتصاص الماء", "كل فحص"], correct: [2] },
+  { q_de: "Auswirkung unterschiedlich dicker Bremsscheiben?", q_ar: "تأثير اختلاف سماكة أقراص الفرامل؟", type: "single", a_de: ["Vibrationen", "Keine", "Mehr Bremskraft", "Längerer Pedalweg"], a_ar: ["اهتزازات", "لا شيء", "قوة أكثر", "مسافة أطول"], correct: [0] },
+  { q_de: "Temperatur von Motoröl bei Betriebstemperatur?", q_ar: "حرارة زيت المحرك عند التشغيل؟", type: "single", a_de: ["50–100 °C", "80–150 °C", "150–250 °C", "50–250 °C"], a_ar: ["50-100 درجة", "80-150 درجة", "150-250 درجة", "50-250 درجة"], correct: [1] },
   { q_de: "Was ist Eloxieren?", q_ar: "ما هي عملية الأنودة (Eloxieren)؟", type: "single", a_de: ["Salzsäurebad", "Zinkschicht", "Chemische Oxidation", "Elektrolytische Oxidation von Aluminium"], a_ar: ["حمام حمض", "طبقة زنك", "أكسدة كيميائية", "الأكسدة الكهربائية للألمنيوم"], correct: [3] },
-  { q_de: "Kennzeichnung Automatikgetriebeöl?", q_ar: "رمز زيت ناقل الحركة الأوتوماتيكي؟", type: "single", a_de: ["ASU", "SAE", "ATF", "API"], a_ar: ["ASU", "SAE", "ATF", "API"], correct: [2] },
-  { q_de: "SAE 10W-40?", q_ar: "إلى ماذا يشير 10W-40؟", type: "single", a_de: ["Viskosität", "Menge", "Qualität", "Motorräder"], a_ar: ["اللزوجة", "الكمية", "الجودة", "دراجات"], correct: [0] },
-  { q_de: "Batteriesäure auf der Hand?", q_ar: "حمض بطارية على اليد - ماذا تفعل؟", type: "single", a_de: ["Nichts", "Viel Wasser abwaschen", "Verbinden", "Abwischen"], a_ar: ["لا شيء", "غسلها بالكثير من الماء", "تضميد", "مسح"], correct: [1] },
-  { q_de: "Verschmutzter Luftfilter?", q_ar: "تأثير فلتر الهواء المتسخ؟", type: "single", a_de: ["Mehr Leistung", "Mehr Luft", "Schneller", "Weniger Luftdurchsatz"], a_ar: ["قوة أكثر", "هواء أكثر", "أسرع", "تدفق هواء أقل"], correct: [3] },
-  { q_de: "Klebeverbindung vorbereiten (2)?", q_ar: "كيف تجهز وصلة لاصقة (اختر 2)؟", type: "multi", a_de: ["Eben schleifen", "Nichts tun", "Metallisch blank schleifen oder KTL anschleifen", "Glasprime/Punktschweißfarbe"], a_ar: ["صنفرة مستوية", "لا تحضير", "صنفرة معدنية لامعة أو KTL", "برايمر زجاجي أو طلاء"], correct: [2, 3] },
-  { q_de: "Was ist die 'Fügezeit' (1)?", q_ar: "ما هي 'زمن التجميع' (Fügezeit)؟", type: "single", a_de: ["Aushärtung", "Verflüssigung", "Benetzung", "Alle Anpassarbeiten abgeschlossen sein müssen"], a_ar: ["التصلب", "التمييع", "الترطيب", "الوقت لإنهاء أعمال الضبط"], correct: [3] },
-  { q_de: "Schweißen von Karosserie: Eigenschaften (1)?", q_ar: "خصائص يجب الحفاظ عليها عند لحام الهيكل؟", type: "single", a_de: ["Korrosionsschutz und Flexibilität", "Flexibilität/Magnetismus", "Festigkeit/Korrosionsschutz", "Lackierbarkeit"], a_ar: ["الحماية من التآكل والمرونة", "مرونة ومغناطيسية", "صلابة وحماية", "طلاء"], correct: [0] },
-  { q_de: "M in M 12x 70?", q_ar: "ماذا يعني حرف M في وصف البرغي؟", type: "single", a_de: ["Metallschraube", "Metrisches ISO-Gewinde", "Zugfestigkeit", "Drehmoment"], a_ar: ["برغي معدني", "لولب متري ISO", "شد", "عزم"], correct: [1] },
-  { q_de: "Zwei Werte auf dem Schraubenkopf (2)?", q_ar: "قيمتان تظهران على رأس البرغي؟", type: "multi", a_de: ["Streckgrenze", "Zugfestigkeit", "Gewindeart", "Gewindebezeichnung"], a_ar: ["حد المرونة", "مقاومة الشد", "نوع اللولب", "تسمية اللولب"], correct: [0, 1] },
+  { q_de: "Kennzeichnung von Automatikgetriebeöl?", q_ar: "ما هو رمز زيت ناقل الحركة الأوتوماتيكي؟", type: "single", a_de: ["ASU", "SAE", "ATF", "API"], a_ar: ["ASU", "SAE", "ATF", "API"], correct: [2] },
+  { q_de: "SAE 10W-40 bezieht sich auf?", q_ar: "إلى ماذا يشير الرمز SAE 10W-40؟", type: "single", a_de: ["Viskosität", "Menge", "Qualität", "Motorräder"], a_ar: ["اللزوجة", "الكمية", "الجودة", "دراجات"], correct: [0] },
+  { q_de: "Batteriesäure auf der Hand – was tun?", q_ar: "حمض بطارية على اليد - ماذا تفعل؟", type: "single", a_de: ["Nichts", "Mit viel Wasser abwaschen", "Verbinden", "Abwischen"], a_ar: ["لا شيء", "غسلها بالكثير من الماء", "تضميد", "مسح"], correct: [1] },
+  { q_de: "Auswirkung eines verschmutzten Luftfilters?", q_ar: "تأثير فلتر الهواء المتسخ؟", type: "single", a_de: ["Mehr Leistung", "Mehr Luft", "Schnellere Luft", "Weniger Luftdurchsatz"], a_ar: ["قوة أكثر", "هواء أكثر", "أسرع", "تدفق هواء أقل"], correct: [3] },
+  
+  // اختيار متعدد
+  { q_de: "Wie bereitest du eine Klebeverbindung fachgerecht vor (2)?", q_ar: "كيف تجهز وصلة لاصقة بشكل احترافي؟ (2)", type: "multi", a_de: ["Eben schleifen", "Nichts vorbereiten", "Metallisch blank schleifen oder KTL reinigen", "Punktschweißfarbe oder Glasprime auftragen"], a_ar: ["صنفرة مستوية", "لا تحضير", "صنفرة معدنية لامعة أو KTL", "طلاء لحام أو برايمر زجاج"], correct: [2, 3] },
+  
+  { q_de: "Was verstehst du unter der „Fügezeit\" eines Klebers (1)?", q_ar: "ماذا تفهم من 'زمن التجميع' (Fügezeit)؟", type: "single", a_de: ["Vollständige Aushärtung", "Verflüssigung", "Wasserbenetzung", "Zeit, in der alle Anpassarbeiten abgeschlossen sein müssen"], a_ar: ["التصلب التام", "التمييع", "الترطيب", "وقت إنهاء أعمال الضبط"], correct: [3] },
+  { q_de: "Welche Materialeigenschaften müssen beim Schweißen erhalten bleiben (1)?", q_ar: "أي الخصائص يجب الحفاظ عليها عند اللحام؟", type: "single", a_de: ["Korrosionsschutz und Flexibilität", "Flexibilität و Magnetismus", "Festigkeit و Korrosionsschutz", "Lackierbarkeit"], a_ar: ["الحماية من التآكل والمرونة", "المرونة والمغناطيسية", "الصلابة والحماية", "قابلية الطلاء"], correct: [0] },
+  { q_de: "Wofür steht das „M\" in M 12x 70?", q_ar: "ماذا يعني حرف M في M 12x 70؟", type: "single", a_de: ["Metallschraube", "Für metrisches ISO-Gewinde", "Mindestzugfestigkeit", "Maximales Drehmoment"], a_ar: ["برغي معدني", "لولب متري ISO", "قوة الشد", "أقصى عزم"], correct: [1] },
+  
+  { q_de: "Welche zwei Werte werden auf den Schraubenkopf aufgebracht (2)?", q_ar: "ما القيمتان الموجودتان على رأس البرغي؟ (2)", type: "multi", a_de: ["Die Streckgrenze", "Die Zugfestigkeit", "Die Gewindeart", "Die Gewindebezeichnung"], a_ar: ["حد المرونة", "مقاومة الشد", "نوع اللولب", "تسمية اللولب"], correct: [0, 1] },
 
-  // السؤال 48 - R/F
-  { q_de: "Messschrauben im Kfz-Bereich:", q_ar: "أنواع الميكرومتر المستخدمة في السيارات (R/F):", type: "truth", 
+  // R/F
+  { q_de: "Varianten von Messschrauben (R/F):", q_ar: "أنواع الميكرومتر المستخدمة (صح/خطأ):", type: "truth", 
     a_de: ["Bügelmessschrauben", "Einbaumessschrauben", "Innenmessschrauben", "Tiefenmessschrauben", "Winkelmessschrauben"], 
-    a_ar: ["ميكرومتر خارجي (Bügel)", "ميكرومتر مدمج", "ميكرومتر داخلي", "ميكرومتر العمق", "ميكرومتر زوايا"],
+    a_ar: ["ميكرومتر خارجي (Bügel)", "ميكرومتر مدمج", "ميكرومتر داخلي", "ميكرومتر العمق", "ميكرومتر الزوايا"],
     correct: ["R", "F", "R", "R", "F"] },
 
-  { q_de: "Genauigkeit Universalmessschieber (2)?", q_ar: "دقة قدمة القياس (اختر 2)؟", type: "multi", a_de: ["0,1 mm", "0,01 mm", "0,001 mm", "0,05 mm"], a_ar: ["0.1 مم", "0.01 مم", "0.001 مم", "0.05 مم"], correct: [0, 3] },
+  { q_de: "Genauigkeit Universalmessschieber (2)?", q_ar: "دقة القدمة القياسية (2)؟", type: "multi", a_de: ["0,1 mm", "0,01 mm", "0,001 mm", "0,05 mm"], a_ar: ["0.1 مم", "0.01 مم", "0.001 مم", "0.05 مم"], correct: [0, 3] },
 
-  // السؤال 50 - R/F
-  { q_de: "Arten der Zinkbeschichtung:", q_ar: "أنواع طلاء الزنك (R/F):", type: "truth", 
+  { q_de: "Arten der Zinkbeschichtung (R/F):", q_ar: "أنواع طلاء الزنك (صح/خطأ):", type: "truth", 
     a_de: ["Legierungsverzinkung", "Pulververzinkung", "Elektrolytische Verzinkung", "Feuerverzinkung", "Spritzverzinkung"], 
     a_ar: ["جلفنة بالسبائك", "جلفنة بالمسحوق", "جلفنة كهربائية", "جلفنة بالغمس الساخن", "جلفنة بالرش"],
     correct: ["R", "F", "R", "R", "F"] },
 
-  { q_de: "Karosserie-Hohlraumschutz (2)?", q_ar: "حماية تجاويف الهيكل (اختر 2)؟", type: "multi", 
-    a_de: ["Keine Wachsmittel", "Innenverkleidung abbauen", "Material auf Zink haftet", "Keine neuen Löcher bohren"], 
-    a_ar: ["لا مواد شمعية", "فك الكسوة", "مادة تلتصق بالزنك", "عدم حفر ثقوب جديدة"], correct: [2, 3] },
+  { q_de: "Karosserie-Hohlraumschutz (2)?", q_ar: "حماية تجاويف الهيكل (2)؟", type: "multi", 
+    a_de: ["Innenverkleidung abbauen", "Material auf Zink haftet", "Überschüssiges Wachs belassen", "Keine neuen Löcher bohren"], 
+    a_ar: ["فك الكسوة الداخلية", "مادة تلتصق بالزنك", "ترك الشمع الزائد", "عدم حفر ثقوب جديدة"], correct: [1, 3] },
 
-  { q_de: "CNG Kraftstoff (1)?", q_ar: "وقود CNG (غاز طبيعي)؟", type: "single", a_de: ["5-8 bar", "200 bar in Stahltanks", "flüssig bei 5 bar", "Beigas Benzin"], a_ar: ["5-8 بار", "200 بار في خزانات صلب", "سائل عند 5 بار", "غاز جانبي للبنزين"], correct: [1] },
-  { q_de: "Bivalenter Betrieb (1)?", q_ar: "ماذا يعني 'ثنائي الوقود' (bivalent)؟", type: "single", a_de: ["Autogas/Erdgas", "Propan/Butan", "Gaskraftstoff/Benzin", "Benzin/Diesel"], a_ar: ["غاز/غاز طبيعي", "بروبان/بوتان", "غاز وبنزين", "بنزين وديزل"], correct: [2] },
+  { q_de: "CNG Kraftstoff (1)?", q_ar: "وقود CNG (غاز طبيعي)؟", type: "single", a_de: ["5-8 bar", "200 bar in Stahltanks", "flüssig bei 5 bar", "Beigas Benzin"], a_ar: ["5-8 بار", "200 بار في خزانات صلب", "سائل عند 5 بار", "غاز جانبي"], correct: [1] },
+  { q_de: "Bivalenter Betrieb (1)?", q_ar: "ماذا يعني 'ثنائي الوقود' (bivalent)؟", type: "single", a_de: ["Autogas/Erdgas", "Propan/Butan", "Gaskraftstoff/Benzin", "Benzin/Diesel"], a_ar: ["LPG وغاز طبيعي", "بروبان وبوتان", "وقود غاز وبنزين", "بنزين وديزل"], correct: [2] },
 
-  // السؤال 54 - R/F
-  { q_de: "Energiegehalt Autogas (R/F):", q_ar: "محتوى الطاقة في LPG (R/F):", type: "truth", 
+  { q_de: "Energiegehalt Autogas (R/F):", q_ar: "محتوى الطاقة في LPG (صح/خطأ):", type: "truth", 
     a_de: ["1L Autogas = 1L Benzin", "1L Autogas = 1kg Erdgas", "1L Autogas = 0.5kg Erdgas", "1L Autogas = 0.5L Benzin"], 
-    a_ar: ["1 لتر غاز = 1 لتر بنزين", "1 لتر غاز = 1 كجم غاز طبيعي", "1 لتر غاز = نصف كجم غاز طبيعي", "1 لتر غاز = نصف لتر بنزين"],
+    a_ar: ["1 لتر غاز = 1 لتر بنزين", "1 لتر غاز = 1 كجم غاز طبيعي", "1 لتر غاز = نصف كجم غاز", "1 لتر غاز = نصف لتر بنزين"],
     correct: ["F", "R", "F", "F"] },
 
-  { q_de: "Innenwiderstand Formel (1)?", q_ar: "قانون المقاومة الداخلية؟", type: "single", a_de: ["U=R*I", "R=U/I", "P=U*I", "R=U*I"], a_ar: ["U=R*I", "R=U/I", "P=U*I", "R=U*I"], correct: [1] },
-  { q_de: "Kälteprüfstrom ETN 588038068?", q_ar: "تيار اختبار البارد للرمز المذكور؟", type: "single", a_de: ["588 A", "380 A", "680 A", "880 A"], a_ar: ["588 أمبير", "380 أمبير", "680 أمبير", "880 أمبير"], correct: [2] },
+  { q_de: "Innenwiderstand Formel (1)?", q_ar: "قانون المقاومة الداخلية؟", type: "single", a_de: ["U=R*I", "R=U/I", "P=U/I", "R=U*I"], a_ar: ["U=R*I", "R=U/I", "P=U/I", "R=U*I"], correct: [1] },
+  { q_de: "Kälteprüfstrom ETN 588038068?", q_ar: "تيار اختبار البارد للرمز ETN 588038068؟", type: "single", a_de: ["588 A", "380 A", "680 A", "880 A"], a_ar: ["588 أمبير", "380 أمبير", "680 أمبير", "880 أمبير"], correct: [2] },
 
-  // السؤال 57 - R/F
-  { q_de: "Klassifizierung Zifferngruppe B:", q_ar: "ماذا تحدد المجموعة B (R/F):", type: "truth", 
+  { q_de: "Klassifizierung Zifferngruppe B (R/F):", q_ar: "ماذا تحدد المجموعة B (صح/خطأ):", type: "truth", 
     a_de: ["Kälteprüfstrom", "Rüttelfestigkeit", "Gehäusematerial", "Zyklenfestigkeit"], 
     a_ar: ["تيار اختبار البرودة", "مقاومة الاهتزاز", "مادة الهيكل", "مقاومة الدورات"],
-    correct: ["R", "F", "F", "F"] }
+    correct: ["R", "F", "F", "F"] },
+
+  { q_de: "50 N/cm² in bar?", q_ar: "50 نيوتن/سم² كم تعادل بالبار؟", type: "single", a_de: ["50 bar", "5 bar", "0,5 bar", "0,05 bar"], a_ar: ["50 بار", "5 بار", "0.5 بار", "0.05 بار"], correct: [1] },
+  { q_de: "Einheit mechanische Kraft?", q_ar: "وحدة القوة الميكانيكية؟", type: "single", a_de: ["Pascal", "Watt", "Newton (N)", "Newtonmeter"], a_ar: ["باسكال", "واط", "نيوتن", "نيوتن متر"], correct: [2] },
+  { q_de: "Kompressions-Sollwert Benzinmotor?", q_ar: "قيمة الانضغاط لمحرك بنزين؟", type: "single", a_de: ["4-8 bar", "30-40 bar", "20-25 bar", "10-17 bar"], a_ar: ["4-8 بار", "30-40 بار", "20-25 بار", "10-17 بار"], correct: [3] },
+  { q_de: "Undichtes Auslassventil - wohin entweicht Luft?", q_ar: "صمام عادم يسرب - أين يخرج الهواء؟", type: "single", a_de: ["Ansaugkanal", "Kurbelgehäuse", "Auspuff", "Kühlsystem"], a_ar: ["قناة السحب", "علبة المرفق", "العادم", "نظام التبريد"], correct: [2] },
+  { q_de: "Max. Druckverlust intakter Zylinder?", q_ar: "أقصى فقد ضغط لأسطوانة سليمة؟", type: "single", a_de: ["20-25%", "80-100%", "10-15%", "4-10%"], a_ar: ["20-25%", "80-100%", "10-15%", "4-10%"], correct: [3] },
+  { q_de: "Ventile bei Zünd-OT?", q_ar: "حالة الصمامات عند نقطة الإشعال OT؟", type: "single", a_de: ["Einlass offen", "Auslass offen", "Beide offen", "Beide geschlossen"], a_ar: ["السحب مفتوح", "العادم مفتوح", "كلاهما مفتوح", "كلاهما مغلق"], correct: [3] },
+  { q_de: "Geöffnet bei Kompressionsprüfung?", q_ar: "ماذا يجب فتحه أثناء فحص الانضغاط؟", type: "single", a_de: ["Drosselklappe", "Kurbelgehäuse", "Kompressionsventil", "Luftfilter"], a_ar: ["صمام الخنق", "علبة المرفق", "صمام الانضغاط", "فلتر الهواء"], correct: [0] },
+  { q_de: "Wegeventil Ausgänge (doppeltwirkend)?", q_ar: "كم مخرجاً لصمام تحكم أسطوانة مزدوجة؟", type: "single", a_de: ["2", "3", "1", "4"], a_ar: ["2", "3", "1", "4"], correct: [0] },
+  { q_de: "Bremskreisaufteilung Kurzbezeichnung?", q_ar: "اختصار توزيع دوائر الفرامل؟", type: "single", a_de: ["HL", "ABS", "- X", "Duo"], a_ar: ["HL", "ABS", "- X", "Duo"], correct: [2] },
+  { q_de: "Symbol geschlossene Anschlüsse?", q_ar: "رمز التوصيلات المغلقة في الصمامات؟", type: "single", a_de: ["Q-Symbol", "T-Symbol", "X-Symbol", "e-Symbol"], a_ar: ["رمز Q", "رمز T", "رمز X", "رمز e"], correct: [2] },
+  { q_de: "Druck bei elektropneumatischen ZV?", q_ar: "نوع الضغط في القفل المركزي الكهروبنوماتيكي؟", type: "single", a_de: ["Überdruck", "Unterdruck", "Atmosphärisch", "Vakuum"], a_ar: ["ضغط زائد", "ضغط سالب", "جوي", "فراغ"], correct: [0] },
+  { q_de: "Nicht unterbrochen bei Kompressionsprüfung?", q_ar: "ما الذي لا يقطع عند فحص الانضغاط؟", type: "single", a_de: ["Starter-Strom", "Zündsystem", "Kraftstoffpumpe", "Generator"], a_ar: ["تيار الستارتر", "نظام الإشعال", "مضخة الوقود", "المولد"], correct: [0] },
+  { q_de: "Eigenschaft von Druckluft?", q_ar: "من خصائص الهواء المضغوط؟", type: "single", a_de: ["Temperaturempfindlich", "Rücklaufleitung nötig", "Nicht kompressibel", "Kann gespeichert werden"], a_ar: ["حساس للحرارة", "يحتاج لخط عودة", "غير قابل للضغط", "يمكن تخزينه"], correct: [3] },
+  { q_de: "Wieviel Pa sind 1 bar?", q_ar: "كم باسكال يساوي 1 بار؟", type: "single", a_de: ["1 Pa", "100 Pa", "1000 Pa", "100.000 Pa"], a_ar: ["1 باسكال", "100 باسكال", "1000 باسكال", "100,000 باسكال"], correct: [3] },
+  { q_de: "Atmosphärischer Druck (Pamb)?", q_ar: "قيمة الضغط الجوي (Pamb)؟", type: "single", a_de: ["0,1 bar", "0,01 bar", "1 bar", "10 bar"], a_ar: ["0.1 بار", "0.01 بار", "1 بار", "10 بار"], correct: [2] },
+  { q_de: "Kolbenrückstellung im Bremssattel?", q_ar: "ما الذي يرجع مكبس الفرامل؟", type: "single", a_de: ["Manschette", "Rechteckring", "Bolzenführung", "Rückstellfeder"], a_ar: ["الغطاء", "الحلقة المستطيلة", "دليل المسمار", "نابض الإرجاع"], correct: [1] },
+  { q_de: "Anschlüsse Zweidruckventil?", q_ar: "عدد توصيلات صمام الضغط المزدوج؟", type: "single", a_de: ["2", "3", "4", "1"], a_ar: ["2", "3", "4", "1"], correct: [1] },
+  { q_de: "Rückschlagventile haben...", q_ar: "صمامات عدم الرجوع تمتلك...", type: "single", a_de: ["1 Sperr- و 1 Durchflussrichtung", "2 Sperrrichtungen", "2 Durchflussrichtungen", "2 Sperr و 1 Durchfluss"], a_ar: ["اتجاه غلق وواحد تدفق", "اتجاهي غلق", "اتجاهي تدفق", "اتجاهي غلق وواحد تدفق"], correct: [0] },
+  
+  // الكلمات والمقاطع الكهربائية
+  { q_de: "Klemme 30?", q_ar: "ماذا يمثل المربط 30؟", type: "single", a_de: ["Geschaltetes Plus", "Dauerplus von Batterie", "Masse", "Anlasser"], a_ar: ["زائد مشغل", "زائد دائم من البطارية", "سالب", "الستارتر"], correct: [1] },
+  { q_de: "Spannung bei Zündung AN?", q_ar: "أي مربط يحمل جهداً عند تشغيل الإشعال؟", type: "single", a_de: ["30", "31", "15", "54"], a_ar: ["30", "31", "15", "54"], correct: [2] },
+  { q_de: "Anschluss Bremslicht?", q_ar: "أي مربط مخصص لضوء الفرامل؟", type: "single", a_de: ["54", "54g", "58", "56b"], a_ar: ["54", "54g", "58", "56b"], correct: [0] },
+  { q_de: "Klemme 54g?", q_ar: "ماذا يشغل المربط 54g؟", type: "single", a_de: ["Rückfahrlicht", "Nebelschlussleuchte", "Kennzeichen", "Blinker rechts"], a_ar: ["ضوء الرجوع", "ضوء الضباب الخلفي", "إضاءة اللوحة", "الغمّاز الأيمن"], correct: [1] },
+  { q_de: "Fernlicht?", q_ar: "أي مربط مسؤول عن الضوء العالي؟", type: "single", a_de: ["56", "56a", "56b", "58"], a_ar: ["56", "56a", "56b", "58"], correct: [1] },
+  { q_de: "Abblendlicht?", q_ar: "أي مربط مسؤول عن الضوء المنخفض؟", type: "single", a_de: ["56a", "56b", "57a", "58L"], a_ar: ["56a", "56b", "57a", "58L"], correct: [1] },
+  { q_de: "Klemme 58?", q_ar: "ماذا تعني العلامة 58؟", type: "single", a_de: ["Begrenzungs/Instrumentenlicht", "Hauptlichtschalter", "Parklicht links", "Bremslicht"], a_ar: ["إضاءة الحدود والتابلوه", "مفتاح الضوء", "ضوء الوقوف يسار", "ضوء الفرامل"], correct: [0] },
+  { q_de: "Blinker rechts?", q_ar: "عند تشغيل الغمّاز الأيمن، أي مربط يستخدم؟", type: "single", a_de: ["L", "R", "54", "58R"], a_ar: ["L", "R", "54", "58R"], correct: [1] },
+
+  // إطارات وقياسات
+  { q_de: "Zahl 205 (Reifengröße)?", q_ar: "ماذا يمثل الرقم 205 في مقاس الإطار؟", type: "single", a_de: ["Felgendurchmesser", "Reifenbreite in mm", "Höhe/Breite Verhältnis", "Tragfähigkeit"], a_ar: ["قطر الجنط", "عرض الإطار بالمليمتر", "النسبة للارتفاع", "التحمل"], correct: [1] },
+  { q_de: "Mindestprofiltiefe PKW (DE)?", q_ar: "الحد الأدنى القانوني لعمق النقشة (ألمانيا)؟", type: "single", a_de: ["1,0 mm", "1,6 mm", "3,0 mm", "4,0 mm"], a_ar: ["1.0 مم", "1.6 مم", "3.0 مم", "4.0 مم"], correct: [1] },
+  { q_de: "DOT 1025?", q_ar: "ماذا يعني الرمز DOT 1025؟", type: "single", a_de: ["Ablaufdatum", "10. Woche 2025 hergestellt", "Max. Druck", "Montageposition"], a_ar: ["تاريخ الانتهاء", "صُنع في الأسبوع 10 عام 2025", "أقصى ضغط", "موضع التركيب"], correct: [1] },
+  { q_de: "TWI am Reifen?", q_ar: "إلى ماذا يرمز TWI على الإطار؟", type: "single", a_de: ["Luftdruck", "Verschleißanzeige", "Laufrichtung", "Reifentyp"], a_ar: ["ضغط الهواء", "مؤشر التآكل", "اتجاه الدوران", "نوع الإطار"], correct: [1] },
+  
+  // قانون أوم وكهرباء
+  { q_de: "Ohmsches Gesetz für R?", q_ar: "قانون أوم لحساب المقاومة R؟", type: "single", a_de: ["R = U * I", "R = U / I", "R = I / U", "R = P / I"], a_ar: ["R = U * I", "R = U / I", "R = I / U", "R = P / I"], correct: [1] },
+  { q_de: "250 mA in Ampere?", q_ar: "250 مللي أمبير كم تساوي بالأمبير؟", type: "single", a_de: ["2,5 A", "0,25 A", "25 A", "0,025 A"], a_ar: ["2.5 A", "0.25 A", "25 A", "0.025 A"], correct: [1] },
+  { q_de: "Längeres Kabel - Widerstand?", q_ar: "ماذا يحدث لمقاومة الكابل عندما يطول؟", type: "single", a_de: ["Sinkt", "Steigt", "Bleibt gleich", "Spannung steigt"], a_ar: ["تقل", "تزداد", "تبقى ثابتة", "يزداد الجهد"], correct: [1] },
+  { q_de: "Leistung P bei 12V و 2A?", q_ar: "كم القدرة P عند 12 فولت و 2 أمبير؟", type: "single", a_de: ["6 W", "14 W", "24 W", "10 W"], a_ar: ["6 واط", "14 واط", "24 واط", "10 واط"], correct: [2] },
+  
+  // عام
+  { q_de: "„W“ in SAE 5W-30?", q_ar: "ماذا يعني حرف W في زيت 5W-30؟", type: "single", a_de: ["Watt", "Wintertauglichkeit", "Widerstand", "Wasseranteil"], a_ar: ["واط", "ملاءمة الشتاء", "مقاومة", "نسبة الماء"], correct: [1] },
+  { q_de: "Aufgabe Generator?", q_ar: "وظيفة المولد (الدينامو)؟", type: "single", a_de: ["Speichert Energie", "Wandelt mech. in elektr. Energie", "Erhöht Zündspannung", "Treibt Räder an"], a_ar: ["تخزين الطاقة", "تحويل الحركة لطلقة كهربائية", "زيادة جهد الإشعال", "دفع العجلات"], correct: [1] },
+  { q_de: "Zusatzaufgabe Frostschutz?", q_ar: "وظيفة إضافية لمضاد التجمد؟", type: "single", a_de: ["Korrosionsschutz", "Ölstandserhöhung", "Schmierung Bremsen", "Kühlung Batterie"], a_ar: ["حماية من الصدأ", "زيادة الزيت", "تشحيم الفرامل", "تبريد البطارية"], correct: [0] },
+  { q_de: "Generator-Klemme zur Batterie?", q_ar: "أي مربط في المولد يشحن البطارية؟", type: "single", a_de: ["31", "B+ (30)", "61", "DF"], a_ar: ["31", "B+ (30)", "61", "DF"], correct: [1] }
 ];
 
 function toggleLanguage() {
