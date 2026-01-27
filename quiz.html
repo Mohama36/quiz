@@ -32,7 +32,7 @@
       transition: 0.3s;
     }
     
-    /* Header - يظهر دائماً على الكمبيوتر */
+    /* Header */
     header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; transition: 0.3s; }
     .logo { font-weight: 900; font-size: 24px; color: var(--primary-dark); display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
     .logo i { font-size: 26px; }
@@ -54,7 +54,6 @@
       position: relative;
     }
 
-    /* Titles & Text */
     h1 { font-size: 26px; text-align: center; margin: 0 0 10px 0; color: var(--text); }
     .subtitle { text-align: center; color: var(--secondary); margin-bottom: 30px; font-size: 15px; }
 
@@ -69,7 +68,6 @@
     .category-btn:hover { border-color: var(--primary); color: var(--primary-dark); transform: translateY(-3px); }
     .category-btn i { font-size: 24px; color: var(--primary); }
 
-    /* Buttons */
     .mode-container { display: flex; gap: 12px; margin-top: 10px; }
     .mode-btn { 
       flex: 1; border: none; padding: 18px; border-radius: 12px; 
@@ -86,9 +84,8 @@
       border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;
     }
 
-    /* زر اللغة الصغير (مخفي افتراضياً للكمبيوتر) */
     .mini-lang-btn {
-      display: none; /* مخفي للكمبيوتر */
+      display: none; 
       background: transparent; border: 1px solid #e2e8f0; border-radius: 8px;
       padding: 6px 12px; cursor: pointer; color: var(--primary); font-size: 14px;
       align-items: center; justify-content: center;
@@ -99,6 +96,45 @@
 
     .question-text { font-size: 22px; font-weight: 800; margin-bottom: 20px; line-height: 1.4; color: var(--text); }
     .hint { font-size: 13px; color: var(--primary); background: #eff6ff; padding: 8px 16px; border-radius: 8px; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; border: 1px solid #dbeafe; }
+
+    /* --- إصلاح تنسيق الصح والخطأ (RF) --- */
+    .rf-row {
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 15px 0; 
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .rf-row:last-child { border-bottom: none; }
+    
+    .rf-text {
+      flex: 1; 
+      font-weight: 600; 
+      font-size: 16px; 
+      padding-right: 15px;
+      color: var(--text);
+    }
+    body.ar .rf-text { padding-right: 0; padding-left: 15px; }
+
+    .rf-options {
+      display: flex; 
+      gap: 10px; 
+      flex-shrink: 0; /* يمنع الأزرار من الانكماش */
+    }
+
+    .rf-btn {
+      width: 45px; height: 45px; 
+      border-radius: 10px; 
+      border: 2px solid #e2e8f0; 
+      display: flex; align-items: center; justify-content: center; 
+      font-weight: 800; cursor: pointer; 
+      background: white; color: #64748b; 
+      transition: 0.2s;
+    }
+    .selected-r { background: var(--success); color: white; border-color: var(--success) !important; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+    .selected-f { background: var(--error); color: white; border-color: var(--error) !important; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
+    
+    /* --- نهاية إصلاح الصح والخطأ --- */
 
     .answers-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
     .answer-item { 
@@ -145,26 +181,19 @@
     .active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ========================================= */
-    /* MOBILE OPTIMIZATION (تعديلات الجوال فقط) */
-    /* ========================================= */
+    /* MOBILE OPTIMIZATION */
     @media (max-width: 768px) {
-      /* هذه التعديلات تعمل فقط إذا كان عرض الشاشة صغير (جوال) */
-      
-      /* إخفاء الهيدر الأساسي عند بدء الكويز */
       body.quiz-mode header { display: none !important; }
-      
-      /* تقليل الحواف لتوفير المساحة */
       body.quiz-mode .app-container { padding: 10px 15px; }
       body.quiz-mode .card { padding: 15px 15px; }
-      
-      /* إظهار زر اللغة الصغير داخل الكرت في الجوال فقط */
       body.quiz-mode .mini-lang-btn { display: flex; }
-      
-      /* تصغير النصوص قليلاً للجوال */
       .question-text { font-size: 18px; margin-bottom: 15px; }
       .answer-item { padding: 12px; font-size: 15px; }
       .main-btn { padding: 14px; font-size: 16px; }
+      
+      /* تحسين الصح والخطأ للجوال */
+      .rf-text { font-size: 14px; }
+      .rf-btn { width: 40px; height: 40px; font-size: 14px; }
     }
 
   </style>
@@ -431,7 +460,6 @@ const allQuestions = [
   { cat: 'motor', q_de: "Unterschied Diesel- vs. Ottomotor (Gemischbildung)?", q_ar: "الفرق الجوهري بين الديزل والبنزين في تكوين الخليط؟", type: "single", a_de: ["Diesel: Innere Gemischbildung (Qualitätsregelung)", "Otto: Selbstzünder", "Diesel: Äußere Gemischbildung", "Beide gleich"], a_ar: ["الديزل: خلط داخلي (تحكم بالجودة)", "البنزين: اشتعال ذاتي", "الديزل: خلط خارجي", "كلاهما واحد"], correct: [0] },
   { cat: 'motor', q_de: "Was passiert im 'Arbeitstakt' (3. Takt)?", q_ar: "ماذا يحدث في شوط القدرة/العمل (الشوط الثالث)؟", type: "single", a_de: ["Ventile offen, Kolben geht hoch", "Ventile zu, Gemisch verbrennt, Kolben geht runter", "Ventile zu, Kolben geht hoch", "Auslass offen"], a_ar: ["الصمامات مفتوحة، المكبس يصعد", "الصمامات مغلقة، احتراق، المكبس ينزل", "الصمامات مغلقة، المكبس يصعد", "العادم مفتوح"], correct: [1] }
 ];
-
 function toggleLanguage() {
   currentLang = (currentLang === 'de') ? 'ar' : 'de';
   document.body.className = (currentLang === 'ar') ? 'ar' : '';
@@ -553,7 +581,14 @@ function renderQuestion(keepSelections = false) {
     if (q.type === 'truth') {
       const row = document.createElement("div");
       row.className = "rf-row";
-      row.innerHTML = `<div style="flex:1;font-weight:600;font-size:14px;">${optText}</div><div class="rf-options"><div class="rf-btn" id="r-${originalIndex}" onclick="handleRF(${originalIndex}, 'R')">R</div><div class="rf-btn" id="f-${originalIndex}" onclick="handleRF(${originalIndex}, 'F')">F</div></div>`;
+      // تم التعديل هنا ليتوافق مع الـ CSS الجديد
+      row.innerHTML = `
+        <div class="rf-text">${optText}</div>
+        <div class="rf-options">
+          <div class="rf-btn" id="r-${originalIndex}" onclick="handleRF(${originalIndex}, 'R')">R</div>
+          <div class="rf-btn" id="f-${originalIndex}" onclick="handleRF(${originalIndex}, 'F')">F</div>
+        </div>
+      `;
       container.appendChild(row);
     } else {
       const label = document.createElement("label");
@@ -608,10 +643,17 @@ function validateRF() {
   const q = quizQuestions[currentIndex];
   let allCorrect = true;
   userSelections.forEach((choice, originalIndex) => {
-    const row = document.getElementById(`r-${originalIndex}`).closest('.rf-row');
+    const rBtn = document.getElementById(`r-${originalIndex}`);
+    const row = rBtn.closest('.rf-row');
     row.querySelectorAll('.rf-btn').forEach(b => b.style.pointerEvents = 'none');
-    if(choice !== q.correct[originalIndex]) { allCorrect = false; row.classList.add('wrong'); } 
-    else { row.classList.add('correct'); }
+    if(choice !== q.correct[originalIndex]) { 
+        allCorrect = false; 
+        if(choice === 'R') document.getElementById(`r-${originalIndex}`).classList.add('selected-f'); // خطأ
+        else document.getElementById(`f-${originalIndex}`).classList.add('selected-f');
+    } else {
+        if(choice === 'R') document.getElementById(`r-${originalIndex}`).classList.add('selected-r'); // صح
+        else document.getElementById(`f-${originalIndex}`).classList.add('selected-r');
+    }
   });
   if(allCorrect) score++;
   document.getElementById("nextBtn").style.display = "flex";
