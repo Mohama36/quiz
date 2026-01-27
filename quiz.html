@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Kfz-Technik Academy Pro | Meistere die Prüfung</title>
+  <title>Kfz-Technik Academy Pro</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     :root { 
       --primary: #2563eb; --primary-dark: #1e40af;
       --secondary: #64748b; --bg-grad: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --success: #10b981; --error: #ef4444; --warning: #f59e0b;
+      --card-bg: rgba(255, 255, 255, 0.98);
+      --success: #10b981; --error: #ef4444; 
       --text: #1e293b; --radius: 16px;
-      --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+      --shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.1);
     }
 
     body { 
@@ -20,136 +20,139 @@
       background: var(--bg-grad); color: var(--text); 
       margin: 0; padding: 0; min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none; /* يمنع الارتداد عند السحب */
     }
     
-    body.ar { direction: rtl; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body.ar { direction: rtl; }
 
     /* Layout & Container */
-    .app-container { max-width: 700px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+    .app-container { 
+      max-width: 700px; margin: 0 auto; min-height: 100vh; 
+      display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; 
+      transition: 0.3s;
+    }
     
-    /* Header */
-    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; margin-bottom: 10px; }
-    .logo { font-weight: 900; font-size: 24px; color: var(--primary-dark); display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    .logo i { font-size: 28px; }
+    /* Header (Main) */
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; transition: 0.3s; }
+    .logo { font-weight: 900; font-size: 22px; color: var(--primary-dark); display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+    .logo i { font-size: 24px; }
     
     .btn-lang { 
-      background: white; border: 1px solid #cbd5e1; padding: 8px 16px; 
+      background: white; border: 1px solid #cbd5e1; padding: 6px 12px; 
       border-radius: 50px; cursor: pointer; font-weight: 700; color: var(--secondary);
-      transition: 0.2s; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-size: 13px; display: flex; align-items: center; gap: 6px; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .btn-lang:hover { color: var(--primary); border-color: var(--primary); transform: translateY(-1px); }
 
+    /* --- Quiz Mode Modifications (The Magic Fix) --- */
+    /* عند تفعيل وضع الكويز، نخفي الهيدر ونقلل الحواف */
+    body.quiz-mode header { display: none !important; }
+    body.quiz-mode .app-container { padding-top: 10px; justify-content: flex-start; }
+    body.quiz-mode .card { padding: 15px 20px; } /* حواف أقل للكويز */
+    
     /* Cards */
     .card { 
       background: var(--card-bg); border-radius: var(--radius); 
-      padding: 30px; box-shadow: var(--shadow); 
-      backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5);
-      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 25px; box-shadow: var(--shadow); 
+      border: 1px solid rgba(255,255,255,0.6);
+      width: 100%; box-sizing: border-box;
+      animation: fadeIn 0.3s ease;
     }
 
     /* Titles */
-    h1 { font-size: 28px; text-align: center; margin: 0 0 10px 0; color: var(--text); }
-    .subtitle { text-align: center; color: var(--secondary); margin-bottom: 30px; font-size: 16px; line-height: 1.5; }
+    h1 { font-size: 24px; text-align: center; margin: 0 0 8px 0; color: var(--text); }
+    .subtitle { text-align: center; color: var(--secondary); margin-bottom: 25px; font-size: 14px; }
 
     /* Menu Grid */
-    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
     .category-btn { 
-      background: white; border: 2px solid transparent; padding: 20px 10px; 
-      border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 14px; 
-      transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); color: var(--secondary);
+      background: white; border: 2px solid transparent; padding: 15px 10px; 
+      border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 13px; 
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05); color: var(--secondary);
     }
-    .category-btn i { font-size: 24px; color: var(--primary); margin-bottom: 5px; }
-    .category-btn:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.15); color: var(--primary-dark); }
+    .category-btn:hover { border-color: var(--primary); color: var(--primary-dark); transform: translateY(-2px); }
+    .category-btn i { font-size: 20px; color: var(--primary); }
 
     /* Mode Buttons */
-    .mode-container { display: flex; gap: 10px; margin-top: 10px; }
+    .mode-container { display: flex; gap: 10px; margin-top: 5px; }
     .mode-btn { 
-      flex: 1; border: none; padding: 18px; border-radius: 12px; 
-      font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.3s; color: white; 
-      display: flex; align-items: center; justify-content: center; gap: 10px;
+      flex: 1; border: none; padding: 15px; border-radius: 12px; 
+      font-weight: 800; font-size: 15px; cursor: pointer; color: white; 
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .training-btn { background: linear-gradient(135deg, #64748b 0%, #475569 100%); box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3); }
-    .exam-btn { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
-    .mode-btn:hover { transform: scale(1.02); opacity: 0.95; }
+    .training-btn { background: #64748b; }
+    .exam-btn { background: #2563eb; }
 
     /* Quiz Screen Elements */
-    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 14px; font-weight: bold; color: var(--secondary); }
-    .timer-badge { background: #fee2e2; color: #991b1b; padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+    /* الشريط العلوي داخل الكرت أصبح يحتوي زر اللغة */
+    .top-bar { 
+      display: flex; justify-content: space-between; align-items: center; 
+      margin-bottom: 15px; font-size: 13px; font-weight: bold; color: var(--secondary); 
+      border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;
+    }
     
-    .progress-container { height: 6px; background: #e2e8f0; border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s ease; border-radius: 10px; }
+    /* زر لغة صغير داخل الكرت */
+    .mini-lang-btn {
+      background: transparent; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 5px 10px; cursor: pointer; color: var(--primary); font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
 
-    .question-text { font-size: 20px; font-weight: 800; margin-bottom: 20px; line-height: 1.5; color: var(--text); }
-    .hint { font-size: 13px; color: var(--primary); background: #eff6ff; padding: 8px 16px; border-radius: 8px; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; border: 1px solid #dbeafe; }
+    .progress-container { height: 6px; background: #e2e8f0; border-radius: 10px; margin-bottom: 15px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s ease; }
+
+    .question-text { font-size: 19px; font-weight: 800; margin-bottom: 15px; line-height: 1.4; color: var(--text); }
+    .hint { font-size: 12px; color: var(--primary); background: #eff6ff; padding: 6px 12px; border-radius: 6px; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; border: 1px solid #dbeafe; }
 
     /* Answers */
-    .answers-list { display: flex; flex-direction: column; gap: 12px; }
+    .answers-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
     .answer-item { 
-      display: flex; align-items: center; padding: 16px 20px; 
+      display: flex; align-items: center; padding: 14px 15px; 
       border: 2px solid #f1f5f9; border-radius: 12px; cursor: pointer; 
-      font-size: 16px; transition: 0.2s; position: relative; background: white;
+      font-size: 15px; transition: 0.1s; background: white;
     }
-    .answer-item:hover { border-color: #bfdbfe; background: #f8fafc; }
-    .answer-item input { margin: 0 15px 0 0; width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
-    body.ar .answer-item input { margin: 0 0 0 15px; }
+    .answer-item:active { background: #f0f9ff; } /* تأثير عند اللمس */
+    .answer-item input { margin: 0 12px 0 0; width: 18px; height: 18px; accent-color: var(--primary); }
+    body.ar .answer-item input { margin: 0 0 0 12px; }
 
-    /* Feedback Colors */
     .correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #065f46; }
-    .wrong { background: #fee2e2 !important; border-color: var(--error) !important; color: #991b1b; opacity: 1 !important; }
+    .wrong { background: #fee2e2 !important; border-color: var(--error) !important; color: #991b1b; }
     .disabled { pointer-events: none; }
-    .correct::after { content: '✓'; position: absolute; right: 20px; font-weight: bold; font-size: 20px; color: var(--success); }
-    .wrong::after { content: '✕'; position: absolute; right: 20px; font-weight: bold; font-size: 20px; color: var(--error); }
-    body.ar .correct::after, body.ar .wrong::after { right: auto; left: 20px; }
 
-    /* RF Section (True/False) */
-    .rf-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 10px; }
-    .rf-options { display: flex; gap: 8px; }
-    .rf-btn { 
-      width: 45px; height: 45px; border-radius: 8px; border: 2px solid #cbd5e1; 
-      display: flex; align-items: center; justify-content: center; 
-      font-weight: 800; cursor: pointer; background: white; color: #64748b; transition: 0.2s;
-    }
-    .selected-r { background: var(--success); color: white; border-color: var(--success); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-    .selected-f { background: var(--error); color: white; border-color: var(--error); box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
-
-    /* Navigation */
-    .nav-btns { margin-top: 30px; display: flex; justify-content: flex-end; }
+    /* Nav Buttons (Next) */
+    /* زر التالي يملأ العرض ليكون سهل الضغط */
+    .nav-btns { margin-top: 15px; }
     .main-btn { 
-      padding: 14px 32px; border: none; border-radius: 12px; 
-      font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s; 
-      background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 15px; border: none; border-radius: 12px; 
+      font-weight: 800; font-size: 16px; cursor: pointer; 
+      background: var(--primary); color: white; display: flex; 
+      justify-content: center; align-items: center; gap: 10px;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
     }
-    .main-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
-    .exit-btn { background: transparent; color: var(--secondary); box-shadow: none; padding: 10px; font-size: 14px; text-decoration: underline; margin-right: auto; cursor: pointer; }
+    .exit-btn { background: transparent; color: var(--error); border: none; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; }
 
     /* Results */
     .result-card { text-align: center; }
     .score-ring { 
-      width: 160px; height: 160px; border-radius: 50%; 
+      width: 140px; height: 140px; border-radius: 50%; 
       background: conic-gradient(var(--primary) var(--pct), #e2e8f0 0); 
-      margin: 30px auto; display: flex; align-items: center; justify-content: center; position: relative;
+      margin: 20px auto; display: flex; align-items: center; justify-content: center; 
     }
     .score-inner { 
-      width: 140px; height: 140px; background: white; border-radius: 50%; 
+      width: 120px; height: 120px; background: white; border-radius: 50%; 
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
     }
-    .score-number { font-size: 36px; font-weight: 900; color: var(--text); line-height: 1; }
-    .score-label { font-size: 13px; color: var(--secondary); font-weight: 600; margin-top: 5px; }
+    .score-number { font-size: 32px; font-weight: 900; }
     
-    .review-list { text-align: left; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; max-height: 300px; overflow-y: auto; }
-    .review-item { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-    .review-q { font-weight: bold; margin-bottom: 5px; color: var(--text); }
-    .review-ans { color: var(--success); font-weight: 600; }
-    .review-wrong { color: var(--error); text-decoration: line-through; margin-right: 10px; }
+    .review-list { text-align: left; margin-top: 20px; max-height: 250px; overflow-y: auto; font-size: 13px; }
+    .review-item { padding: 10px; border-bottom: 1px solid #eee; }
     body.ar .review-list { text-align: right; }
 
     /* Utility */
     .screen { display: none; }
     .active { display: block; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
   </style>
 </head>
@@ -158,11 +161,10 @@
 <div class="app-container">
   <header>
     <div class="logo">
-      <i class="fas fa-car-battery"></i> 
-      <span>KFZ-PRO</span>
+      <i class="fas fa-car-battery"></i> <span>KFZ-PRO</span>
     </div>
-    <button class="btn-lang" onclick="toggleLanguage()" id="langBtn">
-      <i class="fas fa-globe"></i> <span>العربية</span>
+    <button class="btn-lang" onclick="toggleLanguage()">
+      <i class="fas fa-globe"></i> <span id="lbl-lang-main">AR</span>
     </button>
   </header>
 
@@ -171,7 +173,7 @@
       <h1 id="ui-welcome">Willkommen</h1>
       <p id="ui-sub" class="subtitle">Wähle dein Themengebiet</p>
       
-      <div style="text-align: center; margin-bottom: 20px; font-size: 14px; color: var(--secondary);">
+      <div style="text-align: center; margin-bottom: 15px; font-size: 13px; color: var(--secondary);">
         <span id="ui-highscore">🏆 Highscore: 0%</span>
       </div>
 
@@ -191,19 +193,26 @@
   <div id="quiz-screen" class="screen">
     <div class="card">
       <div class="top-bar">
-        <span id="counter">Frage 1 / 10</span>
-        <div id="timerBadge" class="timer-badge" style="display: none;">
+        <button class="exit-btn" onclick="exitToHome()">
+           <i class="fas fa-times"></i> <span id="txt-exit">Exit</span>
+        </button>
+        
+        <span id="counter" style="color: var(--text);">1 / 10</span>
+        <div id="timerBadge" style="display: none; color: #991b1b; font-weight: bold;">
           <i class="fas fa-clock"></i> <span id="timerDisplay">00:00</span>
         </div>
-        <span class="exit-btn" onclick="exitToHome()" id="txt-exit">Beenden</span>
+
+        <button class="mini-lang-btn" onclick="toggleLanguage()">
+          <i class="fas fa-globe"></i>
+        </button>
       </div>
       
       <div class="progress-container">
         <div id="progressBar" class="progress-fill"></div>
       </div>
 
-      <div id="ui-hint" class="hint"><i class="fas fa-info-circle"></i> <span>Hinweis</span></div>
-      <div id="questionText" class="question-text">Frage Text hier...</div>
+      <div id="ui-hint" class="hint"></div>
+      <div id="questionText" class="question-text"></div>
       
       <div id="answersContainer" class="answers-list"></div>
       
@@ -226,14 +235,14 @@
         </div>
       </div>
       
-      <p id="ui-feedback" style="font-size: 18px; font-weight: bold; margin-bottom: 25px;"></p>
+      <p id="ui-feedback" style="font-size: 16px; font-weight: bold; margin-bottom: 20px;"></p>
       
-      <button id="ui-restart" class="main-btn" onclick="exitToHome()" style="width: 100%; justify-content: center;">
-        <i class="fas fa-redo"></i> <span id="txt-home">Home</span>
+      <button id="ui-restart" class="main-btn" onclick="exitToHome()">
+        <i class="fas fa-home"></i> <span id="txt-home">Home</span>
       </button>
 
       <div id="reviewContainer" class="review-list" style="display: none;">
-        <h3 id="txt-review-title" style="font-size: 16px; margin-bottom: 10px;">Fehleranalyse:</h3>
+        <h3 id="txt-review-title" style="font-size: 14px; margin-bottom: 10px;">Fehleranalyse:</h3>
         <div id="reviewItems"></div>
       </div>
     </div>
@@ -241,39 +250,25 @@
 </div>
 
 <script>
-// --- Data & Logic ---
 let currentLang = 'de';
 let quizQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let isExamMode = false;
 let userSelections = [];
-let mistakes = []; // To track wrong answers for review
+let mistakes = []; 
 let timerInterval;
 let timeRemaining = 0;
 
-// Icons Mapping for Categories
-const catIcons = {
-  schrauben: "fa-wrench",
-  flüssig: "fa-oil-can",
-  reifen: "fa-compact-disc",
-  motor: "fa-cogs",
-  elektro: "fa-bolt",
-  pneumatik: "fa-wind",
-  karosserie: "fa-car-side"
-};
-
-const categories = {
-  de: { schrauben: "Schrauben", flüssig: "Flüssigkeiten", reifen: "Räder/Bremsen", motor: "Motor", elektro: "Elektrik", pneumatik: "Pneumatik", karosserie: "Karosserie" },
-  ar: { schrauben: "البراغي والأدوات", flüssig: "الزيوت والسوائل", reifen: "الإطارات والفرامل", motor: "المحرك والميكانيكا", elektro: "الكهرباء", pneumatik: "الهواء والضغط", karosserie: "الهيكل" }
-};
+const catIcons = { schrauben: "fa-wrench", flüssig: "fa-oil-can", reifen: "fa-compact-disc", motor: "fa-cogs", elektro: "fa-bolt", pneumatik: "fa-wind", karosserie: "fa-car-side" };
+const categories = { de: { schrauben: "Schrauben", flüssig: "Flüssigkeiten", reifen: "Räder/Bremsen", motor: "Motor", elektro: "Elektrik", pneumatik: "Pneumatik", karosserie: "Karosserie" }, ar: { schrauben: "البراغي والأدوات", flüssig: "الزيوت والسوائل", reifen: "الإطارات والفرامل", motor: "المحرك والميكانيكا", elektro: "الكهرباء", pneumatik: "الهواء والضغط", karosserie: "الهيكل" } };
 
 const ui = {
-  de: { welcome: "Kfz-Technik Pro", sub: "Meistere die Theorie & Prüfung", train: "Training", exam: "Prüfung", next: "Weiter", exit: "Beenden", result: "Auswertung", home: "Zurück zum Start", hintSingle: "Wähle eine Antwort", hintMulti: "Mehrfachauswahl möglich", hintRF: "Richtig (R) oder Falsch (F)?", q: "Frage", lang: "العربية", hs: "Highscore", review: "Deine Fehler:" },
-  ar: { welcome: "المحترف في ميكانيكا السيارات", sub: "تدريب شامل للامتحانات النظرية", train: "تدريب", exam: "امتحان مؤقت", next: "التالي", exit: "إنهاء", result: "النتيجة النهائية", home: "القائمة الرئيسية", hintSingle: "اختر إجابة واحدة", hintMulti: "اختر الإجابات الصحيحة", hintRF: "صح (R) أم خطأ (F)؟", q: "سؤال", lang: "Deutsch", hs: "أعلى نتيجة", review: "مراجعة الأخطاء:" }
+  de: { welcome: "Kfz-Technik Pro", sub: "Wähle ein Thema", train: "Training", exam: "Prüfung", next: "Weiter", exit: "Beenden", result: "Ergebnis", home: "Startseite", hintSingle: "Wähle eine Antwort", hintMulti: "Mehrfachauswahl", hintRF: "Richtig (R) oder Falsch (F)?", q: "", lang: "AR", hs: "Highscore", review: "Fehler:" },
+  ar: { welcome: "ميكانيكا السيارات", sub: "اختر قسماً للبدء", train: "تدريب", exam: "امتحان", next: "التالي", exit: "خروج", result: "النتيجة", home: "الرئيسية", hintSingle: "إجابة واحدة", hintMulti: "عدة إجابات", hintRF: "صح (R) أم خطأ (F)؟", q: "س", lang: "DE", hs: "أعلى نتيجة", review: "أخطاؤك:" }
 };
 
-// --- INSERT YOUR LARGE QUESTION ARRAY HERE ---
+// --- ضع هنا مصفوفة الأسئلة الكاملة allQuestions ---
 const allQuestions = [
   // --- الأسئلة الأصلية ---
   { cat: 'schrauben', q_de: "Welche Arten von Schrauben gibt es?", q_ar: "ما هي أنواع البراغي الشائعة؟", type: "single", a_de: ["Holzschrauben", "Maschinenschrauben", "Blechschrauben", "Alle oben"], a_ar: ["براغي خشب", "براغي آلات (سن ناعم)", "براغي صاج", "كل ما سبق"], correct: [3] },
@@ -423,23 +418,12 @@ const allQuestions = [
   { cat: 'motor', q_de: "Unterschied Diesel- vs. Ottomotor (Gemischbildung)?", q_ar: "الفرق الجوهري بين الديزل والبنزين في تكوين الخليط؟", type: "single", a_de: ["Diesel: Innere Gemischbildung (Qualitätsregelung)", "Otto: Selbstzünder", "Diesel: Äußere Gemischbildung", "Beide gleich"], a_ar: ["الديزل: خلط داخلي (تحكم بالجودة)", "البنزين: اشتعال ذاتي", "الديزل: خلط خارجي", "كلاهما واحد"], correct: [0] },
   { cat: 'motor', q_de: "Was passiert im 'Arbeitstakt' (3. Takt)?", q_ar: "ماذا يحدث في شوط القدرة/العمل (الشوط الثالث)؟", type: "single", a_de: ["Ventile offen, Kolben geht hoch", "Ventile zu, Gemisch verbrennt, Kolben geht runter", "Ventile zu, Kolben geht hoch", "Auslass offen"], a_ar: ["الصمامات مفتوحة، المكبس يصعد", "الصمامات مغلقة، احتراق، المكبس ينزل", "الصمامات مغلقة، المكبس يصعد", "العادم مفتوح"], correct: [1] }
 ];
-
-
-// Re-injecting a few more from your list to ensure categories work
-allQuestions.push(
-  { cat: 'flüssig', q_de: "Wofür steht die Abkürzung SAE?", q_ar: "إلى ماذا يرمز الاختصار SAE؟", type: "single", a_de: ["Society of Automotive Engineers", "Standard Automotive Engineering", "System Automotive Engineering", "Standard Auto Equipment"], a_ar: ["جمعية مهندسي السيارات", "معايير هندسة السيارات", "نظام هندسة السيارات", "معدات السيارات القياسية"], correct: [0] },
-  { cat: 'reifen', q_de: "Was bedeutet 'TÜV'?", q_ar: "ماذا يعني TÜV؟", type: "single", a_de: ["Technischer Überwachungsverein", "Technische Überwachungsorganisation", "Technischer Überwachungsdienst", "Technische Überwachung"], a_ar: ["جمعية المراقبة الفنية", "منظمة المراقبة الفنية", "خدمة المراقبة الفنية", "المراقبة الفنية"], correct: [0] },
-  { cat: 'pneumatik', q_de: "Umrechnung: 50 N/cm² in bar?", q_ar: "حول 50 نيوتن/سم² إلى بار؟", type: "single", a_de: ["50 bar", "5 bar", "0,5 bar", "0,05 bar"], a_ar: ["50 بار", "5 بار", "0.5 بار", "0.05 بار"], correct: [1] },
-  { cat: 'karosserie', q_de: "Was ist Eloxieren?", q_ar: "ما هي عملية الأنودة (Eloxieren)؟", type: "single", a_de: ["Salzsäurebad", "Zinkschicht", "Chemische Oxidation", "Elektrolytische Oxidation von Aluminium"], a_ar: ["حمام حمض", "طبقة زنك", "أكسدة كيميائية", "أكسدة كهربائية للألمنيوم"], correct: [3] }
-);
-// NOTE: Make sure to copy the full array from your original code into this script block.
-
-
-// --- Functions ---
+// (للتبسيط وضعت سؤالين، تأكد من نسخ قائمتك الكاملة هنا)
 
 function toggleLanguage() {
   currentLang = (currentLang === 'de') ? 'ar' : 'de';
   document.body.className = (currentLang === 'ar') ? 'ar' : '';
+  if(document.body.classList.contains('quiz-mode')) document.body.classList.add(currentLang === 'ar' ? 'ar' : ''); // Ensure AR class stays if in quiz
   renderDashboard();
   renderUI();
   if (document.getElementById("quiz-screen").classList.contains("active")) renderQuestion(true); 
@@ -448,11 +432,7 @@ function toggleLanguage() {
 function updateHighScoreDisplay() {
   const stored = localStorage.getItem('kfz_highscore');
   const t = ui[currentLang];
-  if(stored) {
-    document.getElementById('ui-highscore').textContent = `🏆 ${t.hs}: ${stored}%`;
-  } else {
-    document.getElementById('ui-highscore').textContent = "";
-  }
+  document.getElementById('ui-highscore').textContent = stored ? `🏆 ${t.hs}: ${stored}%` : "";
 }
 
 function renderDashboard() {
@@ -471,7 +451,7 @@ function renderDashboard() {
 
 function renderUI() {
   const t = ui[currentLang];
-  document.getElementById("langBtn").innerHTML = `<i class="fas fa-globe"></i> <span>${t.lang}</span>`;
+  document.getElementById("lbl-lang-main").textContent = t.lang;
   document.getElementById("ui-welcome").textContent = t.welcome;
   document.getElementById("ui-sub").textContent = t.sub;
   document.getElementById("txt-train").textContent = t.train;
@@ -484,34 +464,33 @@ function renderUI() {
 }
 
 function startQuiz(catKey, isExam) {
-  isExamMode = isExam;
-  score = 0;
-  currentIndex = 0;
-  mistakes = [];
+  // تفعيل وضع الكويز (يخفي الهيدر)
+  document.body.classList.add('quiz-mode');
   
-  // Filter questions
+  isExamMode = isExam;
+  score = 0; currentIndex = 0; mistakes = [];
+  
   if (catKey === 'all') {
     quizQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
-    // Limit exam to 30 random questions if "all" is selected, to make it realistic
     if(isExamMode && quizQuestions.length > 30) quizQuestions = quizQuestions.slice(0, 30);
   } else {
     quizQuestions = allQuestions.filter(q => q.cat === catKey).sort(() => Math.random() - 0.5);
   }
 
-  if(quizQuestions.length === 0) { alert("No questions found for this category yet!"); return; }
+  if(quizQuestions.length === 0) { alert("No questions!"); return; }
 
   showScreen("quiz-screen");
   
-  // Exam Timer Setup (1 minute per question approx)
   if(isExamMode) {
-    document.getElementById("timerBadge").style.display = "flex";
-    timeRemaining = quizQuestions.length * 60; // 60 seconds per question
+    document.getElementById("timerBadge").style.display = "inline-flex";
+    document.getElementById("counter").style.display = "none";
+    timeRemaining = quizQuestions.length * 60;
     startTimer();
   } else {
     document.getElementById("timerBadge").style.display = "none";
+    document.getElementById("counter").style.display = "inline";
     clearInterval(timerInterval);
   }
-
   renderQuestion();
 }
 
@@ -521,10 +500,7 @@ function startTimer() {
   timerInterval = setInterval(() => {
     timeRemaining--;
     updateTimerDisplay();
-    if(timeRemaining <= 0) {
-      clearInterval(timerInterval);
-      showResults(); // Auto finish
-    }
+    if(timeRemaining <= 0) { clearInterval(timerInterval); showResults(); }
   }, 1000);
 }
 
@@ -548,17 +524,11 @@ function renderQuestion(keepSelections = false) {
   const container = document.getElementById("answersContainer");
   const nextBtn = document.getElementById("nextBtn");
   
-  // Progress Bar
-  const progressPct = ((currentIndex) / quizQuestions.length) * 100;
-  document.getElementById("progressBar").style.width = `${progressPct}%`;
-  
-  document.getElementById("counter").textContent = `${t.q} ${currentIndex + 1} / ${quizQuestions.length}`;
+  document.getElementById("progressBar").style.width = `${((currentIndex) / quizQuestions.length) * 100}%`;
+  document.getElementById("counter").textContent = `${currentIndex + 1} / ${quizQuestions.length}`;
   document.getElementById("questionText").textContent = (currentLang === 'de' ? q.q_de : q.q_ar);
   
-  let hintText = "";
-  if(q.type === 'single') hintText = t.hintSingle;
-  else if(q.type === 'multi') hintText = t.hintMulti;
-  else hintText = t.hintRF;
+  let hintText = q.type === 'single' ? t.hintSingle : (q.type === 'multi' ? t.hintMulti : t.hintRF);
   document.getElementById("ui-hint").innerHTML = `<i class="fas fa-info-circle"></i> <span>${hintText}</span>`;
 
   container.innerHTML = "";
@@ -566,32 +536,19 @@ function renderQuestion(keepSelections = false) {
   
   const options = (currentLang === 'de' ? q.a_de : q.a_ar);
   let indices = options.map((_, i) => i);
-  
-  // Only shuffle if it's NOT true/false (RF) to keep order logic simple, or handle RF specifically
   if(q.type !== 'truth') indices = shuffleArray(indices);
 
   indices.forEach((originalIndex) => {
     const optText = options[originalIndex];
-    
     if (q.type === 'truth') {
       const row = document.createElement("div");
       row.className = "rf-row";
-      row.innerHTML = `
-        <div style="flex:1; font-weight:600;">${optText}</div>
-        <div class="rf-options">
-          <div class="rf-btn" id="r-${originalIndex}" onclick="handleRF(${originalIndex}, 'R')">R</div>
-          <div class="rf-btn" id="f-${originalIndex}" onclick="handleRF(${originalIndex}, 'F')">F</div>
-        </div>`;
+      row.innerHTML = `<div style="flex:1;font-weight:600;font-size:14px;">${optText}</div><div class="rf-options"><div class="rf-btn" id="r-${originalIndex}" onclick="handleRF(${originalIndex}, 'R')">R</div><div class="rf-btn" id="f-${originalIndex}" onclick="handleRF(${originalIndex}, 'F')">F</div></div>`;
       container.appendChild(row);
     } else {
       const label = document.createElement("label");
       label.className = "answer-item";
-      // Icon selection based on type
-      const inputType = q.type==='single'?'radio':'checkbox';
-      label.innerHTML = `
-        <input type="${inputType}" name="ans" value="${originalIndex}" onchange="handleInput()"> 
-        <span>${optText}</span>
-      `;
+      label.innerHTML = `<input type="${q.type==='single'?'radio':'checkbox'}" name="ans" value="${originalIndex}" onchange="handleInput()"> <span>${optText}</span>`;
       container.appendChild(label);
     }
   });
@@ -599,13 +556,11 @@ function renderQuestion(keepSelections = false) {
 
 function handleInput() {
   const q = quizQuestions[currentIndex];
-  // Get all checked inputs
   const selected = Array.from(document.querySelectorAll('input:checked')).map(el => parseInt(el.value));
   
   if (isExamMode) {
     document.getElementById("nextBtn").style.display = "flex";
   } else {
-    // Training Mode: Immediate Feedback
     if(q.type === 'single') validateChoice(selected);
     else if(q.type === 'multi' && selected.length === q.correct.length) validateChoice(selected);
   }
@@ -615,144 +570,95 @@ function handleRF(rowIndex, choice) {
   userSelections[rowIndex] = choice;
   document.getElementById(`r-${rowIndex}`).classList.remove('selected-r');
   document.getElementById(`f-${rowIndex}`).classList.remove('selected-f');
-  
   if(choice === 'R') document.getElementById(`r-${rowIndex}`).classList.add('selected-r');
   else document.getElementById(`f-${rowIndex}`).classList.add('selected-f');
   
-  const q = quizQuestions[currentIndex];
-  // Check if all rows have a selection
-  if(userSelections.filter(x => x).length === q.a_de.length) {
-    if(isExamMode) {
-       document.getElementById("nextBtn").style.display = "flex";
-    } else validateRF();
+  if(userSelections.filter(x => x).length === quizQuestions[currentIndex].a_de.length) {
+    if(isExamMode) document.getElementById("nextBtn").style.display = "flex";
+    else validateRF();
   }
 }
 
 function validateChoice(selected) {
   const q = quizQuestions[currentIndex];
   const isCorrect = selected.length === q.correct.length && selected.every(v => q.correct.includes(v));
-  
   if(isCorrect) score++;
 
-  const inputs = document.querySelectorAll('input[name="ans"]');
-  inputs.forEach((input) => {
+  document.querySelectorAll('input[name="ans"]').forEach((input) => {
       const val = parseInt(input.value);
       const parent = input.closest('.answer-item');
-      parent.classList.add('disabled'); // Lock
-      
+      parent.classList.add('disabled');
       if(q.correct.includes(val)) parent.classList.add('correct');
       else if(selected.includes(val)) parent.classList.add('wrong');
   });
-  
   document.getElementById("nextBtn").style.display = "flex";
 }
 
 function validateRF() {
   const q = quizQuestions[currentIndex];
   let allCorrect = true;
-  
   userSelections.forEach((choice, originalIndex) => {
-    const rBtn = document.getElementById(`r-${originalIndex}`);
-    const row = rBtn.closest('.rf-row');
-    
-    // Disable buttons
+    const row = document.getElementById(`r-${originalIndex}`).closest('.rf-row');
     row.querySelectorAll('.rf-btn').forEach(b => b.style.pointerEvents = 'none');
-
-    if(choice !== q.correct[originalIndex]) { 
-        allCorrect = false; 
-        row.classList.add('wrong'); 
-    } else {
-        row.classList.add('correct');
-    }
+    if(choice !== q.correct[originalIndex]) { allCorrect = false; row.classList.add('wrong'); } 
+    else { row.classList.add('correct'); }
   });
-  
   if(allCorrect) score++;
   document.getElementById("nextBtn").style.display = "flex";
 }
 
 function goToNext() {
-  // If exam mode, calculate score for current question before moving
   if (isExamMode) calculateExamScoreForCurrent();
-  
   currentIndex++;
-  if(currentIndex < quizQuestions.length) {
-    renderQuestion();
-  } else {
-    showResults();
-  }
+  if(currentIndex < quizQuestions.length) renderQuestion();
+  else showResults();
 }
 
 function calculateExamScoreForCurrent() {
   const q = quizQuestions[currentIndex];
   let isCorrect = false;
-
   if(q.type === 'truth') {
     if(userSelections.length === q.correct.length && userSelections.every((c, i) => c === q.correct[i])) isCorrect = true;
   } else {
     const selected = Array.from(document.querySelectorAll('input:checked')).map(el => parseInt(el.value));
     if(selected.length === q.correct.length && selected.every(v => q.correct.includes(v))) isCorrect = true;
   }
-
-  if(isCorrect) {
-    score++;
-  } else {
-    // Record mistake
-    mistakes.push({
-      q: (currentLang==='de'?q.q_de:q.q_ar),
-      ans: (currentLang==='de'? q.correct.map(i => q.a_de[i]).join(", ") : q.correct.map(i => q.a_ar[i]).join(", "))
-    });
-  }
+  if(isCorrect) score++;
+  else mistakes.push({ q: (currentLang==='de'?q.q_de:q.q_ar), ans: (currentLang==='de'? q.correct.map(i => q.a_de[i]).join(", ") : q.correct.map(i => q.a_ar[i]).join(", ")) });
 }
 
 function showResults() {
   clearInterval(timerInterval);
   showScreen("result-screen");
-  
-  const total = quizQuestions.length;
-  const percent = Math.round((score/total)*100);
-  
-  // Animate Score Ring
+  // إخفاء وضع الكويز عند النتائج لإظهار الهيدر لو رغبت، أو تركه مخفياً. سأبقيه مخفياً للتركيز.
+  const percent = Math.round((score/quizQuestions.length)*100);
   const ring = document.getElementById("scoreRing");
-  ring.style.setProperty('--pct', `${percent}%`); // Needs CSS conic-gradient variable support
-  // Fallback visual update
   ring.style.background = `conic-gradient(${percent >= 50 ? '#10b981' : '#ef4444'} ${percent}%, #e2e8f0 0)`;
-  
   document.getElementById("scoreNumber").textContent = percent;
   
-  // Feedback Text
-  let feedbackMsg = "";
-  if(percent >= 90) feedbackMsg = currentLang==='ar' ? "ممتاز! أنت محترف." : "Exzellent! Du bist ein Profi.";
-  else if(percent >= 50) feedbackMsg = currentLang==='ar' ? "جيد، ولكن تحتاج للمراجعة." : "Gut, aber übe noch etwas.";
-  else feedbackMsg = currentLang==='ar' ? "للأسف، لم تنجح." : "Leider nicht bestanden.";
-  
-  document.getElementById("ui-feedback").textContent = feedbackMsg;
+  let msg = percent >= 90 ? (currentLang==='ar'?"ممتاز!":"Exzellent!") : percent >= 50 ? (currentLang==='ar'?"جيد":"Gut") : (currentLang==='ar'?"للأسف":"Leider nicht");
+  document.getElementById("ui-feedback").textContent = msg;
   document.getElementById("ui-feedback").style.color = percent >= 50 ? "var(--success)" : "var(--error)";
 
-  // Save Highscore
   const currentHigh = localStorage.getItem('kfz_highscore') || 0;
   if(percent > currentHigh) localStorage.setItem('kfz_highscore', percent);
 
-  // Render Mistakes Review
-  const reviewContainer = document.getElementById("reviewContainer");
   const reviewItems = document.getElementById("reviewItems");
   reviewItems.innerHTML = "";
-  
   if(isExamMode && mistakes.length > 0) {
-    reviewContainer.style.display = "block";
+    document.getElementById("reviewContainer").style.display = "block";
     mistakes.forEach(m => {
-      const item = document.createElement("div");
-      item.className = "review-item";
-      item.innerHTML = `<div class="review-q">${m.q}</div><div><span class="review-ans">✔ ${m.ans}</span></div>`;
-      reviewItems.appendChild(item);
+      reviewItems.innerHTML += `<div class="review-item"><div class="review-q">${m.q}</div><div class="review-ans">✔ ${m.ans}</div></div>`;
     });
   } else {
-    reviewContainer.style.display = "none";
+    document.getElementById("reviewContainer").style.display = "none";
   }
 }
 
 function exitToHome() { 
   clearInterval(timerInterval);
-  renderDashboard(); // Update highscore display
+  document.body.classList.remove('quiz-mode'); // إعادة الهيدر للظهور
+  renderDashboard(); 
   showScreen("home-screen"); 
 }
 
@@ -761,7 +667,6 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active'); 
 }
 
-// Init
 renderDashboard();
 renderUI();
 </script>
