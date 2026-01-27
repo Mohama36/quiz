@@ -2,115 +2,278 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kfz-Technik Academy Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kfz-Technik Academy Pro | Meistere die Prüfung</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
     :root { 
-      --primary: #1a73e8; --success: #34a853; --error: #ea4335; 
-      --bg: #f8f9fa; --card: #ffffff; --text: #202124; --secondary: #5f6368;
+      --primary: #2563eb; --primary-dark: #1e40af;
+      --secondary: #64748b; --bg-grad: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --success: #10b981; --error: #ef4444; --warning: #f59e0b;
+      --text: #1e293b; --radius: 16px;
+      --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
     }
-    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; transition: 0.3s; }
-    body.ar { direction: rtl; }
-    .container { max-width: 650px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; margin-bottom: 20px; border-bottom: 2px solid #eee; }
-    .logo { font-weight: 900; font-size: 22px; color: var(--primary); letter-spacing: 1px; }
-    .btn-lang { background: var(--card); border: 1.5px solid #dadce0; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 14px; }
-    .screen { display: none; animation: fadeIn 0.4s ease; }
-    .active { display: block; }
-    .card { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; position: relative; }
-    .exit-top-link { position: absolute; top: 15px; right: 20px; color: var(--secondary); font-size: 13px; font-weight: bold; cursor: pointer; text-decoration: underline; z-index: 10; }
-    body.ar .exit-top-link { right: auto; left: 20px; }
-    h1 { font-size: 24px; text-align: center; margin: 0 0 10px 0; }
-    .subtitle { text-align: center; color: var(--secondary); margin-bottom: 30px; font-size: 15px; line-height: 1.4; }
-    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .category-btn { background: #fff; border: 2px solid #f0f2f5; padding: 18px 10px; border-radius: 15px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .category-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
-    .mode-btn { border: none; margin-top: 10px; padding: 20px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; color: white; width: 100%; }
-    .training-btn { background: #5f6368; }
-    .exam-btn { background: var(--primary); }
-    #counter { font-size: 14px; color: var(--secondary); margin-bottom: 12px; font-weight: bold; }
-    .question-text { font-size: 20px; font-weight: 700; margin-top: 15px; margin-bottom: 25px; line-height: 1.5; color: #111; }
-    .hint { font-size: 12px; color: var(--primary); background: #e8f0fe; padding: 6px 12px; border-radius: 8px; margin-bottom: 10px; display: inline-block; font-weight: bold; }
+
+    body { 
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+      background: var(--bg-grad); color: var(--text); 
+      margin: 0; padding: 0; min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    body.ar { direction: rtl; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    /* Layout & Container */
+    .app-container { max-width: 700px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+    
+    /* Header */
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; margin-bottom: 10px; }
+    .logo { font-weight: 900; font-size: 24px; color: var(--primary-dark); display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .logo i { font-size: 28px; }
+    
+    .btn-lang { 
+      background: white; border: 1px solid #cbd5e1; padding: 8px 16px; 
+      border-radius: 50px; cursor: pointer; font-weight: 700; color: var(--secondary);
+      transition: 0.2s; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .btn-lang:hover { color: var(--primary); border-color: var(--primary); transform: translateY(-1px); }
+
+    /* Cards */
+    .card { 
+      background: var(--card-bg); border-radius: var(--radius); 
+      padding: 30px; box-shadow: var(--shadow); 
+      backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5);
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Titles */
+    h1 { font-size: 28px; text-align: center; margin: 0 0 10px 0; color: var(--text); }
+    .subtitle { text-align: center; color: var(--secondary); margin-bottom: 30px; font-size: 16px; line-height: 1.5; }
+
+    /* Menu Grid */
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .category-btn { 
+      background: white; border: 2px solid transparent; padding: 20px 10px; 
+      border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 14px; 
+      transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); color: var(--secondary);
+    }
+    .category-btn i { font-size: 24px; color: var(--primary); margin-bottom: 5px; }
+    .category-btn:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.15); color: var(--primary-dark); }
+
+    /* Mode Buttons */
+    .mode-container { display: flex; gap: 10px; margin-top: 10px; }
+    .mode-btn { 
+      flex: 1; border: none; padding: 18px; border-radius: 12px; 
+      font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.3s; color: white; 
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .training-btn { background: linear-gradient(135deg, #64748b 0%, #475569 100%); box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3); }
+    .exam-btn { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
+    .mode-btn:hover { transform: scale(1.02); opacity: 0.95; }
+
+    /* Quiz Screen Elements */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 14px; font-weight: bold; color: var(--secondary); }
+    .timer-badge { background: #fee2e2; color: #991b1b; padding: 5px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+    
+    .progress-container { height: 6px; background: #e2e8f0; border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s ease; border-radius: 10px; }
+
+    .question-text { font-size: 20px; font-weight: 800; margin-bottom: 20px; line-height: 1.5; color: var(--text); }
+    .hint { font-size: 13px; color: var(--primary); background: #eff6ff; padding: 8px 16px; border-radius: 8px; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; border: 1px solid #dbeafe; }
+
+    /* Answers */
     .answers-list { display: flex; flex-direction: column; gap: 12px; }
-    .answer-item { display: flex; align-items: center; padding: 18px; border: 2px solid #f0f2f5; border-radius: 15px; cursor: pointer; font-size: 16px; transition: 0.2s; }
-    .answer-item:hover { border-color: var(--primary); background: #f8faff; }
-    .answer-item input { margin: 0 15px; width: 20px; height: 20px; }
-    .rf-row { padding: 15px; border: 2px solid #f0f2f5; border-radius: 15px; margin-bottom: 12px; background: #fafafa; }
-    .rf-options { display: flex; gap: 12px; margin-top: 12px; justify-content: flex-end; }
-    .rf-btn { width: 60px; height: 50px; border: 2px solid #ddd; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; background: #fff; font-size: 18px; }
-    .selected-r { background: var(--success) !important; color: white; border-color: var(--success) !important; }
-    .selected-f { background: var(--error) !important; color: white; border-color: var(--error) !important; }
-    .correct { background: #e6f4ea !important; border-color: var(--success) !important; color: #137333; font-weight: bold; }
-    .wrong { background: #fce8e6 !important; border-color: var(--error) !important; color: #c5221f; }
-    .disabled { pointer-events: none; opacity: 0.7; }
-    .nav-btns { margin-top: 30px; }
-    .main-btn { width: 100%; padding: 18px; border: none; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; }
-    .primary-btn { background: var(--primary); color: white; }
-    .score-circle { width: 150px; height: 150px; border-radius: 50%; border: 10px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 800; margin: 30px auto; color: var(--primary); background: #fff; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .answer-item { 
+      display: flex; align-items: center; padding: 16px 20px; 
+      border: 2px solid #f1f5f9; border-radius: 12px; cursor: pointer; 
+      font-size: 16px; transition: 0.2s; position: relative; background: white;
+    }
+    .answer-item:hover { border-color: #bfdbfe; background: #f8fafc; }
+    .answer-item input { margin: 0 15px 0 0; width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
+    body.ar .answer-item input { margin: 0 0 0 15px; }
+
+    /* Feedback Colors */
+    .correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #065f46; }
+    .wrong { background: #fee2e2 !important; border-color: var(--error) !important; color: #991b1b; opacity: 1 !important; }
+    .disabled { pointer-events: none; }
+    .correct::after { content: '✓'; position: absolute; right: 20px; font-weight: bold; font-size: 20px; color: var(--success); }
+    .wrong::after { content: '✕'; position: absolute; right: 20px; font-weight: bold; font-size: 20px; color: var(--error); }
+    body.ar .correct::after, body.ar .wrong::after { right: auto; left: 20px; }
+
+    /* RF Section (True/False) */
+    .rf-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 10px; }
+    .rf-options { display: flex; gap: 8px; }
+    .rf-btn { 
+      width: 45px; height: 45px; border-radius: 8px; border: 2px solid #cbd5e1; 
+      display: flex; align-items: center; justify-content: center; 
+      font-weight: 800; cursor: pointer; background: white; color: #64748b; transition: 0.2s;
+    }
+    .selected-r { background: var(--success); color: white; border-color: var(--success); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+    .selected-f { background: var(--error); color: white; border-color: var(--error); box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); }
+
+    /* Navigation */
+    .nav-btns { margin-top: 30px; display: flex; justify-content: flex-end; }
+    .main-btn { 
+      padding: 14px 32px; border: none; border-radius: 12px; 
+      font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s; 
+      background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .main-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    .exit-btn { background: transparent; color: var(--secondary); box-shadow: none; padding: 10px; font-size: 14px; text-decoration: underline; margin-right: auto; cursor: pointer; }
+
+    /* Results */
+    .result-card { text-align: center; }
+    .score-ring { 
+      width: 160px; height: 160px; border-radius: 50%; 
+      background: conic-gradient(var(--primary) var(--pct), #e2e8f0 0); 
+      margin: 30px auto; display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .score-inner { 
+      width: 140px; height: 140px; background: white; border-radius: 50%; 
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .score-number { font-size: 36px; font-weight: 900; color: var(--text); line-height: 1; }
+    .score-label { font-size: 13px; color: var(--secondary); font-weight: 600; margin-top: 5px; }
+    
+    .review-list { text-align: left; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; max-height: 300px; overflow-y: auto; }
+    .review-item { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+    .review-q { font-weight: bold; margin-bottom: 5px; color: var(--text); }
+    .review-ans { color: var(--success); font-weight: 600; }
+    .review-wrong { color: var(--error); text-decoration: line-through; margin-right: 10px; }
+    body.ar .review-list { text-align: right; }
+
+    /* Utility */
+    .screen { display: none; }
+    .active { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
   </style>
 </head>
 <body>
 
-<div class="container">
+<div class="app-container">
   <header>
-    <div class="logo">KFZ-TECH PRO</div>
-    <button class="btn-lang" onclick="toggleLanguage()" id="langBtn">العربية</button>
+    <div class="logo">
+      <i class="fas fa-car-battery"></i> 
+      <span>KFZ-PRO</span>
+    </div>
+    <button class="btn-lang" onclick="toggleLanguage()" id="langBtn">
+      <i class="fas fa-globe"></i> <span>العربية</span>
+    </button>
   </header>
 
   <div id="home-screen" class="screen active">
     <div class="card">
       <h1 id="ui-welcome">Willkommen</h1>
-      <p id="ui-sub" class="subtitle"></p>
+      <p id="ui-sub" class="subtitle">Wähle dein Themengebiet</p>
+      
+      <div style="text-align: center; margin-bottom: 20px; font-size: 14px; color: var(--secondary);">
+        <span id="ui-highscore">🏆 Highscore: 0%</span>
+      </div>
+
       <div id="categoryMenu" class="menu-grid"></div>
-      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-        <button id="ui-train-all-btn" class="mode-btn training-btn" onclick="startQuiz('all', false)"></button>
-        <button id="ui-exam-btn" class="mode-btn exam-btn" onclick="startQuiz('all', true)"></button>
+      
+      <div class="mode-container">
+        <button id="ui-train-all-btn" class="mode-btn training-btn" onclick="startQuiz('all', false)">
+          <i class="fas fa-book-open"></i> <span id="txt-train">Training</span>
+        </button>
+        <button id="ui-exam-btn" class="mode-btn exam-btn" onclick="startQuiz('all', true)">
+          <i class="fas fa-stopwatch"></i> <span id="txt-exam">Prüfung</span>
+        </button>
       </div>
     </div>
   </div>
 
   <div id="quiz-screen" class="screen">
-    <div id="counter"></div>
     <div class="card">
-      <div id="ui-exit" class="exit-top-link" onclick="exitToHome()"></div>
-      <div id="ui-hint" class="hint"></div>
-      <div id="questionText" class="question-text"></div>
+      <div class="top-bar">
+        <span id="counter">Frage 1 / 10</span>
+        <div id="timerBadge" class="timer-badge" style="display: none;">
+          <i class="fas fa-clock"></i> <span id="timerDisplay">00:00</span>
+        </div>
+        <span class="exit-btn" onclick="exitToHome()" id="txt-exit">Beenden</span>
+      </div>
+      
+      <div class="progress-container">
+        <div id="progressBar" class="progress-fill"></div>
+      </div>
+
+      <div id="ui-hint" class="hint"><i class="fas fa-info-circle"></i> <span>Hinweis</span></div>
+      <div id="questionText" class="question-text">Frage Text hier...</div>
+      
       <div id="answersContainer" class="answers-list"></div>
+      
       <div class="nav-btns">
-        <button id="nextBtn" class="main-btn primary-btn" onclick="goToNext()" style="display: none;"></button>
+        <button id="nextBtn" class="main-btn" onclick="goToNext()" style="display: none;">
+          <span id="txt-next">Weiter</span> <i class="fas fa-arrow-right"></i>
+        </button>
       </div>
     </div>
   </div>
 
   <div id="result-screen" class="screen">
-    <div class="card" style="text-align: center;">
-      <h2 id="ui-result-title"></h2>
-      <div id="scoreDisplay" class="score-circle"></div>
+    <div class="card result-card">
+      <h2 id="ui-result-title">Ergebnis</h2>
+      
+      <div class="score-ring" id="scoreRing">
+        <div class="score-inner">
+          <div class="score-number" id="scoreNumber">0</div>
+          <div class="score-label" id="scoreLabel">%</div>
+        </div>
+      </div>
+      
       <p id="ui-feedback" style="font-size: 18px; font-weight: bold; margin-bottom: 25px;"></p>
-      <button id="ui-restart" class="main-btn primary-btn" onclick="exitToHome()"></button>
+      
+      <button id="ui-restart" class="main-btn" onclick="exitToHome()" style="width: 100%; justify-content: center;">
+        <i class="fas fa-redo"></i> <span id="txt-home">Home</span>
+      </button>
+
+      <div id="reviewContainer" class="review-list" style="display: none;">
+        <h3 id="txt-review-title" style="font-size: 16px; margin-bottom: 10px;">Fehleranalyse:</h3>
+        <div id="reviewItems"></div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+// --- Data & Logic ---
 let currentLang = 'de';
 let quizQuestions = [];
 let currentIndex = 0;
 let score = 0;
 let isExamMode = false;
 let userSelections = [];
+let mistakes = []; // To track wrong answers for review
+let timerInterval;
+let timeRemaining = 0;
+
+// Icons Mapping for Categories
+const catIcons = {
+  schrauben: "fa-wrench",
+  flüssig: "fa-oil-can",
+  reifen: "fa-compact-disc",
+  motor: "fa-cogs",
+  elektro: "fa-bolt",
+  pneumatik: "fa-wind",
+  karosserie: "fa-car-side"
+};
 
 const categories = {
-  de: { schrauben: "🔧 Schrauben & Werkzeug", flüssig: "🛢️ Öle & Flüssigkeiten", reifen: "🛞 Reifen & Bremsen", motor: "⚙️ Motor & Mechanik", elektro: "⚡ Elektrik & Klemmen", pneumatik: "💨 Pneumatik & Druck", karosserie: "🛠️ Karosserie" },
-  ar: { schrauben: "🔧 البراغي والأدوات", flüssig: "🛢️ الزيوت والسوائل", reifen: "🛞 الإطارات والفرامل", motor: "⚙️ المحرك والميكانيكا", elektro: "⚡ الكهرباء والمرابط", pneumatik: "💨 الهواء والضغط", karosserie: "🛠️ الهيكل" }
+  de: { schrauben: "Schrauben", flüssig: "Flüssigkeiten", reifen: "Räder/Bremsen", motor: "Motor", elektro: "Elektrik", pneumatik: "Pneumatik", karosserie: "Karosserie" },
+  ar: { schrauben: "البراغي والأدوات", flüssig: "الزيوت والسوائل", reifen: "الإطارات والفرامل", motor: "المحرك والميكانيكا", elektro: "الكهرباء", pneumatik: "الهواء والضغط", karosserie: "الهيكل" }
 };
 
 const ui = {
-  de: { welcome: "Kfz-Technik Academy", sub: "Meistere die Theorie: Wähle ein Thema oder starte das Training.", trainAll: "📖 Training: Alle Fragen (Sofort-Korrektur)", exam: "⏱️ Prüfung: Alle Fragen (Ergebnis am Ende)", next: "Nächste Frage", exit: "Quiz Beenden ✕", result: "Prüfungsergebnis", restart: "Zurück zur Auswahl", hintSingle: "Wähle eine Antwort", hintMulti: "Wähle alle richtigen Antworten", hintRF: "Richtig (R) oder Falsch (F)?", of: "von", q: "Frage", lang: "العربية" },
-  ar: { welcome: "أكاديمية ميكانيكا السيارات", sub: "أتقن الجانب النظري: اختر قسماً أو ابدأ المحاكاة الشاملة.", trainAll: "📖 تدريب: كل الأسئلة (تصحيح فوري)", exam: "⏱️ امتحان: كل الأسئلة (النتيجة في النهاية)", next: "السؤال التالي", exit: "خروج من الاختبار ✕", result: "نتيجة الاختبار", restart: "العودة للرئيسية", hintSingle: "اختر إجابة واحدة", hintMulti: "اختر جميع الإجابات الصحيحة", hintRF: "صح (R) أم خطأ (F)؟", of: "من", q: "سؤال", lang: "Deutsch" }
+  de: { welcome: "Kfz-Technik Pro", sub: "Meistere die Theorie & Prüfung", train: "Training", exam: "Prüfung", next: "Weiter", exit: "Beenden", result: "Auswertung", home: "Zurück zum Start", hintSingle: "Wähle eine Antwort", hintMulti: "Mehrfachauswahl möglich", hintRF: "Richtig (R) oder Falsch (F)?", q: "Frage", lang: "العربية", hs: "Highscore", review: "Deine Fehler:" },
+  ar: { welcome: "المحترف في ميكانيكا السيارات", sub: "تدريب شامل للامتحانات النظرية", train: "تدريب", exam: "امتحان مؤقت", next: "التالي", exit: "إنهاء", result: "النتيجة النهائية", home: "القائمة الرئيسية", hintSingle: "اختر إجابة واحدة", hintMulti: "اختر الإجابات الصحيحة", hintRF: "صح (R) أم خطأ (F)؟", q: "سؤال", lang: "Deutsch", hs: "أعلى نتيجة", review: "مراجعة الأخطاء:" }
 };
 
+// --- INSERT YOUR LARGE QUESTION ARRAY HERE ---
 const allQuestions = [
   // --- الأسئلة الأصلية ---
   { cat: 'schrauben', q_de: "Welche Arten von Schrauben gibt es?", q_ar: "ما هي أنواع البراغي الشائعة؟", type: "single", a_de: ["Holzschrauben", "Maschinenschrauben", "Blechschrauben", "Alle oben"], a_ar: ["براغي خشب", "براغي آلات (سن ناعم)", "براغي صاج", "كل ما سبق"], correct: [3] },
@@ -261,12 +424,35 @@ const allQuestions = [
   { cat: 'motor', q_de: "Was passiert im 'Arbeitstakt' (3. Takt)?", q_ar: "ماذا يحدث في شوط القدرة/العمل (الشوط الثالث)؟", type: "single", a_de: ["Ventile offen, Kolben geht hoch", "Ventile zu, Gemisch verbrennt, Kolben geht runter", "Ventile zu, Kolben geht hoch", "Auslass offen"], a_ar: ["الصمامات مفتوحة، المكبس يصعد", "الصمامات مغلقة، احتراق، المكبس ينزل", "الصمامات مغلقة، المكبس يصعد", "العادم مفتوح"], correct: [1] }
 ];
 
+
+// Re-injecting a few more from your list to ensure categories work
+allQuestions.push(
+  { cat: 'flüssig', q_de: "Wofür steht die Abkürzung SAE?", q_ar: "إلى ماذا يرمز الاختصار SAE؟", type: "single", a_de: ["Society of Automotive Engineers", "Standard Automotive Engineering", "System Automotive Engineering", "Standard Auto Equipment"], a_ar: ["جمعية مهندسي السيارات", "معايير هندسة السيارات", "نظام هندسة السيارات", "معدات السيارات القياسية"], correct: [0] },
+  { cat: 'reifen', q_de: "Was bedeutet 'TÜV'?", q_ar: "ماذا يعني TÜV؟", type: "single", a_de: ["Technischer Überwachungsverein", "Technische Überwachungsorganisation", "Technischer Überwachungsdienst", "Technische Überwachung"], a_ar: ["جمعية المراقبة الفنية", "منظمة المراقبة الفنية", "خدمة المراقبة الفنية", "المراقبة الفنية"], correct: [0] },
+  { cat: 'pneumatik', q_de: "Umrechnung: 50 N/cm² in bar?", q_ar: "حول 50 نيوتن/سم² إلى بار؟", type: "single", a_de: ["50 bar", "5 bar", "0,5 bar", "0,05 bar"], a_ar: ["50 بار", "5 بار", "0.5 بار", "0.05 بار"], correct: [1] },
+  { cat: 'karosserie', q_de: "Was ist Eloxieren?", q_ar: "ما هي عملية الأنودة (Eloxieren)؟", type: "single", a_de: ["Salzsäurebad", "Zinkschicht", "Chemische Oxidation", "Elektrolytische Oxidation von Aluminium"], a_ar: ["حمام حمض", "طبقة زنك", "أكسدة كيميائية", "أكسدة كهربائية للألمنيوم"], correct: [3] }
+);
+// NOTE: Make sure to copy the full array from your original code into this script block.
+
+
+// --- Functions ---
+
 function toggleLanguage() {
   currentLang = (currentLang === 'de') ? 'ar' : 'de';
   document.body.className = (currentLang === 'ar') ? 'ar' : '';
   renderDashboard();
   renderUI();
   if (document.getElementById("quiz-screen").classList.contains("active")) renderQuestion(true); 
+}
+
+function updateHighScoreDisplay() {
+  const stored = localStorage.getItem('kfz_highscore');
+  const t = ui[currentLang];
+  if(stored) {
+    document.getElementById('ui-highscore').textContent = `🏆 ${t.hs}: ${stored}%`;
+  } else {
+    document.getElementById('ui-highscore').textContent = "";
+  }
 }
 
 function renderDashboard() {
@@ -276,44 +462,84 @@ function renderDashboard() {
   Object.keys(cats).forEach(key => {
     const btn = document.createElement("button");
     btn.className = "category-btn";
-    btn.textContent = cats[key];
+    btn.innerHTML = `<i class="fas ${catIcons[key] || 'fa-cogs'}"></i><span>${cats[key]}</span>`;
     btn.onclick = () => startQuiz(key, false);
     menu.appendChild(btn);
   });
+  updateHighScoreDisplay();
 }
 
 function renderUI() {
   const t = ui[currentLang];
-  document.getElementById("langBtn").textContent = t.lang;
+  document.getElementById("langBtn").innerHTML = `<i class="fas fa-globe"></i> <span>${t.lang}</span>`;
   document.getElementById("ui-welcome").textContent = t.welcome;
   document.getElementById("ui-sub").textContent = t.sub;
-  document.getElementById("ui-train-all-btn").textContent = t.trainAll;
-  document.getElementById("ui-exam-btn").textContent = t.exam;
-  document.getElementById("ui-restart").textContent = t.restart;
+  document.getElementById("txt-train").textContent = t.train;
+  document.getElementById("txt-exam").textContent = t.exam;
+  document.getElementById("txt-home").textContent = t.home;
   document.getElementById("ui-result-title").textContent = t.result;
-  document.getElementById("ui-exit").textContent = t.exit;
+  document.getElementById("txt-exit").textContent = t.exit;
+  document.getElementById("txt-next").textContent = t.next;
+  document.getElementById("txt-review-title").textContent = t.review;
 }
 
-function startQuiz(catKey, fullExamBlind) {
-  isExamMode = fullExamBlind;
+function startQuiz(catKey, isExam) {
+  isExamMode = isExam;
   score = 0;
   currentIndex = 0;
+  mistakes = [];
+  
+  // Filter questions
   if (catKey === 'all') {
     quizQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
+    // Limit exam to 30 random questions if "all" is selected, to make it realistic
+    if(isExamMode && quizQuestions.length > 30) quizQuestions = quizQuestions.slice(0, 30);
   } else {
     quizQuestions = allQuestions.filter(q => q.cat === catKey).sort(() => Math.random() - 0.5);
   }
+
+  if(quizQuestions.length === 0) { alert("No questions found for this category yet!"); return; }
+
   showScreen("quiz-screen");
+  
+  // Exam Timer Setup (1 minute per question approx)
+  if(isExamMode) {
+    document.getElementById("timerBadge").style.display = "flex";
+    timeRemaining = quizQuestions.length * 60; // 60 seconds per question
+    startTimer();
+  } else {
+    document.getElementById("timerBadge").style.display = "none";
+    clearInterval(timerInterval);
+  }
+
   renderQuestion();
 }
 
-// دالة لخلط المصفوفات عشوائياً (Helper Function)
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeRemaining--;
+    updateTimerDisplay();
+    if(timeRemaining <= 0) {
+      clearInterval(timerInterval);
+      showResults(); // Auto finish
     }
-    return array;
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timeRemaining / 60);
+  const s = timeRemaining % 60;
+  document.getElementById("timerDisplay").textContent = `${m}:${s < 10 ? '0'+s : s}`;
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 function renderQuestion(keepSelections = false) {
@@ -321,35 +547,51 @@ function renderQuestion(keepSelections = false) {
   const t = ui[currentLang];
   const container = document.getElementById("answersContainer");
   const nextBtn = document.getElementById("nextBtn");
-  document.getElementById("counter").innerHTML = `<span>${t.q} ${currentIndex + 1} / ${quizQuestions.length}</span>`;
+  
+  // Progress Bar
+  const progressPct = ((currentIndex) / quizQuestions.length) * 100;
+  document.getElementById("progressBar").style.width = `${progressPct}%`;
+  
+  document.getElementById("counter").textContent = `${t.q} ${currentIndex + 1} / ${quizQuestions.length}`;
   document.getElementById("questionText").textContent = (currentLang === 'de' ? q.q_de : q.q_ar);
-  document.getElementById("ui-hint").textContent = (q.type==='single'?t.hintSingle : q.type==='multi'?t.hintMulti : t.hintRF);
+  
+  let hintText = "";
+  if(q.type === 'single') hintText = t.hintSingle;
+  else if(q.type === 'multi') hintText = t.hintMulti;
+  else hintText = t.hintRF;
+  document.getElementById("ui-hint").innerHTML = `<i class="fas fa-info-circle"></i> <span>${hintText}</span>`;
+
   container.innerHTML = "";
   if (!keepSelections) { nextBtn.style.display = "none"; userSelections = []; }
   
   const options = (currentLang === 'de' ? q.a_de : q.a_ar);
-  
-  // إنشاء مصفوفة أرقام لتمثيل الفهارس الأصلية (0, 1, 2, 3...)
   let indices = options.map((_, i) => i);
   
-  // خلط هذه الفهارس عشوائياً
-  indices = shuffleArray(indices);
+  // Only shuffle if it's NOT true/false (RF) to keep order logic simple, or handle RF specifically
+  if(q.type !== 'truth') indices = shuffleArray(indices);
 
-  // استخدام الفهارس المخلوطة لعرض الإجابات
   indices.forEach((originalIndex) => {
-    const optText = options[originalIndex]; // النص بناءً على الفهرس الأصلي
+    const optText = options[originalIndex];
     
     if (q.type === 'truth') {
       const row = document.createElement("div");
       row.className = "rf-row";
-      // هنا نستخدم originalIndex في المعرفات والقيم لضمان صحة التصحيح
-      row.innerHTML = `<div>${optText}</div><div class="rf-options"><div class="rf-btn" id="r-${originalIndex}" onclick="handleRF(${originalIndex}, 'R')">R</div><div class="rf-btn" id="f-${originalIndex}" onclick="handleRF(${originalIndex}, 'F')">F</div></div>`;
+      row.innerHTML = `
+        <div style="flex:1; font-weight:600;">${optText}</div>
+        <div class="rf-options">
+          <div class="rf-btn" id="r-${originalIndex}" onclick="handleRF(${originalIndex}, 'R')">R</div>
+          <div class="rf-btn" id="f-${originalIndex}" onclick="handleRF(${originalIndex}, 'F')">F</div>
+        </div>`;
       container.appendChild(row);
     } else {
       const label = document.createElement("label");
       label.className = "answer-item";
-      // القيمة (value) تظل originalIndex لكي يقارنها البرنامج مع الإجابة الصحيحة المخزنة
-      label.innerHTML = `<input type="${q.type==='single'?'radio':'checkbox'}" name="ans" value="${originalIndex}" onchange="handleInput()"> ${optText}`;
+      // Icon selection based on type
+      const inputType = q.type==='single'?'radio':'checkbox';
+      label.innerHTML = `
+        <input type="${inputType}" name="ans" value="${originalIndex}" onchange="handleInput()"> 
+        <span>${optText}</span>
+      `;
       container.appendChild(label);
     }
   });
@@ -357,11 +599,13 @@ function renderQuestion(keepSelections = false) {
 
 function handleInput() {
   const q = quizQuestions[currentIndex];
+  // Get all checked inputs
   const selected = Array.from(document.querySelectorAll('input:checked')).map(el => parseInt(el.value));
+  
   if (isExamMode) {
-    document.getElementById("nextBtn").style.display = "block";
-    document.getElementById("nextBtn").textContent = ui[currentLang].next;
+    document.getElementById("nextBtn").style.display = "flex";
   } else {
+    // Training Mode: Immediate Feedback
     if(q.type === 'single') validateChoice(selected);
     else if(q.type === 'multi' && selected.length === q.correct.length) validateChoice(selected);
   }
@@ -371,94 +615,153 @@ function handleRF(rowIndex, choice) {
   userSelections[rowIndex] = choice;
   document.getElementById(`r-${rowIndex}`).classList.remove('selected-r');
   document.getElementById(`f-${rowIndex}`).classList.remove('selected-f');
+  
   if(choice === 'R') document.getElementById(`r-${rowIndex}`).classList.add('selected-r');
   else document.getElementById(`f-${rowIndex}`).classList.add('selected-f');
-  if(userSelections.filter(x => x).length === quizQuestions[currentIndex].a_de.length) {
+  
+  const q = quizQuestions[currentIndex];
+  // Check if all rows have a selection
+  if(userSelections.filter(x => x).length === q.a_de.length) {
     if(isExamMode) {
-        document.getElementById("nextBtn").style.display = "block";
-        document.getElementById("nextBtn").textContent = ui[currentLang].next;
+       document.getElementById("nextBtn").style.display = "flex";
     } else validateRF();
   }
 }
 
 function validateChoice(selected) {
   const q = quizQuestions[currentIndex];
-  // التصحيح يعتمد على القيم (التي تمثل الفهرس الأصلي)، لذا لا يتأثر بتغيير المكان
   const isCorrect = selected.length === q.correct.length && selected.every(v => q.correct.includes(v));
-  if(isCorrect) score++;
   
-  // تلوين الإجابات: نحتاج للبحث عن العنصر الذي يحمل القيمة (originalIndex)
+  if(isCorrect) score++;
+
   const inputs = document.querySelectorAll('input[name="ans"]');
   inputs.forEach((input) => {
       const val = parseInt(input.value);
       const parent = input.closest('.answer-item');
-      parent.classList.add('disabled');
+      parent.classList.add('disabled'); // Lock
       
       if(q.correct.includes(val)) parent.classList.add('correct');
       else if(selected.includes(val)) parent.classList.add('wrong');
   });
-
-  document.getElementById("nextBtn").style.display = "block";
-  document.getElementById("nextBtn").textContent = ui[currentLang].next;
+  
+  document.getElementById("nextBtn").style.display = "flex";
 }
 
 function validateRF() {
   const q = quizQuestions[currentIndex];
   let allCorrect = true;
   
-  // في أسئلة الصح والخطأ، العناصر تظهر بترتيب عشوائي، لكننا نحتاج للبحث عنها بالمعرف
-  const rows = document.querySelectorAll('.rf-row');
-  
-  // لا يمكننا الاعتماد على ترتيب الصفوف الظاهرة لأنها مخلوطة
-  // سنقوم بالتحقق بناءً على userSelections المخزن بالفهرس الأصلي
-  
   userSelections.forEach((choice, originalIndex) => {
-    // العثور على زر R وزر F الخاصين بهذا السؤال الأصلي
     const rBtn = document.getElementById(`r-${originalIndex}`);
     const row = rBtn.closest('.rf-row');
     
+    // Disable buttons
+    row.querySelectorAll('.rf-btn').forEach(b => b.style.pointerEvents = 'none');
+
     if(choice !== q.correct[originalIndex]) { 
         allCorrect = false; 
         row.classList.add('wrong'); 
-    }
-    else {
+    } else {
         row.classList.add('correct');
     }
-    row.classList.add('disabled');
   });
   
   if(allCorrect) score++;
-  document.getElementById("nextBtn").style.display = "block";
-  document.getElementById("nextBtn").textContent = ui[currentLang].next;
+  document.getElementById("nextBtn").style.display = "flex";
 }
 
 function goToNext() {
-  if (isExamMode) calculateExamScore();
+  // If exam mode, calculate score for current question before moving
+  if (isExamMode) calculateExamScoreForCurrent();
+  
   currentIndex++;
-  if(currentIndex < quizQuestions.length) renderQuestion();
-  else showResults();
+  if(currentIndex < quizQuestions.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
 }
 
-function calculateExamScore() {
+function calculateExamScoreForCurrent() {
   const q = quizQuestions[currentIndex];
+  let isCorrect = false;
+
   if(q.type === 'truth') {
-    if(userSelections.every((choice, i) => choice === q.correct[i])) score++;
+    if(userSelections.length === q.correct.length && userSelections.every((c, i) => c === q.correct[i])) isCorrect = true;
   } else {
     const selected = Array.from(document.querySelectorAll('input:checked')).map(el => parseInt(el.value));
-    if(selected.length === q.correct.length && selected.every(v => q.correct.includes(v))) score++;
+    if(selected.length === q.correct.length && selected.every(v => q.correct.includes(v))) isCorrect = true;
+  }
+
+  if(isCorrect) {
+    score++;
+  } else {
+    // Record mistake
+    mistakes.push({
+      q: (currentLang==='de'?q.q_de:q.q_ar),
+      ans: (currentLang==='de'? q.correct.map(i => q.a_de[i]).join(", ") : q.correct.map(i => q.a_ar[i]).join(", "))
+    });
   }
 }
 
 function showResults() {
+  clearInterval(timerInterval);
   showScreen("result-screen");
-  document.getElementById("scoreDisplay").textContent = `${score}/${quizQuestions.length}`;
-  const percent = Math.round((score/quizQuestions.length)*100);
-  document.getElementById("ui-feedback").textContent = percent > 50 ? (currentLang==='ar'?"أداء ممتاز!":"Tolle Leistung!") : (currentLang==='ar'?"حاول مرة أخرى!":"Noch mal üben!");
+  
+  const total = quizQuestions.length;
+  const percent = Math.round((score/total)*100);
+  
+  // Animate Score Ring
+  const ring = document.getElementById("scoreRing");
+  ring.style.setProperty('--pct', `${percent}%`); // Needs CSS conic-gradient variable support
+  // Fallback visual update
+  ring.style.background = `conic-gradient(${percent >= 50 ? '#10b981' : '#ef4444'} ${percent}%, #e2e8f0 0)`;
+  
+  document.getElementById("scoreNumber").textContent = percent;
+  
+  // Feedback Text
+  let feedbackMsg = "";
+  if(percent >= 90) feedbackMsg = currentLang==='ar' ? "ممتاز! أنت محترف." : "Exzellent! Du bist ein Profi.";
+  else if(percent >= 50) feedbackMsg = currentLang==='ar' ? "جيد، ولكن تحتاج للمراجعة." : "Gut, aber übe noch etwas.";
+  else feedbackMsg = currentLang==='ar' ? "للأسف، لم تنجح." : "Leider nicht bestanden.";
+  
+  document.getElementById("ui-feedback").textContent = feedbackMsg;
+  document.getElementById("ui-feedback").style.color = percent >= 50 ? "var(--success)" : "var(--error)";
+
+  // Save Highscore
+  const currentHigh = localStorage.getItem('kfz_highscore') || 0;
+  if(percent > currentHigh) localStorage.setItem('kfz_highscore', percent);
+
+  // Render Mistakes Review
+  const reviewContainer = document.getElementById("reviewContainer");
+  const reviewItems = document.getElementById("reviewItems");
+  reviewItems.innerHTML = "";
+  
+  if(isExamMode && mistakes.length > 0) {
+    reviewContainer.style.display = "block";
+    mistakes.forEach(m => {
+      const item = document.createElement("div");
+      item.className = "review-item";
+      item.innerHTML = `<div class="review-q">${m.q}</div><div><span class="review-ans">✔ ${m.ans}</span></div>`;
+      reviewItems.appendChild(item);
+    });
+  } else {
+    reviewContainer.style.display = "none";
+  }
 }
 
-function exitToHome() { showScreen("home-screen"); }
-function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function exitToHome() { 
+  clearInterval(timerInterval);
+  renderDashboard(); // Update highscore display
+  showScreen("home-screen"); 
+}
 
+function showScreen(id) { 
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
+  document.getElementById(id).classList.add('active'); 
+}
+
+// Init
 renderDashboard();
 renderUI();
 </script>
