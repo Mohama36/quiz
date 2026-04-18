@@ -15,19 +15,16 @@
 
         .container { max-width: 500px; margin: auto; padding: 15px; min-height: 85vh; display: flex; flex-direction: column; }
         
-        /* Setup Screen */
         .setup-screen { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-top: 20px; }
         select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #c6c6c8; font-size: 16px; margin-bottom: 20px; background: #fff; }
         .start-btn { width: 100%; background: var(--primary); color: #fff; border: none; padding: 18px; border-radius: 14px; font-size: 18px; font-weight: 600; cursor: pointer; }
 
-        /* Quiz Screen */
         .quiz-screen { display: none; width: 100%; }
         .progress-bar { height: 6px; background: #e5e5ea; border-radius: 3px; margin-bottom: 15px; overflow: hidden; }
         #progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
         
         .q-card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; animation: slideIn 0.3s ease; }
         
-        /* Translate Button */
         .trans-btn { position: absolute; top: 15px; right: 15px; background: #f0f0f5; border: none; padding: 8px 12px; border-radius: 10px; font-size: 12px; cursor: pointer; color: var(--primary); font-weight: 600; }
         
         .q-text { font-size: 18px; font-weight: 600; margin: 25px 0 20px 0; line-height: 1.5; text-align: left; }
@@ -37,7 +34,6 @@
         .opt-btn.correct { background: #d4edda; border-color: var(--success); color: #155724; }
         .opt-btn.wrong { background: #f8d7da; border-color: var(--danger); color: #721c24; }
 
-        /* Explanation Box */
         .expl-box { display: none; margin-top: 15px; padding: 15px; background: #eef7ff; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary); color: #004a99; }
         .expl-toggle { display: none; width: 100%; background: none; border: 1px dashed var(--primary); color: var(--primary); padding: 10px; border-radius: 10px; margin-top: 10px; font-weight: 600; cursor: pointer; }
 
@@ -99,33 +95,32 @@
         errorMsg.style.display = 'none';
         document.querySelector('.start-btn').disabled = true;
 
-        const prompt = `Du bist ein strenger KFZ-Mechatroniker Prüfungsexperte. Erstelle genau 20 anspruchsvolle Multiple-Choice-Prüfungsfragen auf dem Niveau der Gesellenprüfung Teil 1 und 2 zum gewählten Thema: ${lf}.
+        // توليد رقم عشوائي واختيار تركيز عشوائي لمنع التكرار
+        const randomID = Math.floor(Math.random() * 999999);
+        const focusAreas = ["Diagnose & Fehlersuche", "Technische Berechnungen", "Systemverständnis", "Instandsetzungs-Szenarien"];
+        const randomFocus = focusAreas[Math.floor(Math.random() * focusAreas.length)];
 
-Beziehe dich bei der Fragengenerierung zwingend auf das spezifische KFZ-Fachwissen der folgenden Lernfelder (LF1 - LF6):
-- LF1: Motoröl (SAE-Klassen, ACEA, Viskosität, Additive), Kühlsystem (Frostschutz, Mischungsverhältnis Diagramme, Überdruckventil, Kavitation), Inspektionsarbeiten und Kundenannahme.
-- LF2: Mess- und Prüftechnik (Bügelmessschraube für Bremsscheiben, Messschieber), Schraubenverbindungen (DIN EN ISO, Festigkeitsklassen z.B. 10.9, Steigung), Verbindungsarten (kraft-, form-, stoffschlüssig).
-- LF3: Elektrotechnik-Grundlagen (Ohmsches Gesetz, Reihen-/Parallelschaltung Berechnungen, Widerstandsmessung stromlos, Spannungsabfall), Schaltpläne lesen (Klemmenbezeichnungen 30, 31, 15, 50, 56a, 56b).
-- LF4: Umrüstarbeiten (Anhängerkupplung, D-Wert, Stützlast berechnen, 13-polige Steckdose nach ISO 11446, Abschaltung der Nebelschlussleuchte, C2-Kontrolle).
-- LF5: Verbrennungsmotor & Kühlung (Kurbeltrieb, Motorsteuerung, 4-Takt-Prinzip, pV-Diagramm, Kennfeldthermostat, Druckumlaufschmierung, hydrodynamische Gleitlager, Kolbenspiel).
-- LF6: Diagnosesysteme, Generator (Drehstrom, Gleichrichtung, Pulswechselrichter, Multifunktionsregler, Induktion), Starter (Schub-Schraubtrieb), 48V-Bordnetz, Hochvolttechnik (DGUV 209-093, Spannungsfreiheit feststellen, eigensichere Fahrzeuge, HV-Batterie).
+        const prompt = `Du bist ein KFZ-Mechatroniker Prüfungsexperte. Generiere 20 EINZIGARTIGE und NEUE Multiple-Choice-Fragen für: ${lf}.
+        
+        ZUFALLS-SEED: ${randomID} 
+        FOKUS FÜR DIESE RUNDE: ${randomFocus}
 
-WICHTIGE REGELN FÜR DIE FRAGEN:
-1. Erstelle EXAKT 20 Fragen.
-2. Die Fragen müssen extrem praxisnah und analytisch sein (Szenarien aus der Werkstatt, Fehlersuche, Interpretation von Messwerten, Ursache-Wirkung-Zusammenhänge). Vermeide einfache Vokabelabfragen; fordere tiefes Verständnis.
-3. Jede Frage hat genau 4 Antwortoptionen, wovon nur EINE richtig ist.
-4. Das "answer" Feld muss EXAKT den Text der richtigen Option enthalten.
-5. Antworte NUR mit einem validen JSON-Array.
+        ANFORDERUNGEN FÜR VARIANTENREICHTUM:
+        1. Vermeide Standard-Fragen. Suche nach komplexen Szenarien aus LF1-LF6.
+        2. Nutze unterschiedliche Unterthemen wie: DGUV 209-093 (HV), pV-Diagramme (LF5), CAN-Bus Signale (LF6), Drehmomentberechnungen (LF2) oder chemische Eigenschaften von Betriebsstoffen (LF1).
+        3. Erstelle exakt 20 Fragen im JSON-Format.
+        4. Jede Frage muss eine fachlich tiefe Erklärung auf Arabisch haben.
 
-Format:
-[
-  {
-    "q": "Fragetext auf Deutsch (z.B. Ein Kunde beanstandet... / Bei der Messung mit dem Multimeter an einer defekten Reihenschaltung...)",
-    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-    "answer": "Option 1",
-    "tr": "ترجمة السؤال والسيناريو بدقة إلى العربية",
-    "ex": "شرح تقني دقيق ومفصل بالعربية يوضح لماذا هذه الإجابة هي الصحيحة بناءً على القواعد الفيزيائية أو الميكانيكية للسيارات"
-  }
-]`;
+        Format:
+        [
+          {
+            "q": "Frage auf Deutsch",
+            "options": ["A", "B", "C", "D"],
+            "answer": "Korrekt",
+            "tr": "الترجمة العربية",
+            "ex": "الشرح الفني بالعربي"
+          }
+        ]`;
 
         try {
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -137,26 +132,19 @@ Format:
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [{ role: "user", content: prompt }],
-                    temperature: 0.5,
+                    temperature: 0.8, // زيادة الـ temperature تزيد من إبداع الذكاء الاصطناعي وتمنع التكرار
                     response_format: { type: "json_object" }
                 })
             });
 
-            if (!response.ok) throw new Error(`API Error: ${response.status}`);
-
             const data = await response.json();
-            let rawText = data.choices[0].message.content;
-            
-            // Groq liefert oft ein Objekt zurück, wir brauchen das Array
-            let parsed = JSON.parse(rawText);
-            if (parsed.questions) parsed = parsed.questions; // Falls KI es in ein "questions" Objekt packt
-            if (!Array.isArray(parsed)) {
-                // Suche nach dem ersten Array im Objekt
-                const key = Object.keys(parsed).find(k => Array.isArray(parsed[k]));
-                parsed = key ? parsed[key] : parsed;
+            let parsed = JSON.parse(data.choices[0].message.content);
+            questions = parsed.questions || parsed;
+            if (!Array.isArray(questions)) {
+                const key = Object.keys(questions).find(k => Array.isArray(questions[k]));
+                questions = key ? questions[key] : questions;
             }
 
-            questions = parsed;
             currentIndex = 0;
             score = 0;
             document.getElementById('setup').style.display = 'none';
@@ -164,7 +152,6 @@ Format:
             showQuestion();
 
         } catch (e) {
-            console.error('Error:', e);
             errorMsg.textContent = 'Fehler: ' + e.message;
             errorMsg.style.display = 'block';
         } finally {
@@ -178,7 +165,6 @@ Format:
         const q = questions[currentIndex];
         document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('progress-fill').style.width = ((currentIndex + 1) / questions.length * 100) + '%';
-
         container.dataset.correctAnswer = q.answer;
 
         let optionsHTML = q.options.map((opt) => {
@@ -191,25 +177,19 @@ Format:
                 <div style="font-size:12px; color:#8e8e93;">Frage ${currentIndex + 1}/${questions.length}</div>
                 <div class="q-text">${q.q}</div>
                 <div class="q-translation" id="qTrans">${q.tr || ''}</div>
-                <div id="options" data-answered="false">
-                    ${optionsHTML}
-                </div>
+                <div id="options" data-answered="false">${optionsHTML}</div>
                 <button id="explToggle" class="expl-toggle" onclick="showExpl()">Erklärung anzeigen / إظهار الشرح</button>
                 <div id="explBox" class="expl-box"><b>💡 الشرح:</b><br>${q.ex || ''}</div>
             </div>
         `;
     }
 
-    function escapeAttr(str) {
-        return String(str).replace(/"/g, '&quot;');
-    }
-
-    function toggleTrans() {
+    function escapeAttr(str) { return String(str).replace(/"/g, '&quot;'); }
+    function toggleTrans() { 
         const tr = document.getElementById('qTrans');
         tr.style.display = tr.style.display === 'block' ? 'none' : 'block';
     }
-
-    function showExpl() {
+    function showExpl() { 
         document.getElementById('explBox').style.display = 'block';
         document.getElementById('explToggle').style.display = 'none';
     }
@@ -229,37 +209,27 @@ Format:
             btn.classList.add('wrong');
             const allBtns = optionsDiv.querySelectorAll('.opt-btn');
             allBtns.forEach(b => {
-                if (b.dataset.option.trim() === correctAnswer.trim()) {
-                    b.classList.add('correct');
-                }
+                if (b.dataset.option.trim() === correctAnswer.trim()) b.classList.add('correct');
             });
         }
-
         document.getElementById('explToggle').style.display = 'block';
         document.getElementById('nextBtn').style.display = 'block';
-        if (currentIndex === questions.length - 1) {
-            document.getElementById('nextBtn').textContent = 'Ergebnis anzeigen 🏆';
-        }
+        if (currentIndex === questions.length - 1) document.getElementById('nextBtn').textContent = 'Ergebnis anzeigen 🏆';
     }
 
     function nextQuestion() {
         currentIndex++;
-        if (currentIndex < questions.length) {
-            showQuestion();
-        } else {
-            showScore();
-        }
+        if (currentIndex < questions.length) showQuestion();
+        else showScore();
     }
 
     function showScore() {
         document.getElementById('quiz').style.display = 'none';
-        const scoreScreen = document.getElementById('scoreScreen');
-        scoreScreen.style.display = 'block';
+        document.getElementById('scoreScreen').style.display = 'block';
         const percentage = Math.round((score / questions.length) * 100);
         document.getElementById('scoreCircle').textContent = percentage + '%';
         document.getElementById('scoreText').textContent = `${score} von ${questions.length} richtig`;
-        const circle = document.getElementById('scoreCircle');
-        circle.style.background = percentage >= 70 ? 'var(--success)' : (percentage >= 50 ? '#ff9500' : 'var(--danger)');
+        document.getElementById('scoreCircle').style.background = percentage >= 70 ? 'var(--success)' : (percentage >= 50 ? '#ff9500' : 'var(--danger)');
     }
 
     function restartQuiz() {
