@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار أنظمة 48 فولت - KFZ Expert</title>
+    <title>اختبار أنظمة 48 فولت - النسخة المحدثة</title>
     <style>
         :root { --primary: #2c3e50; --accent: #27ae60; --light: #f4f7f6; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); margin: 0; padding: 20px; color: #333; }
@@ -27,7 +27,7 @@
 <div class="container">
     <header>
         <h1>متخصص أنظمة 48 فولت (KFZ)</h1>
-        <p>توليد أسئلة ذكية لرفاقي في الدراسة</p>
+        <p>توليد أسئلة دراسية لرفاقي</p>
     </header>
 
     <div class="controls">
@@ -39,12 +39,12 @@
         <button id="genBtn" onclick="generateExam()">توليد 25 سؤال جديد</button>
     </div>
 
-    <div id="status">جاهز لتوليد الاختبار...</div>
+    <div id="status">جاهز...</div>
     <div id="quiz-area"></div>
 </div>
 
 <script>
-    // مفتاح الـ API الخاص بك
+    // مفتاحك الفعال
     const API_KEY = 'AIzaSyAwnoyleWh2dA4ur8QWsy-GyYTcPqMlbbM'; 
 
     async function generateExam() {
@@ -54,38 +54,40 @@
         const btn = document.getElementById('genBtn');
 
         quizArea.innerHTML = '';
-        status.innerText = '📡 جاري الاتصال بالذكاء الاصطناعي (Gemini)...';
+        status.innerText = '📡 جاري جلب الأسئلة من Gemini...';
         status.style.color = "blue";
         btn.disabled = true;
 
-        const prompt = `أنت خبير ميكانيكا سيارات. قم بتوليد 25 سؤال اختيار من متعدد عن نظام (48 Volt System) باللغة العربية. 
+        const prompt = `أنت خبير ميكانيكا سيارات. ولد 25 سؤال MCQ عن نظام 48V باللغة العربية. 
         المستوى: ${diff}. 
-        يجب أن يكون الرد بصيغة JSON فقط كقائمة كائنات بهذا الشكل تماماً: 
+        الرد يجب أن يكون JSON فقط بهذا التنسيق: 
         [{"q": "السؤال؟", "options": ["1", "2", "3", "4"], "a": "الإجابة الصحيحة"}]`;
 
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            // التعديل هنا: استخدام gemini-pro كخيار أكثر استقراراً في v1beta
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
             
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: {
-                        response_mime_type: "application/json"
-                    }
+                    contents: [{ parts: [{ text: prompt }] }]
                 })
             });
 
-            if (!response.ok) {
-                const err = await response.json();
-                throw new Error(err.error.message || 'فشل الاتصال');
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error.message);
             }
 
-            const data = await response.json();
-            const questions = JSON.parse(data.candidates[0].content.parts[0].text);
+            // استخراج النص وتنظيفه
+            let text = data.candidates[0].content.parts[0].text;
+            // إزالة أي علامات مضافة مثل ```json
+            const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const questions = JSON.parse(cleanJson);
             
-            status.innerText = '✅ تم التوليد بنجاح! ابدأ الحل الآن.';
+            status.innerText = '✅ تم التوليد بنجاح!';
             status.style.color = "green";
             
             questions.forEach((item, index) => {
