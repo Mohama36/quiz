@@ -3,52 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KFZ 48V Exam - النسخة الصاروخية</title>
+    <title>منصة مراجعة KFZ - Lernfelds 1-6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #1a73e8; --accent: #34a853; --light: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); padding: 20px; text-align: center; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .header { border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
-        .card { background: #fff; border: 1px solid #ddd; padding: 20px; margin-top: 15px; border-radius: 8px; border-right: 6px solid var(--accent); text-align: right; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .opt-btn { display: block; width: 100%; text-align: right; padding: 12px; margin: 8px 0; border: 1px solid #eee; border-radius: 6px; cursor: pointer; background: #fff; font-size: 15px; transition: 0.2s; }
-        .opt-btn:hover { background: #f1f3f4; }
-        .correct { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724; font-weight: bold; }
-        .wrong { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24; }
-        button#genBtn { background: var(--primary); color: white; padding: 15px; border: none; border-radius: 8px; width: 100%; font-size: 18px; cursor: pointer; font-weight: bold; }
-        button#genBtn:disabled { background: #ccc; }
-        #status { margin: 15px; font-weight: bold; color: #555; }
+        :root { --primary: #0071e3; --success: #34c759; --danger: #ff3b30; --bg: #f5f5f7; --card: #ffffff; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: #1d1d1f; margin: 0; padding: 0; line-height: 1.6; }
+        .nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); sticky; top: 0; padding: 15px; text-align: center; border-bottom: 1px solid #d2d2d7; z-index: 100; }
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        .setup-card { background: var(--card); border-radius: 20px; padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        h2 { margin-top: 0; color: #1d1d1f; font-weight: 700; }
+        label { display: block; margin-bottom: 10px; font-weight: 500; text-align: right; }
+        select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #d2d2d7; background: #fff; font-size: 16px; font-family: inherit; margin-bottom: 20px; appearance: none; cursor: pointer; }
+        .btn-gen { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-size: 18px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn-gen:hover { opacity: 0.9; transform: scale(0.99); }
+        .btn-gen:disabled { background: #999; }
+        .question-card { background: var(--card); border-radius: 18px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e5e5e5; text-align: right; animation: slideUp 0.5s ease; }
+        .opt-btn { display: block; width: 100%; text-align: right; padding: 14px; margin: 10px 0; border: 2px solid #f2f2f2; border-radius: 12px; background: #fff; cursor: pointer; font-size: 16px; transition: 0.2s; font-family: inherit; }
+        .opt-btn:hover { border-color: var(--primary); background: #f9f9f9; }
+        .correct { background: #e8f5e9 !important; border-color: var(--success) !important; color: #1b5e20; font-weight: bold; }
+        .wrong { background: #ffebee !important; border-color: var(--danger) !important; color: #b71c1c; }
+        #status { margin-top: 15px; font-weight: 600; font-size: 14px; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .loader { display: none; width: 24px; height: 24px; border: 3px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; margin-right: 10px; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
+<div class="nav">
+    <strong>منصة KFZ التعليمية | مراجعة شاملة</strong>
+</div>
+
 <div class="container">
-    <div class="header">
-        <h1>اختبار أنظمة 48V (KFZ) 🚗</h1>
-        <p>هذه النسخة تعمل في ألمانيا 100% لجميع الرفاق</p>
+    <div class="setup-card">
+        <h2>توليد اختبار من الكتاب (LF1-LF6)</h2>
+        
+        <label>اختر مجال الدراسة (Lernfeld):</label>
+        <select id="lfSelect">
+            <option value="LF1: Fahrzeugwartung, Schmierstoffe, Motorkennwerte, Wartungsunterlagen">Lernfeld 1: الصيانة ومواصفات المحرك والزيوت</option>
+            <option value="LF2: Gewinde, Schraubensicherungen, Bremsanlage Grundlagen, Messzeuge">Lernfeld 2: الميكانيكا والبراغي والفرامل</option>
+            <option value="LF3: Elektrotechnik, Ohmsches Gesetz, Reihen-Parallelschaltung, Schaltpläne">Lernfeld 3: الكهرباء، قانون أوم والدوائر الكهربائية</option>
+            <option value="LF4: Anhängerkupplung, Elektrosatz 7/13-polig, Kostenrechnung">Lernfeld 4: أنظمة القطر وحساب التكاليف</option>
+            <option value="LF5: Kurbeltrieb, Motorschmierung, Kühlsysteme, Thermostat">Lernfeld 5: أجزاء المحرك ودورة التبريد والتزييت</option>
+            <option value="LF6: 48V-Bordnetz, Starter-Generator, DC/DC-Wandler, Li-Ionen-Batterie, Deaktivierung">Lernfeld 6: تشخيص الأعطال ونظام الـ 48 فولت</option>
+        </select>
+
+        <button class="btn-gen" id="genBtn" onclick="generateQuiz()">
+            <span id="loader" class="loader" style="display:none;"></span>
+            توليد 25 سؤالاً اختيارياً
+        </button>
+        <div id="status"></div>
     </div>
-    
-    <div id="status">جاهز للعمل.. اضغط لتوليد 25 سؤالاً</div>
-    <button id="genBtn" onclick="generateExam()">توليد الأسئلة الآن (بسرعة Groq)</button>
+
     <div id="quiz-area"></div>
 </div>
 
 <script>
-    // مفتاح Groq الخاص بك الذي أرسلته
-    const API_KEY = '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'; 
+    const API_KEY = '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';
 
-    async function generateExam() {
+    async function generateQuiz() {
+        const lf = document.getElementById('lfSelect').value;
         const quizArea = document.getElementById('quiz-area');
         const status = document.getElementById('status');
         const btn = document.getElementById('genBtn');
+        const loader = document.getElementById('loader');
 
         quizArea.innerHTML = '';
-        status.innerText = '⌛ جاري توليد الأسئلة... (سريع جداً)';
-        status.style.color = "blue";
+        status.innerText = '📡 جاري تحليل بيانات الكتاب وتوليد الأسئلة...';
+        status.style.color = "#0071e3";
+        loader.style.display = 'inline-block';
         btn.disabled = true;
 
-        const prompt = `أنت خبير ميكانيكا سيارات ألماني. قم بتوليد 25 سؤالاً اختيار من متعدد (MCQ) باللغة العربية حول نظام الـ 48 فولت في السيارات الحديثة. 
-        يجب أن يكون الرد بصيغة JSON نظيفة فقط، عبارة عن قائمة كائنات:
-        [{"q": "السؤال؟", "options": ["أ", "ب", "ج", "د"], "a": "الإجابة الصحيحة"}]`;
+        const prompt = `You are a German KFZ-Mechatronik expert. Based on the topics in "${lf}", generate 25 professional MCQs in Arabic. 
+        Focus on technical accuracy, calculations, and safety.
+        Return ONLY a JSON array: [{"q":"question","options":["a","b","c","d"],"a":"correct_option"}]`;
 
         try {
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -60,50 +88,50 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [{ role: "user", content: prompt }],
-                    temperature: 0.7
+                    temperature: 0.6,
+                    response_format: { type: "json_object" }
                 })
             });
 
             const data = await response.json();
-            let content = data.choices[0].message.content;
-            
-            // تنظيف النص في حال وجود علامات ```
-            const cleanJson = content.replace(/```json/g, '').replace(/```/g, '').trim();
-            const questions = JSON.parse(cleanJson);
+            const resContent = JSON.parse(data.choices[0].message.content);
+            const questions = Array.isArray(resContent) ? resContent : (resContent.questions || Object.values(resContent)[0]);
 
-            status.innerText = '✅ تم التوليد بنجاح! بالتوفيق يا شباب.';
-            status.style.color = "green";
-            
+            status.innerText = '✅ تم توليد الأسئلة بنجاح. بالتوفيق!';
+            status.style.color = "#34c759";
+
             questions.forEach((item, index) => {
                 const card = document.createElement('div');
-                card.className = 'card';
+                card.className = 'question-card';
                 card.innerHTML = `
-                    <strong>س ${index + 1}: ${item.q}</strong>
-                    <div style="margin-top:10px;">
+                    <strong>سؤال ${index + 1}: ${item.q}</strong>
+                    <div style="margin-top:15px;">
                         ${item.options.map(opt => `
-                            <button class="opt-btn" onclick="check(this,'${item.a.replace(/'/g, "\\'")}')">${opt}</button>
+                            <button class="opt-btn" onclick="checkAnswer(this, '${item.a.replace(/'/g, "\\'")}')">${opt}</button>
                         `).join('')}
-                    </div>`;
+                    </div>
+                `;
                 quizArea.appendChild(card);
             });
 
-        } catch (e) {
-            status.innerText = "❌ حدث خطأ في الاتصال. حاول مرة أخرى.";
-            status.style.color = "red";
-            console.error(e);
+        } catch (error) {
+            status.innerText = '❌ حدث خطأ. تأكد من اتصال الإنترنت وحاول مرة أخرى.';
+            status.style.color = "#ff3b30";
+            console.error(error);
         } finally {
+            loader.style.display = 'none';
             btn.disabled = false;
         }
     }
 
-    function check(btn, correct) {
+    function checkAnswer(btn, correct) {
         const parent = btn.parentElement;
         if (parent.dataset.answered === "true") return;
+        
         parent.dataset.answered = "true";
-
-        if (btn.innerText.trim() === correct.trim()) { 
-            btn.classList.add('correct'); 
-        } else { 
+        if (btn.innerText.trim() === correct.trim()) {
+            btn.classList.add('correct');
+        } else {
             btn.classList.add('wrong');
             const btns = parent.querySelectorAll('.opt-btn');
             btns.forEach(b => {
@@ -112,5 +140,6 @@
         }
     }
 </script>
+
 </body>
 </html>
