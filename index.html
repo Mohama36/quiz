@@ -3,100 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KFZ Prüfungssimulator Pro</title>
+    <title>KFZ Pro-Learn App</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #007aff; --success: #34c759; --danger: #ff3b30; --bg: #f2f2f7; --card: #ffffff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #1c1c1e; }
+        
         .header { background: #fff; padding: 15px; text-align: center; border-bottom: 1px solid #d1d1d6; position: sticky; top: 0; z-index: 10; }
         .header h1 { margin: 0; font-size: 18px; color: var(--primary); }
+
         .container { max-width: 500px; margin: auto; padding: 15px; min-height: 85vh; display: flex; flex-direction: column; }
+        
+        /* Setup Screen */
         .setup-screen { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-top: 20px; }
-        select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #c6c6c8; font-size: 16px; margin-bottom: 20px; }
+        select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #c6c6c8; font-size: 16px; margin-bottom: 20px; background: #fff; }
         .start-btn { width: 100%; background: var(--primary); color: #fff; border: none; padding: 18px; border-radius: 14px; font-size: 18px; font-weight: 600; cursor: pointer; }
+
+        /* Quiz Screen */
         .quiz-screen { display: none; width: 100%; }
         .progress-bar { height: 6px; background: #e5e5ea; border-radius: 3px; margin-bottom: 15px; overflow: hidden; }
         #progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        
         .q-card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; animation: slideIn 0.3s ease; }
+        
+        /* Translate Button */
         .trans-btn { position: absolute; top: 15px; right: 15px; background: #f0f0f5; border: none; padding: 8px 12px; border-radius: 10px; font-size: 12px; cursor: pointer; color: var(--primary); font-weight: 600; }
-        .q-text { font-size: 17px; font-weight: 600; margin: 25px 0 20px 0; line-height: 1.5; text-align: left; color: #000; }
-        .q-translation { font-size: 15px; color: #444; margin-bottom: 15px; display: none; text-align: right; background: #fdf2f2; padding: 12px; border-radius: 10px; border-right: 4px solid var(--danger); direction: rtl; }
-        .opt-btn { width: 100%; text-align: left; padding: 16px; margin: 8px 0; border: 2px solid #efeff4; border-radius: 12px; background: #fff; font-size: 15px; cursor: pointer; transition: 0.2s; color: #333; }
-        .opt-btn.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724; font-weight: 600; }
-        .opt-btn.wrong { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24; }
-        .expl-box { display: none; margin-top: 15px; padding: 15px; background: #f0f7ff; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary); color: #004a99; line-height: 1.6; text-align: right; direction: rtl; }
-        .expl-toggle { display: none; width: 100%; background: none; border: 1px dashed var(--primary); color: var(--primary); padding: 12px; border-radius: 10px; margin-top: 10px; font-weight: 600; cursor: pointer; }
-        .next-btn { width: 100%; background: #1c1c1e; color: #fff; border: none; padding: 18px; border-radius: 14px; font-weight: 600; margin-top: 20px; display: none; font-size: 16px; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+        
+        .q-text { font-size: 18px; font-weight: 600; margin: 25px 0 20px 0; line-height: 1.5; text-align: left; }
+        .q-translation { font-size: 15px; color: #666; margin-bottom: 15px; display: none; text-align: right; background: #f9f9f9; padding: 10px; border-radius: 8px; font-style: italic; direction: rtl; }
+
+        .opt-btn { width: 100%; text-align: left; padding: 15px; margin: 8px 0; border: 2px solid #efeff4; border-radius: 12px; background: #fff; font-size: 15px; cursor: pointer; transition: 0.2s; }
+        .opt-btn.correct { background: #d4edda; border-color: var(--success); color: #155724; }
+        .opt-btn.wrong { background: #f8d7da; border-color: var(--danger); color: #721c24; }
+
+        /* Explanation Box */
+        .expl-box { display: none; margin-top: 15px; padding: 15px; background: #eef7ff; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary); color: #004a99; }
+        .expl-toggle { display: none; width: 100%; background: none; border: 1px dashed var(--primary); color: var(--primary); padding: 10px; border-radius: 10px; margin-top: 10px; font-weight: 600; cursor: pointer; }
+
+        .next-btn { width: 100%; background: #1c1c1e; color: #fff; border: none; padding: 16px; border-radius: 14px; font-weight: 600; margin-top: 20px; display: none; cursor: pointer; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .score-screen { display: none; background: var(--card); border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-top: 20px; }
+        .score-circle { width: 120px; height: 120px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 32px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .restart-btn { width: 100%; background: var(--primary); color: #fff; border: none; padding: 18px; border-radius: 14px; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="header"><h1>KFZ EXAM SIMULATOR (LF 1-6)</h1></div>
+<div class="header"><h1>KFZ Lern-Expert (LF 1-6)</h1></div>
 
 <div class="container">
     <div id="setup" class="setup-screen">
-        <h2 style="margin:0 0 10px 0; font-size: 20px;">Prüfungsmodus (Schwer)</h2>
-        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Fragen basierend auf echten IHK-Prüfungsmustern.</p>
+        <h2 style="margin:0 0 20px 0; font-size: 22px;">Prüfungsvorbereitung</h2>
         <select id="lfSelect">
-            <option value="LF1: Viskosität, SAE, API, Kühlmittelzusammensetzung, Wartungspläne">LF1: Wartung & Schmierstoffe</option>
-            <option value="LF2: Gewindearten, Festigkeitsklassen, Bremsmechanik, Messschieber-Fehler">LF2: Mechanik & Verbindungstechnik</option>
-            <option value="LF3: Multimeter-Einstellung, Schaltplananalyse Kl.15/30, Spannungsabfall">LF3: Elektrotechnik & Diagnose</option>
-            <option value="LF4: 13-poliger Stecker, Anhängelast, Kalkulation von AW">LF4: Umbau & Service</option>
-            <option value="LF5: Kurbeltrieb-Lagerung, Thermostat-Regelung, Öldruck-Diagnose">LF5: Motormechanik & Kühlung</option>
-            <option value="LF6: 48V-Sicherheitsregeln, DC/DC-Wandler, Li-Ionen Chemie, Freischalten">LF6: Hochvolt- & 48V-Systeme</option>
+            <option value="LF1: Wartung, Motoröl SAE, Kühlmittel, Inspektionsarbeiten">LF1: Wartung & Motorkennwerte</option>
+            <option value="LF2: Gewinde, Schrauben, Bremsen, Messen, Bremsscheiben">LF2: Mechanik & Bremsanlage</option>
+            <option value="LF3: Spannung, Strom, Widerstand, Schaltpläne, Generator, Batterie">LF3: Elektrotechnik</option>
+            <option value="LF4: Anhängerkupplung, 7/13-pol, Zeitberechnung, Kalkulation">LF4: Umbau & Kalkulation</option>
+            <option value="LF5: Kurbeltrieb, Thermostat, Schmierung, Motoröl">LF5: Kraftmaschine & Kühlung</option>
+            <option value="LF6: 48V-Bordnetz, DC/DC, Diagnosesysteme, Hochvolt">LF6: Diagnosesysteme & 48V</option>
         </select>
-        <button class="start-btn" onclick="startQuiz()">Schwere Fragen generieren</button>
+        <button class="start-btn" onclick="startQuiz()">Fragen generieren</button>
         <div id="loader" class="loader"></div>
+        <div id="errorMsg" style="color:red; margin-top:10px; display:none; text-align:center;"></div>
     </div>
 
     <div id="quiz" class="quiz-screen">
         <div class="progress-bar"><div id="progress-fill"></div></div>
         <div id="q-container"></div>
-        <button id="nextBtn" class="next-btn" onclick="nextQuestion()">Nächste Frage ➔</button>
+        <button id="nextBtn" class="next-btn" onclick="nextQuestion()">Nächste Frage ›</button>
+    </div>
+    
+    <div id="scoreScreen" class="score-screen">
+        <h2>Fertig! 🎉</h2>
+        <div class="score-circle" id="scoreCircle"></div>
+        <p id="scoreText" style="font-size:18px; font-weight:600;"></p>
+        <button class="restart-btn" onclick="restartQuiz()">Nochmal versuchen</button>
     </div>
 </div>
 
 <script>
-    const API_KEY = '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';
     let questions = [];
     let currentIndex = 0;
+    let score = 0;
 
     async function startQuiz() {
         const lf = document.getElementById('lfSelect').value;
         const loader = document.getElementById('loader');
+        const errorMsg = document.getElementById('errorMsg');
         loader.style.display = 'block';
-        
-        const prompt = `DU BIST EIN STRENGER PRÜFER. Erstelle 25 SCHWERE Fragen für KFZ-Mechatroniker zu: ${lf}.
-        STIL: Wie IHK-Prüfung (Situation, Diagnose, Folgen). Keine einfachen Fakten.
-        GEB NUR JSON ZURÜCK: [{"q":"Fachfrage auf Deutsch","options":["A","B","C","D"],"a":"Korrekte Antwort","tr":"ترجمة السؤال بدقة","ex":"شرح تقني عميق باللغة العربية لماذا هذه الإجابة هي الصحيحة وما هو الخطأ في البقية"}]`;
+        errorMsg.style.display = 'none';
+        document.querySelector('.start-btn').disabled = true;
+
+        // CRITICAL: The prompt must be very explicit about the answer format
+        // The answer field must be the EXACT text of the correct option
+        const prompt = `Du bist ein KFZ-Mechatroniker Prüfungsexperte. Erstelle 10 Multiple-Choice-Prüfungsfragen für KFZ-Mechatroniker zum Thema: ${lf}.
+
+WICHTIGE REGELN:
+1. Jede Frage hat genau 4 Antwortoptionen (A, B, C, D)
+2. Das "answer" Feld muss EXAKT den vollständigen Text der richtigen Antwortoption enthalten - kopiere ihn wortwörtlich
+3. Stelle sicher dass die richtige Antwort immer in der "options" Liste vorhanden ist
+4. Variiere welche Option (A/B/C/D Position) die richtige ist - nicht immer die erste
+
+Antworte NUR mit einem gültigen JSON Array, kein anderer Text, keine Markdown-Backticks:
+[
+  {
+    "q": "Fragetext auf Deutsch",
+    "options": ["Option A Text", "Option B Text", "Option C Text", "Option D Text"],
+    "answer": "Exakt der vollständige Text der richtigen Option hier",
+    "tr": "ترجمة السؤال بالعربية",
+    "ex": "شرح بالعربية لماذا هذه الإجابة صحيحة"
+  }
+]`;
 
         try {
-            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            const response = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': '',
+                    'anthropic-version': '2023-06-01',
+                    'anthropic-dangerous-direct-browser-access': 'true'
+                },
                 body: JSON.stringify({
-                    model: "llama-3.3-70b-versatile",
-                    messages: [{ role: "user", content: prompt }],
-                    temperature: 0.5,
-                    response_format: { type: "json_object" }
+                    model: "claude-sonnet-4-20250514",
+                    max_tokens: 4000,
+                    messages: [{ role: "user", content: prompt }]
                 })
             });
 
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+
             const data = await response.json();
-            const res = JSON.parse(data.choices[0].message.content);
-            questions = Array.isArray(res) ? res : (res.questions || Object.values(res)[0]);
             
+            // Extract text from response
+            let rawText = '';
+            for (const block of data.content) {
+                if (block.type === 'text') rawText += block.text;
+            }
+            
+            // Clean up: remove markdown code blocks if present
+            rawText = rawText.trim();
+            rawText = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '');
+            rawText = rawText.replace(/^```\s*/i, '').replace(/```\s*$/i, '');
+            rawText = rawText.trim();
+            
+            // Parse JSON
+            let parsed;
+            try {
+                parsed = JSON.parse(rawText);
+            } catch (parseErr) {
+                // Try to extract JSON array from text
+                const match = rawText.match(/\[[\s\S]*\]/);
+                if (match) {
+                    parsed = JSON.parse(match[0]);
+                } else {
+                    throw new Error('JSON konnte nicht geparst werden');
+                }
+            }
+            
+            if (!Array.isArray(parsed) || parsed.length === 0) {
+                throw new Error('Keine Fragen erhalten');
+            }
+            
+            // Validate and fix each question
+            questions = parsed.map((q, i) => {
+                // Ensure answer exists in options - find best match
+                if (!q.options || !Array.isArray(q.options)) {
+                    q.options = ['A', 'B', 'C', 'D'];
+                }
+                
+                // Normalize whitespace in options and answer
+                q.options = q.options.map(o => String(o).trim());
+                q.answer = String(q.answer || '').trim();
+                
+                // Check if answer exactly matches one of the options
+                const exactMatch = q.options.find(o => o === q.answer);
+                if (!exactMatch) {
+                    // Try case-insensitive match
+                    const caseMatch = q.options.find(o => o.toLowerCase() === q.answer.toLowerCase());
+                    if (caseMatch) {
+                        q.answer = caseMatch; // use the exact option text
+                    } else {
+                        // Try partial match - find option that contains the answer or vice versa
+                        const partialMatch = q.options.find(o => 
+                            o.toLowerCase().includes(q.answer.toLowerCase()) || 
+                            q.answer.toLowerCase().includes(o.toLowerCase())
+                        );
+                        if (partialMatch) {
+                            q.answer = partialMatch;
+                        } else {
+                            // If no match found, use first option as fallback (shouldn't happen with good prompt)
+                            console.warn(`Question ${i+1}: answer "${q.answer}" not found in options, using first option`);
+                            q.answer = q.options[0];
+                        }
+                    }
+                }
+                
+                return q;
+            });
+
             currentIndex = 0;
+            score = 0;
             document.getElementById('setup').style.display = 'none';
             document.getElementById('quiz').style.display = 'block';
             showQuestion();
+
         } catch (e) {
-            alert('Server überlastet. Bitte erneut versuchen.');
+            console.error('Error:', e);
+            errorMsg.textContent = 'Fehler beim Laden der Fragen: ' + e.message + '. Bitte erneut versuchen.';
+            errorMsg.style.display = 'block';
+        } finally {
             loader.style.display = 'none';
+            document.querySelector('.start-btn').disabled = false;
         }
     }
 
@@ -106,19 +231,36 @@
         document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('progress-fill').style.width = ((currentIndex + 1) / questions.length * 100) + '%';
 
+        // Store correct answer as data attribute on container for reliable comparison
+        container.dataset.correctAnswer = q.answer;
+
+        let optionsHTML = q.options.map((opt, idx) => {
+            // Use data-option attribute to store the option text separately from displayed text
+            return `<button class="opt-btn" data-option="${escapeAttr(opt)}" onclick="checkAnswer(this)">${opt}</button>`;
+        }).join('');
+
         container.innerHTML = `
             <div class="q-card">
-                <button class="trans-btn" onclick="toggleTrans()">Übersetzen 🌐</button>
-                <div style="font-size:11px; color:#8e8e93; font-weight:700;">FRAGE ${currentIndex + 1}/${questions.length}</div>
+                <button class="trans-btn" onclick="toggleTrans()">Translate 🌐</button>
+                <div style="font-size:12px; color:#8e8e93;">Frage ${currentIndex + 1}/${questions.length}</div>
                 <div class="q-text" id="qText">${q.q}</div>
-                <div class="q-translation" id="qTrans">${q.tr}</div>
-                <div id="options">
-                    ${q.options.map(opt => `<button class="opt-btn" onclick="checkAnswer(this, '${q.a.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}
+                <div class="q-translation" id="qTrans">${q.tr || ''}</div>
+                <div id="options" data-answered="false">
+                    ${optionsHTML}
                 </div>
-                <button id="explToggle" class="expl-toggle" onclick="showExpl()">WARUM IST DAS RICHTIG? (شرح)</button>
-                <div id="explBox" class="expl-box"><b>🔧 التقنية خلف الجواب:</b><br>${q.ex}</div>
+                <button id="explToggle" class="expl-toggle" onclick="showExpl()">Erklärung anzeigen / إظهار الشرح</button>
+                <div id="explBox" class="expl-box"><b>💡 الشرح:</b><br>${q.ex || ''}</div>
             </div>
         `;
+    }
+
+    function escapeAttr(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
     }
 
     function toggleTrans() {
@@ -131,25 +273,75 @@
         document.getElementById('explToggle').style.display = 'none';
     }
 
-    function checkAnswer(btn, correct) {
-        const opts = document.getElementById('options');
-        if (opts.dataset.answered === "true") return;
-        opts.dataset.answered = "true";
-        
-        if (btn.innerText.trim() === correct.trim()) {
+    function checkAnswer(btn) {
+        const optionsDiv = document.getElementById('options');
+        if (optionsDiv.dataset.answered === "true") return;
+        optionsDiv.dataset.answered = "true";
+
+        // Get the option text from data attribute (avoids innerHTML whitespace issues)
+        const selectedText = btn.dataset.option;
+        const correctAnswer = document.getElementById('q-container').dataset.correctAnswer;
+
+        const isCorrect = selectedText.trim() === correctAnswer.trim();
+
+        if (isCorrect) {
             btn.classList.add('correct');
+            score++;
         } else {
             btn.classList.add('wrong');
-            [...opts.children].forEach(b => { if(b.innerText.trim() === correct.trim()) b.classList.add('correct'); });
+            // Highlight the correct answer
+            const allBtns = optionsDiv.querySelectorAll('.opt-btn');
+            allBtns.forEach(b => {
+                if (b.dataset.option.trim() === correctAnswer.trim()) {
+                    b.classList.add('correct');
+                }
+            });
         }
+
         document.getElementById('explToggle').style.display = 'block';
         document.getElementById('nextBtn').style.display = 'block';
+        
+        // Update next button text for last question
+        if (currentIndex === questions.length - 1) {
+            document.getElementById('nextBtn').textContent = 'Ergebnis anzeigen 🏆';
+        }
     }
 
     function nextQuestion() {
         currentIndex++;
-        if (currentIndex < questions.length) showQuestion();
-        else { alert('Prüfung beendet! Sehr gut.'); location.reload(); }
+        if (currentIndex < questions.length) {
+            showQuestion();
+        } else {
+            showScore();
+        }
+    }
+
+    function showScore() {
+        document.getElementById('quiz').style.display = 'none';
+        const scoreScreen = document.getElementById('scoreScreen');
+        scoreScreen.style.display = 'block';
+        
+        const percentage = Math.round((score / questions.length) * 100);
+        document.getElementById('scoreCircle').textContent = percentage + '%';
+        document.getElementById('scoreText').textContent = `${score} von ${questions.length} Fragen richtig`;
+        
+        // Color based on score
+        const circle = document.getElementById('scoreCircle');
+        if (percentage >= 70) {
+            circle.style.background = 'var(--success)';
+        } else if (percentage >= 50) {
+            circle.style.background = '#ff9500';
+        } else {
+            circle.style.background = 'var(--danger)';
+        }
+    }
+
+    function restartQuiz() {
+        document.getElementById('scoreScreen').style.display = 'none';
+        document.getElementById('setup').style.display = 'block';
+        questions = [];
+        currentIndex = 0;
+        score = 0;
     }
 </script>
 </body>
