@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار أنظمة 48 فولت - النسخة المحدثة</title>
+    <title>اختبار أنظمة 48 فولت - KFZ Expert</title>
     <style>
         :root { --primary: #2c3e50; --accent: #27ae60; --light: #f4f7f6; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); margin: 0; padding: 20px; color: #333; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--light); margin: 0; padding: 20px; color: #333; }
         .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
         header { text-align: center; border-bottom: 3px solid var(--accent); margin-bottom: 20px; padding-bottom: 10px; }
         .controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #eee; padding: 15px; border-radius: 10px; }
         select, button { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; cursor: pointer; }
-        button { background: var(--primary); color: white; border: none; font-weight: bold; flex-grow: 1; }
+        button { background: var(--primary); color: white; border: none; font-weight: bold; flex-grow: 1; transition: 0.3s; }
         button:hover { background: var(--accent); }
         button:disabled { background: #999; cursor: not-allowed; }
-        .card { background: #fff; border: 1px solid #ddd; padding: 20px; margin-top: 15px; border-radius: 8px; border-right: 6px solid var(--accent); text-align: right; }
-        .opt-btn { display: block; width: 100%; text-align: right; padding: 12px; margin: 8px 0; border: 1px solid #eee; border-radius: 6px; background: #fafafa; cursor: pointer; font-size: 15px; transition: 0.2s; }
-        .opt-btn:hover { background: #f0f0f0; border-color: #bbb; }
+        .card { background: #fff; border: 1px solid #ddd; padding: 20px; margin-top: 15px; border-radius: 8px; border-right: 6px solid var(--accent); text-align: right; animation: fadeIn 0.5s ease; }
+        .opt-btn { display: block; width: 100%; text-align: right; padding: 12px; margin: 8px 0; border: 1px solid #eee; border-radius: 6px; background: #fafafa; cursor: pointer; font-size: 15px; }
+        .opt-btn:hover { background: #f0f0f0; }
         .correct { background-color: #2ecc71 !important; color: white; }
         .wrong { background-color: #e74c3c !important; color: white; }
-        #status { text-align: center; font-weight: bold; margin: 10px; color: var(--primary); }
+        #status { text-align: center; font-weight: bold; margin: 10px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -27,24 +28,24 @@
 <div class="container">
     <header>
         <h1>متخصص أنظمة 48 فولت (KFZ)</h1>
-        <p>توليد أسئلة دراسية لرفاقي</p>
+        <p>توليد أسئلة دراسية تفاعلية لرفاقي</p>
     </header>
 
     <div class="controls">
         <select id="difficulty">
-            <option value="سهل">سهل</option>
-            <option value="متوسط" selected>متوسط</option>
-            <option value="صعب">صعب</option>
+            <option value="سهل">مستوى سهل</option>
+            <option value="متوسط" selected>مستوى متوسط</option>
+            <option value="صعب">مستوى خبير</option>
         </select>
         <button id="genBtn" onclick="generateExam()">توليد 25 سؤال جديد</button>
     </div>
 
-    <div id="status">جاهز...</div>
+    <div id="status">جاهز... اضغط على الزر للبدء</div>
     <div id="quiz-area"></div>
 </div>
 
 <script>
-    // مفتاحك الفعال
+    // مفتاح الـ API الخاص بك
     const API_KEY = 'AIzaSyAwnoyleWh2dA4ur8QWsy-GyYTcPqMlbbM'; 
 
     async function generateExam() {
@@ -54,18 +55,19 @@
         const btn = document.getElementById('genBtn');
 
         quizArea.innerHTML = '';
-        status.innerText = '📡 جاري جلب الأسئلة من Gemini...';
-        status.style.color = "blue";
+        status.innerText = '⌛ جاري توليد الأسئلة... قد يستغرق الأمر 10 ثوانٍ';
+        status.style.color = "#2c3e50";
         btn.disabled = true;
 
-        const prompt = `أنت خبير ميكانيكا سيارات. ولد 25 سؤال MCQ عن نظام 48V باللغة العربية. 
-        المستوى: ${diff}. 
-        الرد يجب أن يكون JSON فقط بهذا التنسيق: 
-        [{"q": "السؤال؟", "options": ["1", "2", "3", "4"], "a": "الإجابة الصحيحة"}]`;
+        // البرومبت مع تشديد على صيغة JSON
+        const prompt = `Generate 25 multiple-choice questions in Arabic about 48V automotive systems (Hybrid systems). 
+        Difficulty level: ${diff}. 
+        Return ONLY a JSON array of objects. 
+        Each object: {"q": "question", "options": ["opt1", "opt2", "opt3", "opt4"], "a": "correct answer"}`;
 
         try {
-            // التعديل هنا: استخدام gemini-pro كخيار أكثر استقراراً في v1beta
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+            // استخدام المسار الصحيح والمحدث لموديل Flash
+            const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
             
             const response = await fetch(url, {
                 method: 'POST',
@@ -75,19 +77,19 @@
                 })
             });
 
-            const data = await response.json();
-
-            if (data.error) {
-                throw new Error(data.error.message);
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error.message || 'خطأ في الاتصال');
             }
 
-            // استخراج النص وتنظيفه
-            let text = data.candidates[0].content.parts[0].text;
-            // إزالة أي علامات مضافة مثل ```json
-            const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const data = await response.json();
+            let rawText = data.candidates[0].content.parts[0].text;
+            
+            // تنظيف أي علامات برمجية يضعها الذكاء الاصطناعي
+            const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
             const questions = JSON.parse(cleanJson);
             
-            status.innerText = '✅ تم التوليد بنجاح!';
+            status.innerText = '✅ تم التوليد بنجاح! بالتوفيق يا بطل.';
             status.style.color = "green";
             
             questions.forEach((item, index) => {
