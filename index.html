@@ -1,90 +1,98 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="de" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة مراجعة KFZ - Lernfelds 1-6</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KFZ Pro-Learn App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0071e3; --success: #34c759; --danger: #ff3b30; --bg: #f5f5f7; --card: #ffffff; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: #1d1d1f; margin: 0; padding: 0; line-height: 1.6; }
-        .nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); sticky; top: 0; padding: 15px; text-align: center; border-bottom: 1px solid #d2d2d7; z-index: 100; }
-        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
-        .setup-card { background: var(--card); border-radius: 20px; padding: 30px; box-shadow: 0 8px 30px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        h2 { margin-top: 0; color: #1d1d1f; font-weight: 700; }
-        label { display: block; margin-bottom: 10px; font-weight: 500; text-align: right; }
-        select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #d2d2d7; background: #fff; font-size: 16px; font-family: inherit; margin-bottom: 20px; appearance: none; cursor: pointer; }
-        .btn-gen { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-size: 18px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; }
-        .btn-gen:hover { opacity: 0.9; transform: scale(0.99); }
-        .btn-gen:disabled { background: #999; }
-        .question-card { background: var(--card); border-radius: 18px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e5e5e5; text-align: right; animation: slideUp 0.5s ease; }
-        .opt-btn { display: block; width: 100%; text-align: right; padding: 14px; margin: 10px 0; border: 2px solid #f2f2f2; border-radius: 12px; background: #fff; cursor: pointer; font-size: 16px; transition: 0.2s; font-family: inherit; }
-        .opt-btn:hover { border-color: var(--primary); background: #f9f9f9; }
-        .correct { background: #e8f5e9 !important; border-color: var(--success) !important; color: #1b5e20; font-weight: bold; }
-        .wrong { background: #ffebee !important; border-color: var(--danger) !important; color: #b71c1c; }
-        #status { margin-top: 15px; font-weight: 600; font-size: 14px; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .loader { display: none; width: 24px; height: 24px; border: 3px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; margin-right: 10px; }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        :root { --primary: #007aff; --success: #34c759; --danger: #ff3b30; --bg: #f2f2f7; --card: #ffffff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #1c1c1e; }
+        
+        .header { background: #fff; padding: 15px; text-align: center; border-bottom: 1px solid #d1d1d6; position: sticky; top: 0; z-index: 10; }
+        .header h1 { margin: 0; font-size: 18px; color: var(--primary); }
+
+        .container { max-width: 500px; margin: auto; padding: 15px; min-height: 85vh; display: flex; flex-direction: column; }
+        
+        /* Setup Screen */
+        .setup-screen { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-top: 20px; }
+        select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #c6c6c8; font-size: 16px; margin-bottom: 20px; background: #fff; }
+        .start-btn { width: 100%; background: var(--primary); color: #fff; border: none; padding: 18px; border-radius: 14px; font-size: 18px; font-weight: 600; cursor: pointer; }
+
+        /* Quiz Screen */
+        .quiz-screen { display: none; width: 100%; }
+        .progress-bar { height: 6px; background: #e5e5ea; border-radius: 3px; margin-bottom: 15px; overflow: hidden; }
+        #progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        
+        .q-card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; animation: slideIn 0.3s ease; }
+        
+        /* Translate Button */
+        .trans-btn { position: absolute; top: 15px; right: 15px; background: #f0f0f5; border: none; padding: 8px 12px; border-radius: 10px; font-size: 12px; cursor: pointer; color: var(--primary); font-weight: 600; }
+        
+        .q-text { font-size: 18px; font-weight: 600; margin: 25px 0 20px 0; line-height: 1.5; text-align: left; }
+        .q-translation { font-size: 15px; color: #666; margin-bottom: 15px; display: none; text-align: right; background: #f9f9f9; padding: 10px; border-radius: 8px; font-style: italic; direction: rtl; }
+
+        .opt-btn { width: 100%; text-align: left; padding: 15px; margin: 8px 0; border: 2px solid #efeff4; border-radius: 12px; background: #fff; font-size: 15px; cursor: pointer; transition: 0.2s; }
+        .opt-btn.correct { background: #d4edda; border-color: var(--success); color: #155724; }
+        .opt-btn.wrong { background: #f8d7da; border-color: var(--danger); color: #721c24; }
+
+        /* Explanation Box */
+        .expl-box { display: none; margin-top: 15px; padding: 15px; background: #eef7ff; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary); color: #004a99; }
+        .expl-toggle { display: none; width: 100%; background: none; border: 1px dashed var(--primary); color: var(--primary); padding: 10px; border-radius: 10px; margin-top: 10px; font-weight: 600; cursor: pointer; }
+
+        .next-btn { width: 100%; background: #1c1c1e; color: #fff; border: none; padding: 16px; border-radius: 14px; font-weight: 600; margin-top: 20px; display: none; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="nav">
-    <strong>منصة KFZ التعليمية | مراجعة شاملة</strong>
-</div>
+<div class="header"><h1>KFZ Lern-Expert (LF 1-6)</h1></div>
 
 <div class="container">
-    <div class="setup-card">
-        <h2>توليد اختبار من الكتاب (LF1-LF6)</h2>
-        
-        <label>اختر مجال الدراسة (Lernfeld):</label>
+    <div id="setup" class="setup-screen">
+        <h2 style="margin:0 0 20px 0; font-size: 22px;">Prüfungsvorbereitung</h2>
         <select id="lfSelect">
-            <option value="LF1: Fahrzeugwartung, Schmierstoffe, Motorkennwerte, Wartungsunterlagen">Lernfeld 1: الصيانة ومواصفات المحرك والزيوت</option>
-            <option value="LF2: Gewinde, Schraubensicherungen, Bremsanlage Grundlagen, Messzeuge">Lernfeld 2: الميكانيكا والبراغي والفرامل</option>
-            <option value="LF3: Elektrotechnik, Ohmsches Gesetz, Reihen-Parallelschaltung, Schaltpläne">Lernfeld 3: الكهرباء، قانون أوم والدوائر الكهربائية</option>
-            <option value="LF4: Anhängerkupplung, Elektrosatz 7/13-polig, Kostenrechnung">Lernfeld 4: أنظمة القطر وحساب التكاليف</option>
-            <option value="LF5: Kurbeltrieb, Motorschmierung, Kühlsysteme, Thermostat">Lernfeld 5: أجزاء المحرك ودورة التبريد والتزييت</option>
-            <option value="LF6: 48V-Bordnetz, Starter-Generator, DC/DC-Wandler, Li-Ionen-Batterie, Deaktivierung">Lernfeld 6: تشخيص الأعطال ونظام الـ 48 فولت</option>
+            <option value="LF1: Wartung, Motoröl SAE, Kühlmittel">LF1: Wartung & Motorkennwerte</option>
+            <option value="LF2: Gewinde, Schrauben, Bremsen, Messen">LF2: Mechanik & Bremsanlage</option>
+            <option value="LF3: Spannung, Strom, Widerstand, Schaltpläne">LF3: Elektrotechnik</option>
+            <option value="LF4: Anhängerkupplung, 7/13-pol, Zeitberechnung">LF4: Umbau & Kalkulation</option>
+            <option value="LF5: Kurbeltrieb, Thermostat, Schmierung">LF5: Kraftmaschine & Kühlung</option>
+            <option value="LF6: 48V-Bordnetz, DC/DC, Sicherheit">LF6: Diagnosesysteme & 48V</option>
         </select>
-
-        <button class="btn-gen" id="genBtn" onclick="generateQuiz()">
-            <span id="loader" class="loader" style="display:none;"></span>
-            توليد 25 سؤالاً اختيارياً
-        </button>
-        <div id="status"></div>
+        <button class="start-btn" onclick="startQuiz()">Fragen generieren</button>
+        <div id="loader" class="loader"></div>
     </div>
 
-    <div id="quiz-area"></div>
+    <div id="quiz" class="quiz-screen">
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+        <div id="q-container"></div>
+        <button id="nextBtn" class="next-btn" onclick="nextQuestion()">Nächste Frage</button>
+    </div>
 </div>
 
 <script>
     const API_KEY = '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';
+    let questions = [];
+    let currentIndex = 0;
 
-    async function generateQuiz() {
+    async function startQuiz() {
         const lf = document.getElementById('lfSelect').value;
-        const quizArea = document.getElementById('quiz-area');
-        const status = document.getElementById('status');
-        const btn = document.getElementById('genBtn');
         const loader = document.getElementById('loader');
-
-        quizArea.innerHTML = '';
-        status.innerText = '📡 جاري تحليل بيانات الكتاب وتوليد الأسئلة...';
-        status.style.color = "#0071e3";
-        loader.style.display = 'inline-block';
-        btn.disabled = true;
-
-        const prompt = `You are a German KFZ-Mechatronik expert. Based on the topics in "${lf}", generate 25 professional MCQs in Arabic. 
-        Focus on technical accuracy, calculations, and safety.
-        Return ONLY a JSON array: [{"q":"question","options":["a","b","c","d"],"a":"correct_option"}]`;
+        loader.style.display = 'block';
+        
+        const prompt = `Erstelle 25 Prüfungsfragen für KFZ-Mechatroniker zu: ${lf}. 
+        Sprache: Deutsch. 
+        WICHTIG: Gib NUR ein JSON-Array zurück: 
+        [{"q":"Frage","options":["A","B","C","D"],"a":"Antwort","tr":"الترجمة للعربية","ex":"Schرح بالعربية لسبب الجواب"}]`;
 
         try {
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [{ role: "user", content: prompt }],
@@ -94,52 +102,70 @@
             });
 
             const data = await response.json();
-            const resContent = JSON.parse(data.choices[0].message.content);
-            const questions = Array.isArray(resContent) ? resContent : (resContent.questions || Object.values(resContent)[0]);
-
-            status.innerText = '✅ تم توليد الأسئلة بنجاح. بالتوفيق!';
-            status.style.color = "#34c759";
-
-            questions.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'question-card';
-                card.innerHTML = `
-                    <strong>سؤال ${index + 1}: ${item.q}</strong>
-                    <div style="margin-top:15px;">
-                        ${item.options.map(opt => `
-                            <button class="opt-btn" onclick="checkAnswer(this, '${item.a.replace(/'/g, "\\'")}')">${opt}</button>
-                        `).join('')}
-                    </div>
-                `;
-                quizArea.appendChild(card);
-            });
-
-        } catch (error) {
-            status.innerText = '❌ حدث خطأ. تأكد من اتصال الإنترنت وحاول مرة أخرى.';
-            status.style.color = "#ff3b30";
-            console.error(error);
-        } finally {
+            const res = JSON.parse(data.choices[0].message.content);
+            questions = Array.isArray(res) ? res : (res.questions || Object.values(res)[0]);
+            
+            currentIndex = 0;
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+            showQuestion();
+        } catch (e) {
+            alert('Fehler! Bitte Seite neu laden.');
             loader.style.display = 'none';
-            btn.disabled = false;
         }
     }
 
+    function showQuestion() {
+        const container = document.getElementById('q-container');
+        const q = questions[currentIndex];
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('progress-fill').style.width = ((currentIndex + 1) / questions.length * 100) + '%';
+
+        container.innerHTML = `
+            <div class="q-card">
+                <button class="trans-btn" onclick="toggleTrans()">Translate 🌐</button>
+                <div style="font-size:12px; color:#8e8e93;">Frage ${currentIndex + 1}/${questions.length}</div>
+                <div class="q-text" id="qText">${q.q}</div>
+                <div class="q-translation" id="qTrans">${q.tr}</div>
+                <div id="options">
+                    ${q.options.map(opt => `<button class="opt-btn" onclick="checkAnswer(this, '${q.a.replace(/'/g, "\\'")}')">${opt}</button>`).join('')}
+                </div>
+                <button id="explToggle" class="expl-toggle" onclick="showExpl()">Erklärung anzeigen / إظهار الشرح</button>
+                <div id="explBox" class="expl-box"><b>💡 الشرح:</b><br>${q.ex}</div>
+            </div>
+        `;
+    }
+
+    function toggleTrans() {
+        const tr = document.getElementById('qTrans');
+        tr.style.display = tr.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function showExpl() {
+        document.getElementById('explBox').style.display = 'block';
+        document.getElementById('explToggle').style.display = 'none';
+    }
+
     function checkAnswer(btn, correct) {
-        const parent = btn.parentElement;
-        if (parent.dataset.answered === "true") return;
+        const opts = document.getElementById('options');
+        if (opts.dataset.answered === "true") return;
+        opts.dataset.answered = "true";
         
-        parent.dataset.answered = "true";
         if (btn.innerText.trim() === correct.trim()) {
             btn.classList.add('correct');
         } else {
             btn.classList.add('wrong');
-            const btns = parent.querySelectorAll('.opt-btn');
-            btns.forEach(b => {
-                if (b.innerText.trim() === correct.trim()) b.classList.add('correct');
-            });
+            [...opts.children].forEach(b => { if(b.innerText.trim() === correct.trim()) b.classList.add('correct'); });
         }
+        document.getElementById('explToggle').style.display = 'block';
+        document.getElementById('nextBtn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex < questions.length) showQuestion();
+        else { alert('Fertig!'); location.reload(); }
     }
 </script>
-
 </body>
 </html>
