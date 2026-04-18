@@ -99,21 +99,31 @@
         errorMsg.style.display = 'none';
         document.querySelector('.start-btn').disabled = true;
 
-        const prompt = `Du bist ein KFZ-Mechatroniker Prüfungsexperte. Erstelle 10 Multiple-Choice-Prüfungsfragen für KFZ-Mechatroniker zum Thema: ${lf}.
+        const prompt = `Du bist ein strenger KFZ-Mechatroniker Prüfungsexperte. Erstelle genau 20 anspruchsvolle Multiple-Choice-Prüfungsfragen auf dem Niveau der Gesellenprüfung Teil 1 und 2 zum gewählten Thema: ${lf}.
 
-WICHTIGE REGELN:
-1. Jede Frage hat genau 4 Antwortoptionen.
-2. Das "answer" Feld muss EXAKT den Text der richtigen Option enthalten.
-3. Antworte NUR mit einem validen JSON-Array.
+Beziehe dich bei der Fragengenerierung zwingend auf das spezifische KFZ-Fachwissen der folgenden Lernfelder (LF1 - LF6):
+- LF1: Motoröl (SAE-Klassen, ACEA, Viskosität, Additive), Kühlsystem (Frostschutz, Mischungsverhältnis Diagramme, Überdruckventil, Kavitation), Inspektionsarbeiten und Kundenannahme.
+- LF2: Mess- und Prüftechnik (Bügelmessschraube für Bremsscheiben, Messschieber), Schraubenverbindungen (DIN EN ISO, Festigkeitsklassen z.B. 10.9, Steigung), Verbindungsarten (kraft-, form-, stoffschlüssig).
+- LF3: Elektrotechnik-Grundlagen (Ohmsches Gesetz, Reihen-/Parallelschaltung Berechnungen, Widerstandsmessung stromlos, Spannungsabfall), Schaltpläne lesen (Klemmenbezeichnungen 30, 31, 15, 50, 56a, 56b).
+- LF4: Umrüstarbeiten (Anhängerkupplung, D-Wert, Stützlast berechnen, 13-polige Steckdose nach ISO 11446, Abschaltung der Nebelschlussleuchte, C2-Kontrolle).
+- LF5: Verbrennungsmotor & Kühlung (Kurbeltrieb, Motorsteuerung, 4-Takt-Prinzip, pV-Diagramm, Kennfeldthermostat, Druckumlaufschmierung, hydrodynamische Gleitlager, Kolbenspiel).
+- LF6: Diagnosesysteme, Generator (Drehstrom, Gleichrichtung, Pulswechselrichter, Multifunktionsregler, Induktion), Starter (Schub-Schraubtrieb), 48V-Bordnetz, Hochvolttechnik (DGUV 209-093, Spannungsfreiheit feststellen, eigensichere Fahrzeuge, HV-Batterie).
+
+WICHTIGE REGELN FÜR DIE FRAGEN:
+1. Erstelle EXAKT 20 Fragen.
+2. Die Fragen müssen extrem praxisnah und analytisch sein (Szenarien aus der Werkstatt, Fehlersuche, Interpretation von Messwerten, Ursache-Wirkung-Zusammenhänge). Vermeide einfache Vokabelabfragen; fordere tiefes Verständnis.
+3. Jede Frage hat genau 4 Antwortoptionen, wovon nur EINE richtig ist.
+4. Das "answer" Feld muss EXAKT den Text der richtigen Option enthalten.
+5. Antworte NUR mit einem validen JSON-Array.
 
 Format:
 [
   {
-    "q": "Fragetext auf Deutsch",
-    "options": ["Opt 1", "Opt 2", "Opt 3", "Opt 4"],
-    "answer": "Opt 1",
-    "tr": "ترجمة السؤال بالعربية",
-    "ex": "شرح بالعربية لماذا هذه الإجابة صحيحة"
+    "q": "Fragetext auf Deutsch (z.B. Ein Kunde beanstandet... / Bei der Messung mit dem Multimeter an einer defekten Reihenschaltung...)",
+    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+    "answer": "Option 1",
+    "tr": "ترجمة السؤال والسيناريو بدقة إلى العربية",
+    "ex": "شرح تقني دقيق ومفصل بالعربية يوضح لماذا هذه الإجابة هي الصحيحة بناءً على القواعد الفيزيائية أو الميكانيكية للسيارات"
   }
 ]`;
 
