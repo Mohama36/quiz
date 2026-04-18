@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KFZ Pro-Learn App (Fixed Logic)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>KFZ Pro-Learn App (Final Fix)</title>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap)" rel="stylesheet">
     <style>
         :root { --primary: #007aff; --success: #34c759; --danger: #ff3b30; --bg: #f2f2f7; --card: #ffffff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -13,7 +13,7 @@
         .header h1 { margin: 0; font-size: 18px; color: var(--primary); }
         .container { max-width: 500px; margin: auto; padding: 15px; min-height: 85vh; display: flex; flex-direction: column; }
         .setup-screen { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-top: 20px; }
-        select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #c6c6c8; font-size: 16px; margin-bottom: 20px; }
+        select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #c6c6c8; font-size: 16px; margin-bottom: 20px; background: #fff; }
         .start-btn { width: 100%; background: var(--primary); color: #fff; border: none; padding: 18px; border-radius: 14px; font-size: 18px; font-weight: 600; cursor: pointer; }
         .quiz-screen { display: none; width: 100%; }
         .progress-bar { height: 6px; background: #e5e5ea; border-radius: 3px; margin-bottom: 15px; overflow: hidden; }
@@ -22,10 +22,10 @@
         .trans-btn { position: absolute; top: 15px; right: 15px; background: #f0f0f5; border: none; padding: 8px 12px; border-radius: 10px; font-size: 12px; color: var(--primary); font-weight: 600; cursor: pointer; }
         .q-text { font-size: 18px; font-weight: 600; margin: 25px 0 20px 0; line-height: 1.5; text-align: left; }
         .q-translation { font-size: 15px; color: #666; margin-bottom: 15px; display: none; text-align: right; background: #f9f9f9; padding: 10px; border-radius: 8px; direction: rtl; }
-        .opt-btn { width: 100%; text-align: left; padding: 15px; margin: 8px 0; border: 2px solid #efeff4; border-radius: 12px; background: #fff; font-size: 15px; cursor: pointer; }
+        .opt-btn { width: 100%; text-align: left; padding: 15px; margin: 8px 0; border: 2px solid #efeff4; border-radius: 12px; background: #fff; font-size: 15px; cursor: pointer; transition: 0.2s; }
         .opt-btn.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724 !important; }
         .opt-btn.wrong { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24 !important; }
-        .expl-box { display: none; margin-top: 15px; padding: 15px; background: #eef7ff; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary); color: #004a99; }
+        .expl-box { display: none; margin-top: 15px; padding: 15px; background: #eef7ff; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary); color: #004a99; line-height: 1.4; }
         .expl-toggle { display: none; width: 100%; background: none; border: 1px dashed var(--primary); color: var(--primary); padding: 10px; border-radius: 10px; margin-top: 10px; font-weight: 600; cursor: pointer; }
         .next-btn { width: 100%; background: #1c1c1e; color: #fff; border: none; padding: 16px; border-radius: 14px; font-weight: 600; margin-top: 20px; display: none; cursor: pointer; }
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
@@ -44,9 +44,9 @@
             <option value="LF1: Wartung, Motoröl SAE, Kühlmittel, Inspektionsarbeiten">LF1: Wartung & Motorkennwerte</option>
             <option value="LF2: Gewinde, Schrauben, Bremsen, Messen, Bremsscheiben">LF2: Mechanik & Bremsanlage</option>
             <option value="LF3: Spannung, Strom, Widerstand, Schaltpläne, Generator, Batterie">LF3: Elektrotechnik</option>
-            <option value="LF4: Anhängerkupplung, 7/13-pol, Zeitberechnung, Kalkulation">LF4: Umbau & Kalkulation</option>
+            <option value="LF4: Anhängerkuقلم، 7/13-pol, Zeitberechnung, Kalkulation">LF4: Umbau & Kalkulation</option>
             <option value="LF5: Kurbeltrieb, Thermostat, Schmierung, Motoröl">LF5: Kraftmaschine & Kühlung</option>
-            <option value="LF6: 48V-Bordnetz, DC/DC, Diagnosesysteme, Hochvolt">LF6: Diagnosesysteme & 48V</option>
+            <option value="LF6: 48V-Bordnetz, DC/DC, Diagnosesysteme, Hochvolt">LF6: Diagnosesystemه & 48V</option>
         </select>
         <button class="start-btn" onclick="startQuiz()">Fragen generieren</button>
         <div id="loader" class="loader"></div>
@@ -62,7 +62,7 @@
     <div id="scoreScreen" class="score-screen">
         <h2>Fertig! 🎉</h2>
         <div id="scoreCircle" style="width:100px; height:100px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; margin:20px auto;"></div>
-        <p id="scoreText"></p>
+        <p id="scoreText" style="font-weight: 600;"></p>
         <button class="start-btn" onclick="location.reload()">Nochmal versuchen</button>
     </div>
 </div>
@@ -75,23 +75,24 @@
     async function startQuiz() {
         const lf = document.getElementById('lfSelect').value;
         const loader = document.getElementById('loader');
+        const errorMsg = document.getElementById('errorMsg');
+        
         loader.style.display = 'block';
+        errorMsg.style.display = 'none';
         document.querySelector('.start-btn').disabled = true;
 
-        const randomID = Math.floor(Math.random() * 99999);
-        
-        // برومبت محسن جداً لضمان عدم حدوث أخطاء في المطابقة
-        const prompt = `Du bist ein KFZ-Experte. Erstelle 20 schwere Prüfungsfragen zu ${lf}. 
-        REGELN:
-        1. "options" Array darf NUR den Text enthalten (KEIN A, B, C davor).
-        2. "answer" MUSS exakt einer der Texte aus "options" sein.
-        3. Schwierigkeit: Hoch (Gesellenprüfung).
-        4. "ex" (Erklärung) muss auf Arabisch sein.
-        5. Rückgabe NUR als JSON-Array von Objekten.
+        const randomID = Math.floor(Math.random() * 999999);
+
+        const prompt = `Du bist ein KFZ-Prüfungsexperte. Erstelle 20 schwere Multiple-Choice-Fragen zu ${lf}.
+        WICHTIG:
+        1. Jedes Objekt MUSS die Felder "q", "options" (Array mit 4 Texten), "answer", "tr", "ex" enthalten.
+        2. "q" darf NIEMALS leer oder undefined sein.
+        3. "answer" muss EXAKT einem der Texte in "options" entsprechen.
+        4. Rückgabe NUR als reines JSON-Array.
         Seed: ${randomID}`;
 
         try {
-            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            const response = await fetch('[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,23 +101,36 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [{ role: "user", content: prompt }],
-                    temperature: 0.7,
+                    temperature: 0.8,
                     response_format: { type: "json_object" }
                 })
             });
 
             const data = await response.json();
-            let parsed = JSON.parse(data.choices[0].message.content);
-            questions = parsed.questions || parsed;
-            if(!Array.isArray(questions)) questions = questions[Object.keys(questions)[0]];
+            let content = data.choices[0].message.content;
+            
+            // تنظيف أي زوائد من الذكاء الاصطناعي
+            content = content.replace(/```json/g, "").replace(/```/g, "").trim();
+            
+            let parsed = JSON.parse(content);
+            let rawList = parsed.questions || parsed;
+            if(!Array.isArray(rawList)) rawList = rawList[Object.keys(rawList)[0]];
+
+            // فحص السلامة: حذف أي سؤال يحتوي على undefined
+            questions = rawList.filter(item => item.q && item.options && item.options.length === 4 && item.answer);
+
+            if (questions.length === 0) throw new Error("Keine gültigen Fragen generiert. Bitte erneut versuchen.");
 
             document.getElementById('setup').style.display = 'none';
             document.getElementById('quiz').style.display = 'block';
             showQuestion();
+
         } catch (e) {
-            alert("Error: " + e.message);
+            errorMsg.textContent = "Fehler: " + e.message;
+            errorMsg.style.display = 'block';
         } finally {
             loader.style.display = 'none';
+            document.querySelector('.start-btn').disabled = false;
         }
     }
 
@@ -126,19 +140,20 @@
         document.getElementById('nextBtn').style.display = 'none';
         document.getElementById('progress-fill').style.width = ((currentIndex + 1) / questions.length * 100) + '%';
 
-        let optionsHTML = q.options.map(opt => 
-            `<button class="opt-btn" onclick="checkAnswer(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>`
-        ).join('');
+        let optionsHTML = q.options.map(opt => {
+            const safeOpt = opt.replace(/'/g, "\\'");
+            return `<button class="opt-btn" onclick="checkAnswer(this, '${safeOpt}')">${opt}</button>`;
+        }).join('');
 
         container.innerHTML = `
             <div class="q-card">
                 <button class="trans-btn" onclick="document.getElementById('qTr').style.display='block'">Translate 🌐</button>
                 <div style="font-size:12px; color:#888;">Frage ${currentIndex+1}/${questions.length}</div>
                 <div class="q-text">${q.q}</div>
-                <div id="qTr" class="q-translation">${q.tr}</div>
-                <div id="options-box">${optionsHTML}</div>
+                <div id="qTr" class="q-translation">${q.tr || 'Keine Übersetzung verfügbar'}</div>
+                <div id="options-box" data-answered="false">${optionsHTML}</div>
                 <button id="exBtn" class="expl-toggle" onclick="document.getElementById('exBox').style.display='block'">Schرح الإجابة</button>
-                <div id="exBox" class="expl-box"><b>💡 الشرح:</b><br>${q.ex}</div>
+                <div id="exBox" class="expl-box"><b>💡 الشرح:</b><br>${q.ex || 'Keine Erklärung verfügbar'}</div>
             </div>
         `;
     }
@@ -149,25 +164,24 @@
         if (optionsBox.dataset.answered === "true") return;
         optionsBox.dataset.answered = "true";
 
-        // تنظيف النصوص تماماً قبل المقارنة لحل مشكلة "D) Alle oben genannten"
-        const cleanSelected = selectedText.replace(/^[A-Z][\)|\]|\.]\s*/i, "").trim().toLowerCase();
-        const cleanCorrect = q.answer.replace(/^[A-Z][\)|\]|\.]\s*/i, "").trim().toLowerCase();
+        // تنظيف النصوص للمقارنة الدقيقة
+        const clean = (txt) => txt.replace(/^[A-D][\)|\]|\.]\s*/i, "").trim().toLowerCase();
+        
+        const isCorrect = clean(selectedText) === clean(q.answer);
 
-        if (cleanSelected === cleanCorrect) {
+        if (isCorrect) {
             btn.classList.add('correct');
             score++;
         } else {
             btn.classList.add('wrong');
-            // إظهار الإجابة الصحيحة
             Array.from(optionsBox.children).forEach(child => {
-                const childText = child.innerText.replace(/^[A-Z][\)|\]|\.]\s*/i, "").trim().toLowerCase();
-                if (childText === cleanCorrect) child.classList.add('correct');
+                if (clean(child.innerText) === clean(q.answer)) child.classList.add('correct');
             });
         }
 
         document.getElementById('exBtn').style.display = 'block';
         document.getElementById('nextBtn').style.display = 'block';
-        if(currentIndex === questions.length -1) document.getElementById('nextBtn').innerText = "Ergebnis";
+        if(currentIndex === questions.length - 1) document.getElementById('nextBtn').innerText = "Ergebnis anzeigen 🏆";
     }
 
     function nextQuestion() {
@@ -181,7 +195,8 @@
         document.getElementById('scoreScreen').style.display = 'block';
         const p = Math.round((score/questions.length)*100);
         document.getElementById('scoreCircle').innerText = p + "%";
-        document.getElementById('scoreText').innerText = `${score} von ${questions.length} richtig`;
+        document.getElementById('scoreText').innerText = `${score} von ${questions.length} Fragen richtig beantwortet.`;
+        document.getElementById('scoreCircle').style.background = p >= 70 ? 'var(--success)' : (p >= 50 ? '#ff9500' : 'var(--danger)');
     }
 </script>
 </body>
