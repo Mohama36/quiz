@@ -3,55 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KFZ Pro-Learn App - V4</title>
+    <title>KFZ Pro-Learn Expert V5</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #007aff; --success: #34c759; --danger: #ff3b30; --bg: #f2f2f7; --card: #ffffff; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #1c1c1e; }
+        
+        /* Header */
         .header { background: #fff; padding: 15px; text-align: center; border-bottom: 1px solid #d1d1d6; position: sticky; top: 0; z-index: 10; }
         .header h1 { margin: 0; font-size: 18px; color: var(--primary); }
-        .container { max-width: 500px; margin: auto; padding: 15px; min-height: 85vh; display: flex; flex-direction: column; }
+        
+        .container { max-width: 550px; margin: auto; padding: 15px; min-height: 85vh; display: flex; flex-direction: column; }
+        
+        /* Setup Screen */
         .setup-screen { background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-top: 20px; }
-        select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #c6c6c8; font-size: 16px; margin-bottom: 20px; }
-        .start-btn { width: 100%; background: var(--primary); color: #fff; border: none; padding: 18px; border-radius: 14px; font-size: 18px; font-weight: 600; cursor: pointer; }
+        .setup-screen h2 { margin: 0 0 10px 0; font-size: 22px; }
+        .setup-screen p { color: #666; font-size: 14px; margin-bottom: 20px; }
+        
+        select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #c6c6c8; font-size: 16px; margin-bottom: 20px; background: #fff; }
+        
+        .start-btn { width: 100%; background: var(--primary); color: #fff; border: none; padding: 18px; border-radius: 14px; font-size: 18px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .start-btn:active { transform: scale(0.98); opacity: 0.9; }
         .start-btn:disabled { background: #ccc; }
+
+        /* Quiz Screen */
         .quiz-screen { display: none; width: 100%; }
-        .progress-bar { height: 6px; background: #e5e5ea; border-radius: 3px; margin-bottom: 15px; overflow: hidden; }
+        .progress-bar { height: 8px; background: #e5e5ea; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
         #progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.4s; }
+        
         .q-card { background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; }
         .trans-btn { position: absolute; top: 15px; right: 15px; background: #f0f0f5; border: none; padding: 8px 12px; border-radius: 10px; font-size: 12px; color: var(--primary); font-weight: 600; cursor: pointer; }
-        .q-text { font-size: 18px; font-weight: 600; margin: 25px 0 20px 0; line-height: 1.5; text-align: left; }
-        .q-translation { font-size: 15px; color: #666; margin-bottom: 15px; display: none; text-align: right; background: #f9f9f9; padding: 10px; border-radius: 8px; direction: rtl; }
-        .opt-btn { width: 100%; text-align: left; padding: 15px; margin: 8px 0; border: 2px solid #efeff4; border-radius: 12px; background: #fff; font-size: 15px; cursor: pointer; }
-        .opt-btn.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724 !important; }
+        
+        .q-text { font-size: 18px; font-weight: 600; margin: 30px 0 20px 0; line-height: 1.5; color: #000; }
+        .q-translation { font-size: 15px; color: #444; margin-bottom: 20px; display: none; text-align: right; background: #f1f1f7; padding: 15px; border-radius: 12px; direction: rtl; line-height: 1.4; border-right: 4px solid var(--primary); }
+        
+        /* Options */
+        .opt-btn { width: 100%; text-align: left; padding: 16px; margin: 10px 0; border: 2px solid #f2f2f7; border-radius: 14px; background: #fff; font-size: 15px; cursor: pointer; transition: 0.2s; color: #333; }
+        .opt-btn:hover { border-color: #d1d1d6; }
+        .opt-btn.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724 !important; font-weight: 600; }
         .opt-btn.wrong { background: #f8d7da !important; border-color: var(--danger) !important; color: #721c24 !important; }
-        .expl-box { display: none; margin-top: 15px; padding: 15px; background: #eef7ff; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary); color: #004a99; direction: rtl; }
-        .expl-toggle { display: none; width: 100%; background: none; border: 1px dashed var(--primary); color: var(--primary); padding: 10px; border-radius: 10px; margin-top: 10px; font-weight: 600; cursor: pointer; }
-        .next-btn { width: 100%; background: #1c1c1e; color: #fff; border: none; padding: 16px; border-radius: 14px; font-weight: 600; margin-top: 20px; display: none; cursor: pointer; }
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+        
+        /* Explanation Box */
+        .expl-box { display: none; margin-top: 15px; padding: 15px; background: #eef7ff; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary); color: #004a99; direction: rtl; line-height: 1.5; }
+        .expl-toggle { display: none; width: 100%; background: none; border: 1px dashed var(--primary); color: var(--primary); padding: 12px; border-radius: 10px; margin-top: 10px; font-weight: 600; cursor: pointer; }
+        
+        .next-btn { width: 100%; background: #1c1c1e; color: #fff; border: none; padding: 18px; border-radius: 14px; font-weight: 600; margin-top: 20px; display: none; cursor: pointer; font-size: 16px; }
+
+        /* Loader */
+        .loader-container { display: none; text-align: center; margin-top: 20px; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .score-screen { display: none; background: var(--card); border-radius: 20px; padding: 30px; text-align: center; }
+
+        /* Score Screen */
+        .score-screen { display: none; background: var(--card); border-radius: 20px; padding: 40px 20px; text-align: center; }
+        #scoreCircle { width: 120px; height: 120px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; margin: 0 auto 20px auto; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
-<div class="header"><h1>KFZ Lern-Expert (LF 1-6)</h1></div>
+<div class="header"><h1>KFZ Lern-Expert Pro</h1></div>
 
 <div class="container">
     <div id="setup" class="setup-screen">
-        <h2 style="margin:0 0 20px 0; font-size: 22px;">Prüfungsvorbereitung</h2>
+        <h2>Prüfungsmodus</h2>
+        <p>Wählen Sie ein Lernfeld aus. Die KI generiert komplexe Fragen im Stil der Gesellenprüfung.</p>
+        
         <select id="lfSelect">
-            <option value="LF1: Wartung, Motoröl SAE, Kühlmittel, Inspektionsarbeiten">LF1: Wartung & Motorkennwerte</option>
-            <option value="LF2: Gewinde, Schrauben, Bremsen, Messen, Bremsscheiben">LF2: Mechanik & Bremsanlage</option>
-            <option value="LF3: Spannung, Strom, Widerstand, Schaltpläne, Generator, Batterie">LF3: Elektrotechnik</option>
-            <option value="LF4: Anhängerkupplung, 13-pol, Zeitberechnung">LF4: Umbau & Kalkulation</option>
-            <option value="LF5: Kurbeltrieb, Thermostat, Schmierung">LF5: Kraftmaschine & Kühlung</option>
-            <option value="LF6: 48V-Bordnetz, Diagnosesysteme, Hochvolt">LF6: Diagnosesysteme & 48V</option>
+            <option value="LF1: Wartung, Motoröl SAE-Viskosität, Kühlmittel, Inspektionsarbeiten">LF1: Wartung & Motorkennwerte</option>
+            <option value="LF2: Gewinde, Schrauben, Bremsen, Messen (Bügelmessschraube), Bremsscheiben">LF2: Mechanik & Bremsanlage</option>
+            <option value="LF3: Spannung, Strom, Widerstand, Schaltpläne, Generator (Dioden), Batterie, Multimeter">LF3: Elektrotechnik & Diagnose</option>
+            <option value="LF4: Anhängerkupplung, 13-pol, Zeitberechnung, Kalkulation">LF4: Umbau & Kalkulation</option>
+            <option value="LF5: Kurbeltrieb, Thermostat, Schmierung, Kühlung">LF5: Kraftmaschine & Kühlung</option>
+            <option value="LF6: 48V-Bordnetz, Diagnosesysteme, Hochvolt-Sicherheit">LF6: Diagnosesysteme & 48V</option>
         </select>
-        <button class="start-btn" onclick="startQuiz()">Fragen generieren</button>
-        <div id="loader" class="loader"></div>
-        <div id="errorMsg" style="color:red; margin-top:10px; display:none; text-align:center; font-size:14px;"></div>
+        
+        <button class="start-btn" onclick="startQuiz()">Fragen mit KI generieren</button>
+        
+        <div id="loaderCont" class="loader-container">
+            <div class="loader"></div>
+            <div id="loadingStatus" style="font-size:13px; color:#666;">Analysiere Lernfeld & erstelle Szenarien...</div>
+        </div>
+        <div id="errorMsg" style="color:var(--danger); margin-top:15px; display:none; text-align:center; font-size:14px; padding:10px; background:#fff1f0; border-radius:10px;"></div>
     </div>
 
     <div id="quiz" class="quiz-screen">
@@ -61,9 +94,10 @@
     </div>
     
     <div id="scoreScreen" class="score-screen">
-        <h2>Fertig! 🎉</h2>
-        <div id="scoreCircle" style="width:100px; height:100px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; margin:20px auto;"></div>
-        <p id="scoreText" style="font-weight:600;"></p>
+        <h2>Ergebnis 🎉</h2>
+        <div id="scoreCircle">0%</div>
+        <p id="scoreText" style="font-weight:600; font-size:18px;"></p>
+        <p style="color:#666; margin-bottom:30px;">Tipp: Analysiere die Erklärungen bei den falschen Antworten.</p>
         <button class="start-btn" onclick="location.reload()">Neustart</button>
     </div>
 </div>
@@ -75,22 +109,27 @@
 
     async function startQuiz() {
         const lf = document.getElementById('lfSelect').value;
-        const loader = document.getElementById('loader');
+        const loaderCont = document.getElementById('loaderCont');
         const errorMsg = document.getElementById('errorMsg');
         const startBtn = document.querySelector('.start-btn');
 
-        loader.style.display = 'block';
+        loaderCont.style.display = 'block';
         errorMsg.style.display = 'none';
         startBtn.disabled = true;
 
-        const randomSeed = Math.floor(Math.random() * 1000000);
+        const randomSeed = Math.floor(Math.random() * 999999);
 
-        // التعديل هنا: تم تحسين الـ Prompt لضمان جلب نصوص الخيارات بدلاً من الحروف
-        const prompt = `Du bist ein KFZ-Mechatroniker Meister. Erstelle 20 komplexe Prüfungsfragen für ${lf}. 
-        Nutze Fachwissen aus LF1 bis LF6 (Motortechnik, Elektrik, Hochvolt, Bremsen).
-        FORMAT: Antworte NUR mit einem JSON-Array.
-        Jedes Objekt: {"q":"Text der Frage","options":["Erste Antwortmöglichkeit","Zweite Antwortmöglichkeit","Dritte Antwortmöglichkeit","Vierte Antwortmöglichkeit"],"answer":"Exakter Text der richtigen Option","tr":"Arabische Übersetzung der Frage","ex":"Arabische Erklärung"}.
-        Kein Text vor oder nach dem JSON. Seed: ${randomSeed}`;
+        // هذا هو الـ Prompt المطور بناءً على تحليل الـ PDF
+        const prompt = `Du bist ein KFZ-Mechatroniker Meister und Prüfer. Erstelle 15 komplexe Prüfungsfragen für ${lf}, die exakt den Stil der offiziellen Gesellenprüfung widerspiegeln.
+        
+        ANFORDERUNGEN:
+        1. PRAXIS: Starte Fragen oft mit Kundenaussagen oder Werkstattsituationen.
+        2. MESSUNG: Integriere Multimeter-Einstellungen (V, A, Ohm) und mechanische Messzeuge.
+        3. TERMINOLOGIE: Nutze Fachbegriffe wie Spannungsfall, Ruhestrom, Induktion, Viskosität.
+        4. SMART DISTRACTORS: Die falschen Antworten müssen wie typische Denkfehler klingen.
+        
+        FORMAT: Antworte NUR mit einem JSON-Objekt, das ein Array namens "questions" enthält.
+        Struktur: {"questions": [{"q":"Frage","options":["A","B","C","D"],"answer":"Exakter Text der richtigen Antwort","tr":"الترجمة العربية الاحترافية مع المصطلحات الألمانية","ex":"شرح فني مفصل باللغة العربية"}]}`;
 
         try {
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -102,29 +141,19 @@
                 body: JSON.stringify({
                     model: "llama-3.3-70b-versatile",
                     messages: [{ role: "user", content: prompt }],
-                    temperature: 0.7,
+                    temperature: 0.6,
                     response_format: { type: "json_object" }
                 })
             });
 
-            if (!response.ok) {
-                const errText = await response.text();
-                throw new Error(`API Fehler (${response.status}). مفتاح الـ API قد يكون معطلاً.`);
-            }
+            if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
             const data = await response.json();
-            let content = data.choices[0].message.content;
+            const parsed = JSON.parse(data.choices[0].message.content);
             
-            const jsonMatch = content.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
-            if (!jsonMatch) throw new Error("Kein gültiges JSON gefunden.");
+            questions = parsed.questions || parsed;
             
-            let parsed = JSON.parse(jsonMatch[0]);
-            let list = parsed.questions || parsed;
-            if (!Array.isArray(list)) list = Object.values(parsed).find(Array.isArray);
-
-            questions = list.filter(item => item && item.q && item.options && item.answer);
-
-            if (questions.length === 0) throw new Error("Die KI hat keine gültigen Fragen geliefert.");
+            if (!questions || questions.length === 0) throw new Error("Keine Fragen generiert.");
 
             document.getElementById('setup').style.display = 'none';
             document.getElementById('quiz').style.display = 'block';
@@ -132,10 +161,10 @@
 
         } catch (e) {
             console.error(e);
-            errorMsg.innerHTML = `<b>خطأ في الاتصال:</b><br>${e.message}<br><small>تأكد من مفتاح الـ API أو حاول مرة أخرى.</small>`;
+            errorMsg.innerText = "Fehler: " + e.message + ". Bitte versuche es erneut.";
             errorMsg.style.display = 'block';
         } finally {
-            loader.style.display = 'none';
+            loaderCont.style.display = 'none';
             startBtn.disabled = false;
         }
     }
@@ -143,25 +172,38 @@
     function showQuestion() {
         const q = questions[currentIndex];
         const container = document.getElementById('q-container');
-        document.getElementById('nextBtn').style.display = 'none';
-        document.getElementById('progress-fill').style.width = ((currentIndex + 1) / questions.length * 100) + '%';
+        const nextBtn = document.getElementById('nextBtn');
+        const fill = document.getElementById('progress-fill');
+        
+        nextBtn.style.display = 'none';
+        fill.style.width = ((currentIndex + 1) / questions.length * 100) + '%';
 
         let optionsHTML = q.options.map(opt => {
-            const safeOpt = opt.replace(/'/g, "\\'");
+            const safeOpt = opt.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
             return `<button class="opt-btn" onclick="checkAnswer(this, '${safeOpt}')">${opt}</button>`;
         }).join('');
 
         container.innerHTML = `
             <div class="q-card">
-                <button class="trans-btn" onclick="document.getElementById('qTr').style.display='block'">Translate 🌐</button>
-                <div style="font-size:12px; color:#888;">Frage ${currentIndex+1}/${questions.length}</div>
+                <button class="trans-btn" onclick="toggleTranslation()">Translate 🌐</button>
+                <div style="font-size:12px; color:#888; font-weight:600;">Frage ${currentIndex+1} von ${questions.length}</div>
                 <div class="q-text">${q.q}</div>
-                <div id="qTr" class="q-translation">${q.tr || ''}</div>
+                <div id="qTr" class="q-translation">${q.tr}</div>
                 <div id="options-box" data-answered="false">${optionsHTML}</div>
-                <button id="exBtn" class="expl-toggle" onclick="document.getElementById('exBox').style.display='block'">Schرح الإجابة</button>
-                <div id="exBox" class="expl-box"><b>💡 الشرح:</b><br>${q.ex || ''}</div>
+                <button id="exBtn" class="expl-toggle" onclick="toggleExplanation()">Erläuterung anzeigen (الشرح)</button>
+                <div id="exBox" class="expl-box"><b>💡 الشرح التقني:</b><br>${q.ex}</div>
             </div>
         `;
+    }
+
+    function toggleTranslation() {
+        const tr = document.getElementById('qTr');
+        tr.style.display = (tr.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function toggleExplanation() {
+        const ex = document.getElementById('exBox');
+        ex.style.display = (ex.style.display === 'block') ? 'none' : 'block';
     }
 
     function checkAnswer(btn, selectedText) {
@@ -170,7 +212,7 @@
         if (optionsBox.dataset.answered === "true") return;
         optionsBox.dataset.answered = "true";
 
-        const clean = (t) => t.replace(/^[A-D][\)|\]|\.]\s*/i, "").trim().toLowerCase();
+        const clean = (t) => t.trim().toLowerCase();
         const isCorrect = clean(selectedText) === clean(q.answer);
 
         if (isCorrect) {
@@ -178,30 +220,45 @@
             score++;
         } else {
             btn.classList.add('wrong');
+            // إظهار الإجابة الصحيحة
             Array.from(optionsBox.children).forEach(child => {
-                if (clean(child.innerText) === clean(q.answer)) child.classList.add('correct');
+                if (clean(child.innerText) === clean(q.answer)) {
+                    child.classList.add('correct');
+                }
             });
         }
 
         document.getElementById('exBtn').style.display = 'block';
         document.getElementById('nextBtn').style.display = 'block';
-        if(currentIndex === questions.length - 1) document.getElementById('nextBtn').innerText = "Ergebnis anzeigen";
+        if(currentIndex === questions.length - 1) {
+            document.getElementById('nextBtn').innerText = "Ergebnis anzeigen";
+        }
     }
 
     function nextQuestion() {
         currentIndex++;
-        if(currentIndex < questions.length) showQuestion();
-        else showScore();
+        if(currentIndex < questions.length) {
+            showQuestion();
+        } else {
+            showScore();
+        }
     }
 
     function showScore() {
         document.getElementById('quiz').style.display = 'none';
         document.getElementById('scoreScreen').style.display = 'block';
-        const p = Math.round((score/questions.length)*100);
-        document.getElementById('scoreCircle').innerText = p + "%";
-        document.getElementById('scoreText').innerText = `${score} von ${questions.length} richtig.`;
-        document.getElementById('scoreCircle').style.background = p >= 70 ? 'var(--success)' : (p >= 50 ? '#ff9500' : 'var(--danger)');
+        const percent = Math.round((score / questions.length) * 100);
+        
+        const circle = document.getElementById('scoreCircle');
+        circle.innerText = percent + "%";
+        
+        if (percent >= 70) circle.style.background = 'var(--success)';
+        else if (percent >= 50) circle.style.background = '#ff9500';
+        else circle.style.background = 'var(--danger)';
+        
+        document.getElementById('scoreText').innerText = `${score} von ${questions.length} Fragen richtig beantwortet.`;
     }
 </script>
+
 </body>
 </html>
