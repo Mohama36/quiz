@@ -85,10 +85,11 @@
 
         const randomSeed = Math.floor(Math.random() * 1000000);
 
+        // التعديل هنا: تم تحسين الـ Prompt لضمان جلب نصوص الخيارات بدلاً من الحروف
         const prompt = `Du bist ein KFZ-Mechatroniker Meister. Erstelle 20 komplexe Prüfungsfragen für ${lf}. 
         Nutze Fachwissen aus LF1 bis LF6 (Motortechnik, Elektrik, Hochvolt, Bremsen).
         FORMAT: Antworte NUR mit einem JSON-Array.
-        Jedes Objekt: {"q":"Text","options":["A","B","C","D"],"answer":"Exakter Text der richtigen Option","tr":"Arabisch","ex":"Arabisch"}.
+        Jedes Objekt: {"q":"Text der Frage","options":["Erste Antwortmöglichkeit","Zweite Antwortmöglichkeit","Dritte Antwortmöglichkeit","Vierte Antwortmöglichkeit"],"answer":"Exakter Text der richtigen Option","tr":"Arabische Übersetzung der Frage","ex":"Arabische Erklärung"}.
         Kein Text vor oder nach dem JSON. Seed: ${randomSeed}`;
 
         try {
@@ -106,7 +107,6 @@
                 })
             });
 
-            // 1. فحص هل الرد سليم (وليس صفحة خطأ HTML)
             if (!response.ok) {
                 const errText = await response.text();
                 throw new Error(`API Fehler (${response.status}). مفتاح الـ API قد يكون معطلاً.`);
@@ -115,7 +115,6 @@
             const data = await response.json();
             let content = data.choices[0].message.content;
             
-            // 2. استخراج الـ JSON فقط باستخدام Regex لضمان عدم وجود نصوص زائدة
             const jsonMatch = content.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
             if (!jsonMatch) throw new Error("Kein gültiges JSON gefunden.");
             
@@ -123,7 +122,6 @@
             let list = parsed.questions || parsed;
             if (!Array.isArray(list)) list = Object.values(parsed).find(Array.isArray);
 
-            // 3. تنظيف الأسئلة من أي قيم undefined
             questions = list.filter(item => item && item.q && item.options && item.answer);
 
             if (questions.length === 0) throw new Error("Die KI hat keine gültigen Fragen geliefert.");
